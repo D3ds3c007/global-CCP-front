@@ -1,0 +1,19 @@
+<div class="input-field">
+  <label class="input-label" [for]="id()">{{ label() }}</label>
+  <select
+    class="input-control"
+    [id]="id()"
+    [value]="value"
+    [disabled]="isDisabled"
+    [class.input-control--invalid]="invalid()"
+    (change)="handleChange($event)"
+    (blur)="handleBlur()"
+  >
+    @if (placeholder()) {
+      <option value="" disabled>{{ placeholder() }}</option>
+    }
+    @for (option of options(); track option.value) {
+      <option [value]="option.value">{{ option.label }}</option>
+    }
+  </select>
+</div>

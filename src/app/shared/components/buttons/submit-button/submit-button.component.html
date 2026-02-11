@@ -1,0 +1,13 @@
+<button
+  class="submit-button"
+  type="submit"
+  [disabled]="disabled() || loading()"
+  [attr.aria-busy]="loading() ? 'true' : 'false'"
+>
+  @if (loading()) {
+    <span class="spinner" aria-hidden="true"></span>
+    <span class="submit-button__text">Loading...</span>
+  } @else {
+    <span class="submit-button__text">{{ label() }}</span>
+  }
+</button>
