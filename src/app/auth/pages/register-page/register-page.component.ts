@@ -1,4 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
 import { ReactiveFormsModule, Validators, FormControl, FormGroup, NonNullableFormBuilder } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { finalize, take } from 'rxjs';
@@ -44,10 +45,11 @@ export class RegisterPageComponent {
 
   readonly loading = signal(false);
   readonly submitted = signal(false);
+  readonly apiError = signal<string | null>(null);
 
   readonly roleOptions: SelectOption[] = [
     { label: 'Buyer', value: 'BUYER' },
-    { label: 'Shop owner', value: 'SHOP_OWNER' }
+    { label: 'Shop owner', value: 'SHOP' }
   ];
 
   readonly form: FormGroup<RegisterFormGroup> = this.fb.group({
@@ -60,6 +62,7 @@ export class RegisterPageComponent {
 
   onSubmit(): void {
     this.submitted.set(true);
+    this.apiError.set(null);
 
     if (this.form.invalid) {
       this.form.markAllAsTouched();
@@ -83,9 +86,26 @@ export class RegisterPageComponent {
         finalize(() => this.loading.set(false))
       )
       .subscribe({
-        next: result => console.log('Register success', result),
-        error: error => console.error('Register error', error)
+        next: result => {
+          console.log('Register success', result);
+          this.apiError.set(null);
+        },
+        error: error => {
+          console.error('Register error', error);
+          this.apiError.set(this.getErrorMessage(error));
+        }
       });
+  }
+
+  private getErrorMessage(error: unknown): string {
+    if (error instanceof HttpErrorResponse) {
+      const message = error.error?.message ?? error.message;
+      if (typeof message === 'string' && message.trim().length > 0) {
+        return message;
+      }
+    }
+
+    return 'Something went wrong. Please try again.';
   }
 
   isInvalid(controlName: keyof RegisterFormGroup): boolean {

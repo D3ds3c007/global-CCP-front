@@ -4,6 +4,9 @@
   titleId="register-title"
 >
   <form class="auth-form" [formGroup]="form" (ngSubmit)="onSubmit()">
+    @if (apiError()) {
+      <div class="api-error" role="alert">{{ apiError() }}</div>
+    }
     <div class="field-group">
       <app-select-input
         id="register-role"

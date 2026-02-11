@@ -9,6 +9,15 @@
   flex-direction: column;
 }
 
+.api-error {
+  border: 1px solid #fca5a5;
+  background: #fef2f2;
+  color: #b42318;
+  padding: 12px 14px;
+  border-radius: 10px;
+  font-size: 14px;
+}
+
 .auth-footer {
   margin-top: 16px;
   font-size: 14px;
