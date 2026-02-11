@@ -17,14 +17,14 @@ export class AuthService {
   }
 
   register(payload: {
-    role: 'BUYER' | 'SHOP_OWNER';
+    role: 'BUYER' | 'SHOP';
     fullName: string;
     email: string;
     phone: string;
     password: string;
-  }): Observable<{ id: string }> {
+  }): Observable<any> {
     console.log('AuthService.register payload', payload);
-    return of({ id: 'mock-user-id' }).pipe(delay(800));
+    return this.http.post<any>(`${this.apiUrl}/register`, payload);
   }
 
   me() {

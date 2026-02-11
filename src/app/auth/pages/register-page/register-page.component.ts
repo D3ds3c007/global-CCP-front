@@ -1,7 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ReactiveFormsModule, Validators, FormControl, FormGroup, NonNullableFormBuilder } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { RouterLink, Router } from '@angular/router';
 import { finalize, take } from 'rxjs';
 
 import { AuthService } from '../../services/auth.service';
@@ -13,7 +13,7 @@ import { SelectInputComponent, SelectOption } from '../../../shared/components/i
 import { FormErrorComponent } from '../../../shared/components/form-error/form-error.component';
 import { SubmitButtonComponent } from '../../../shared/components/buttons/submit-button/submit-button.component';
 
-type UserRole = 'BUYER' | 'SHOP_OWNER';
+type UserRole = 'BUYER' | 'SHOP';
 
 type RegisterFormGroup = {
   role: FormControl<UserRole | ''>;
@@ -42,6 +42,9 @@ type RegisterFormGroup = {
 export class RegisterPageComponent {
   private readonly fb = inject(NonNullableFormBuilder);
   private readonly authService = inject(AuthService);
+  private readonly router = inject(Router);
+
+  
 
   readonly loading = signal(false);
   readonly submitted = signal(false);
@@ -87,8 +90,9 @@ export class RegisterPageComponent {
       )
       .subscribe({
         next: result => {
-          console.log('Register success', result);
+          window.alert('Registration successful! Please log in with your new account.');
           this.apiError.set(null);
+          this.router.navigate(['/login']);
         },
         error: error => {
           console.error('Register error', error);
@@ -99,7 +103,7 @@ export class RegisterPageComponent {
 
   private getErrorMessage(error: unknown): string {
     if (error instanceof HttpErrorResponse) {
-      const message = error.error?.message ?? error.message;
+      const message = error.error?.error ?? 'Something went wrong. Please try again.';
       if (typeof message === 'string' && message.trim().length > 0) {
         return message;
       }
