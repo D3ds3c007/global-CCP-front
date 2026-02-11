@@ -1,0 +1,43 @@
+.submit-button {
+  width: 100%;
+  border: none;
+  border-radius: 12px;
+  padding: 14px 16px;
+  background: #1d4ed8;
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 15px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 14px 24px rgba(29, 78, 216, 0.24);
+}
+
+.submit-button:disabled {
+  cursor: not-allowed;
+  background: #94a3b8;
+  box-shadow: none;
+}
+
+.submit-button:not(:disabled):hover {
+  transform: translateY(-1px);
+  box-shadow: 0 18px 28px rgba(29, 78, 216, 0.3);
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-top-color: #ffffff;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
