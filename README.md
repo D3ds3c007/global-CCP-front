@@ -165,10 +165,15 @@ npm install
 
 ### Angular CLI Version Mismatch
 
-Ensure your global Angular CLI matches the project version:
+Ensure your global Angular CLI matches the project version. Check `package.json` for the required Angular version:
 ```bash
 npm uninstall -g @angular/cli
-npm install -g @angular/cli@latest
+npm install -g @angular/cli
+```
+
+Or install using the project's local version:
+```bash
+npx ng version
 ```
 
 ### Clear Angular Cache
