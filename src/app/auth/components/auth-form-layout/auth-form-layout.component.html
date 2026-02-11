@@ -1,5 +1,5 @@
 <section class="auth-layout" [attr.aria-labelledby]="titleId()">
-  <div class="auth-card">
+  <nz-card class="auth-card">
     <header class="auth-header">
       <h1 class="auth-title" [id]="titleId()">{{ title() }}</h1>
       <p class="auth-subtitle">{{ subtitle() }}</p>
@@ -7,5 +7,5 @@
     <div class="auth-content">
       <ng-content></ng-content>
     </div>
-  </div>
+  </nz-card>
 </section>

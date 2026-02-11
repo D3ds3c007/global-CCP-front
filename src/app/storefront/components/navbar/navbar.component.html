@@ -1,0 +1,18 @@
+<header class="navbar">
+  <div class="navbar__brand">
+    <a class="brand-link" routerLink="/">{{ brand() }}</a>
+  </div>
+
+  <div class="navbar__spacer"></div>
+
+  <div class="navbar__actions">
+    @if (user()) {
+      <span class="navbar__greeting">Hi, {{ user()!.fullName }}</span>
+      <button nz-button nzType="default" type="button" (click)="onLogout()">
+        Logout
+      </button>
+    } @else {
+      <a nz-button nzType="primary" routerLink="/auth/login">Sign In</a>
+    }
+  </div>
+</header>

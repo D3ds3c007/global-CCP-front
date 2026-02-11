@@ -1,11 +1,13 @@
 import { ChangeDetectionStrategy, Component, forwardRef, input } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { NzInputModule } from 'ng-zorro-antd/input';
 
 @Component({
   selector: 'app-email-input',
   templateUrl: './email-input.component.html',
   styleUrl: './email-input.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [NzInputModule],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,

@@ -5,6 +5,9 @@
 >
   <form class="auth-form" [formGroup]="form" (ngSubmit)="onSubmit()">
     @if (apiError()) {
+      <nz-alert nzType="error" [nzMessage]="apiError()" nzShowIcon></nz-alert>
+    }
+    @if (apiError()) {
       <div class="api-error" role="alert">{{ apiError() }}</div>
     }
     <div class="field-group">

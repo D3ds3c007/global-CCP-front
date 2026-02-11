@@ -12,6 +12,7 @@ import { TextInputComponent } from '../../../shared/components/inputs/text-input
 import { SelectInputComponent, SelectOption } from '../../../shared/components/inputs/select-input/select-input.component';
 import { FormErrorComponent } from '../../../shared/components/form-error/form-error.component';
 import { SubmitButtonComponent } from '../../../shared/components/buttons/submit-button/submit-button.component';
+import { NzAlertModule } from 'ng-zorro-antd/alert';
 
 type UserRole = 'BUYER' | 'SHOP';
 
@@ -36,7 +37,8 @@ type RegisterFormGroup = {
     TextInputComponent,
     SelectInputComponent,
     FormErrorComponent,
-    SubmitButtonComponent
+    SubmitButtonComponent,
+    NzAlertModule
   ]
 })
 export class RegisterPageComponent {

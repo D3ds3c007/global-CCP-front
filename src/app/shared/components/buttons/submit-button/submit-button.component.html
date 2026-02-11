@@ -1,13 +1,11 @@
 <button
-  class="submit-button"
+  nz-button
+  nzType="primary"
+  nzBlock
   type="submit"
-  [disabled]="disabled() || loading()"
+  [nzLoading]="loading()"
+  [disabled]="disabled()"
   [attr.aria-busy]="loading() ? 'true' : 'false'"
 >
-  @if (loading()) {
-    <span class="spinner" aria-hidden="true"></span>
-    <span class="submit-button__text">Loading...</span>
-  } @else {
-    <span class="submit-button__text">{{ label() }}</span>
-  }
+  {{ label() }}
 </button>

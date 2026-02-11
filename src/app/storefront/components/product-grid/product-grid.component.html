@@ -1,0 +1,14 @@
+@if (products().length > 0) {
+  <div class="product-grid">
+    @for (product of products(); track product.id) {
+      <app-product-card
+        [product]="product"
+        [isAdding]="addingProductId() === product.id"
+        [justAdded]="addedProductId() === product.id"
+        (addToCart)="onAddToCart($event)"
+      ></app-product-card>
+    }
+  </div>
+} @else {
+  <div class="product-grid__empty">{{ emptyMessage() }}</div>
+}

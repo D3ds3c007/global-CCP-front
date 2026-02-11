@@ -1,0 +1,27 @@
+<div class="field">
+  <span class="field__label">Price range</span>
+  <div class="field__row">
+    <label class="field__sr" for="min-price">Min price</label>
+    <input
+      nz-input
+      class="field__input"
+      id="min-price"
+      type="number"
+      min="0"
+      [value]="minPrice() === null ? '' : minPrice()"
+      (input)="onMinInput($event)"
+      placeholder="Min"
+    />
+    <label class="field__sr" for="max-price">Max price</label>
+    <input
+      nz-input
+      class="field__input"
+      id="max-price"
+      type="number"
+      min="0"
+      [value]="maxPrice() === null ? '' : maxPrice()"
+      (input)="onMaxInput($event)"
+      placeholder="Max"
+    />
+  </div>
+</div>

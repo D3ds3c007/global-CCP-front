@@ -1,11 +1,14 @@
 import { ChangeDetectionStrategy, Component, forwardRef, input, signal } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzButtonModule } from 'ng-zorro-antd/button';
 
 @Component({
   selector: 'app-password-input',
   templateUrl: './password-input.component.html',
   styleUrl: './password-input.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [NzInputModule, NzButtonModule],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,

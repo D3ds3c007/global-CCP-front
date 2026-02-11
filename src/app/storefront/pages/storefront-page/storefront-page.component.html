@@ -1,0 +1,58 @@
+<app-navbar [user]="currentUser$ | async" (logout)="onLogout()"></app-navbar>
+
+<main class="storefront">
+  <div class="storefront__container">
+    <aside class="storefront__filters">
+      @if (categories$ | async; as categories) {
+        <app-advanced-search-panel
+          [categories]="categories"
+          [query]="query()"
+          (queryChange)="onQueryChange($event)"
+          (clearFilters)="onClearFilters()"
+        ></app-advanced-search-panel>
+      }
+    </aside>
+
+    <section class="storefront__content">
+      @if (topProducts$ | async; as topProducts) {
+        <app-top-products-section
+          [products]="topProducts"
+          [addingProductId]="addingProductId()"
+          [addedProductId]="addedProductId()"
+          (addToCart)="onAddToCart($event)"
+        ></app-top-products-section>
+      }
+
+      <section class="storefront__results">
+        <div class="results__header">
+          <h2>All products</h2>
+          @if (loading()) {
+            <span class="results__status">Loading...</span>
+          }
+        </div>
+
+        @if (error()) {
+          <div class="results__error" role="alert">{{ error() }}</div>
+        }
+
+        @if (products$ | async; as products) {
+          <app-product-grid
+            [products]="products"
+            [addingProductId]="addingProductId()"
+            [addedProductId]="addedProductId()"
+            (addToCart)="onAddToCart($event)"
+          ></app-product-grid>
+        }
+
+        @if (totalItems$ | async; as totalItems) {
+          <app-pagination
+            [pageIndex]="pageIndex()"
+            [pageSize]="pageSize()"
+            [totalItems]="totalItems"
+            (pageChange)="onPageChange($event)"
+          ></app-pagination>
+        }
+      </section>
+    </section>
+  </div>
+</main>

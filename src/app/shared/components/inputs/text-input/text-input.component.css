@@ -7,23 +7,26 @@
 .input-label {
   font-size: 13px;
   font-weight: 600;
-  color: #1e293b;
+  color: var(--text-muted);
 }
 
 .input-control {
-  border: 1px solid #d7deff;
+  border: 1px solid var(--border);
   border-radius: 10px;
   padding: 12px 14px;
   font-size: 14px;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  color: var(--text-strong);
+  background: rgba(255, 255, 255, 0.9);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
 }
 
 .input-control:focus-visible {
   outline: none;
-  border-color: #2563eb;
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px var(--ring);
+  background: #ffffff;
 }
 
 .input-control--invalid {
-  border-color: #f04438;
+  border-color: rgba(239, 68, 68, 0.6);
 }

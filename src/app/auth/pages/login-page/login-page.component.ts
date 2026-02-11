@@ -10,6 +10,8 @@ import { EmailInputComponent } from '../../../shared/components/inputs/email-inp
 import { PasswordInputComponent } from '../../../shared/components/inputs/password-input/password-input.component';
 import { FormErrorComponent } from '../../../shared/components/form-error/form-error.component';
 import { SubmitButtonComponent } from '../../../shared/components/buttons/submit-button/submit-button.component';
+import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
+import { NzAlertModule } from 'ng-zorro-antd/alert';
 
 type LoginFormGroup = {
   email: FormControl<string>;
@@ -28,7 +30,9 @@ type LoginFormGroup = {
     EmailInputComponent,
     PasswordInputComponent,
     FormErrorComponent,
-    SubmitButtonComponent
+    SubmitButtonComponent,
+    NzCheckboxModule,
+    NzAlertModule
   ]
 })
 export class LoginPageComponent {
