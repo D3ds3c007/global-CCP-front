@@ -1,0 +1,34 @@
+@if (totalItems() > 0) {
+  <nav class="pagination" aria-label="Pagination">
+    <button
+      class="pagination__button"
+      type="button"
+      [disabled]="pageIndex() <= 1"
+      (click)="goToPage(pageIndex() - 1)"
+    >
+      Prev
+    </button>
+
+    <div class="pagination__pages">
+      @for (page of pages(); track page) {
+        <button
+          class="pagination__page"
+          type="button"
+          [class.pagination__page--active]="page === pageIndex()"
+          (click)="goToPage(page)"
+        >
+          {{ page }}
+        </button>
+      }
+    </div>
+
+    <button
+      class="pagination__button"
+      type="button"
+      [disabled]="pageIndex() >= totalPages()"
+      (click)="goToPage(pageIndex() + 1)"
+    >
+      Next
+    </button>
+  </nav>
+}

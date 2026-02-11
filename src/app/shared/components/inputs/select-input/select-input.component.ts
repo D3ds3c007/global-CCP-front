@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, forwardRef, input } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormsModule } from '@angular/forms';
+import { NzSelectModule } from 'ng-zorro-antd/select';
 
 export type SelectOption = {
   label: string;
@@ -11,6 +12,7 @@ export type SelectOption = {
   templateUrl: './select-input.component.html',
   styleUrl: './select-input.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [FormsModule, NzSelectModule],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -48,9 +50,8 @@ export class SelectInputComponent implements ControlValueAccessor {
     this.isDisabled = isDisabled;
   }
 
-  handleChange(event: Event): void {
-    const target = event.target as HTMLSelectElement;
-    this.value = target.value;
+  handleChange(value: string): void {
+    this.value = value;
     this.onChange(this.value);
   }
 

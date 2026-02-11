@@ -1,0 +1,37 @@
+<nz-card class="search-panel" nzTitle="Advanced search" [nzExtra]="extraTpl">
+  <div class="search-panel__body">
+    <app-search-keyword-input
+      label="Keyword"
+      placeholder="Try wireless charger"
+      [value]="draft().keyword"
+      (valueChange)="updateKeyword($event)"
+    ></app-search-keyword-input>
+
+    <app-price-range-filter
+      [minPrice]="draft().minPrice"
+      [maxPrice]="draft().maxPrice"
+      (rangeChange)="updatePriceRange($event)"
+    ></app-price-range-filter>
+
+    <app-category-filter
+      [categories]="categories()"
+      [selectedIds]="draft().categoryIds"
+      (selectionChange)="updateCategories($event)"
+    ></app-category-filter>
+
+    <app-sort-select
+      [sort]="draft().sort"
+      (sortChange)="updateSort($event)"
+    ></app-sort-select>
+  </div>
+
+  <button nz-button nzType="primary" nzBlock type="button" (click)="applyFilters()">
+    Apply filters
+  </button>
+</nz-card>
+
+<ng-template #extraTpl>
+  <button nz-button nzType="link" type="button" (click)="clearAll()">
+    Clear filters
+  </button>
+</ng-template>

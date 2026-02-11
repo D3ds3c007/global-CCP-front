@@ -1,0 +1,12 @@
+<div class="field">
+  <label class="field__label" for="sort-select">Sort by price</label>
+  <nz-select
+    class="field__input"
+    id="sort-select"
+    [ngModel]="sort()"
+    (ngModelChange)="sortChange.emit($event)"
+  >
+    <nz-option nzValue="PRICE_ASC" nzLabel="Lowest to highest"></nz-option>
+    <nz-option nzValue="PRICE_DESC" nzLabel="Highest to lowest"></nz-option>
+  </nz-select>
+</div>

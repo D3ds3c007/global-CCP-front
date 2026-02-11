@@ -1,19 +1,17 @@
 <div class="input-field">
   <label class="input-label" [for]="id()">{{ label() }}</label>
-  <select
+  <nz-select
     class="input-control"
     [id]="id()"
-    [value]="value"
-    [disabled]="isDisabled"
+    [ngModel]="value"
+    [nzDisabled]="isDisabled"
+    [nzPlaceHolder]="placeholder()"
     [class.input-control--invalid]="invalid()"
-    (change)="handleChange($event)"
+    (ngModelChange)="handleChange($event)"
     (blur)="handleBlur()"
   >
-    @if (placeholder()) {
-      <option value="" disabled>{{ placeholder() }}</option>
-    }
     @for (option of options(); track option.value) {
-      <option [value]="option.value">{{ option.label }}</option>
+      <nz-option [nzLabel]="option.label" [nzValue]="option.value"></nz-option>
     }
-  </select>
+  </nz-select>
 </div>
