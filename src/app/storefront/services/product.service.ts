@@ -9,6 +9,8 @@ export interface Product {
   stock: number;
   imageUrl: string;
   categoryId: string;
+  // optionnel pour le carrousel
+  images?: string[];
 }
 
 export interface Category {
@@ -50,7 +52,13 @@ const PRODUCTS: Product[] = [
     price: 48,
     stock: 12,
     imageUrl: 'https://picsum.photos/id/1062/800/560',
-    categoryId: 'cat-home'
+    categoryId: 'cat-home',
+
+    images: [
+      'https://picsum.photos/id/1062/800/560',
+      'https://picsum.photos/id/1063/800/560',
+      'https://picsum.photos/id/1064/800/560'
+    ]
   },
   {
     id: 'p-1002',
@@ -209,6 +217,16 @@ const PRODUCTS: Product[] = [
 
 @Injectable({ providedIn: 'root' })
 export class ProductService {
+  handleAddToCart(e: { productId: string; quantity: number }) {
+    console.log('ADD TO CART', e);
+  }
+
+  getProductById(id: string): Observable<Product | undefined> {
+    const found = PRODUCTS.find(p => p.id === id);
+    // on retourne une copie pour éviter les mutations
+    return of(found ? { ...found } : undefined).pipe(delay(300));
+  }
+
   getCategories(): Observable<Category[]> {
     return of([...CATEGORIES]).pipe(delay(300));
   }

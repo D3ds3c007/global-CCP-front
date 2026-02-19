@@ -1,0 +1,103 @@
+.cart {
+  max-width: 980px;
+  margin: 0 auto;
+}
+.title { margin: 0 0 16px; }
+.empty { color: #6b7280; }
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 20px;
+  align-items: start;
+}
+
+.list { list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; }
+
+.item {
+  display: grid;
+  grid-template-columns: 92px 1fr auto;
+  gap: 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 12px;
+
+}
+
+.thumb {
+  width: 92px; height: 92px;
+  object-fit: cover;
+  border-radius: 10px;
+  background: #f3f4f6;
+}
+
+.content { min-width: 0; }
+
+.row { display: flex; justify-content: space-between; gap: 12px; }
+.name { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.price { font-weight: 600; white-space: nowrap; }
+
+.info { margin-top: 4px; color: #6b7280; font-size: 14px; }
+
+.bottom { margin-top: 10px; align-items: center; flex-wrap: wrap; }
+
+.qty { display: inline-flex; align-items: center; gap: 8px; }
+.qty button {
+  width: 32px; height: 32px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  cursor: pointer;
+}
+.qty input {
+  width: 64px;
+  padding: 6px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+.lineTotal { color: #6b7280; }
+.lineTotal strong { color: #111827; }
+
+.remove {
+  color: #b91c1c;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.summary {
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.summaryTitle { margin: 0 0 10px; }
+
+.sumRow { display: flex; justify-content: space-between; margin: 10px 0; }
+
+.delivery { display: grid; gap: 6px; margin: 10px 0; }
+.delivery select {
+  padding: 8px;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+}
+
+.divider { border: 0; border-top: 1px solid #e5e7eb; margin: 12px 0; }
+.total { font-size: 18px; }
+
+.cta {
+  width: 100%;
+  margin-top: 10px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #111827;
+  background: #111827;
+  color: #fff;
+  cursor: pointer;
+}
+
+@media (max-width: 900px) {
+  .grid { grid-template-columns: 1fr; }
+}

@@ -3,6 +3,7 @@ import { NgOptimizedImage, CurrencyPipe } from '@angular/common';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzTagModule } from 'ng-zorro-antd/tag';
+import { RouterLink } from '@angular/router';
 
 import { Product } from '../../services/product.service';
 
@@ -11,7 +12,13 @@ import { Product } from '../../services/product.service';
   templateUrl: './product-card.component.html',
   styleUrl: './product-card.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgOptimizedImage, CurrencyPipe, NzCardModule, NzButtonModule, NzTagModule]
+  imports: [
+    RouterLink,
+    NgOptimizedImage,
+    CurrencyPipe,
+    NzCardModule,
+    NzButtonModule,
+    NzTagModule]
 })
 export class ProductCardComponent {
   readonly product = input<Product | null>(null);

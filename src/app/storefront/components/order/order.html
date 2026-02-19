@@ -1,0 +1,60 @@
+<section class="orders">
+  <div class="header">
+    <h2>Orders payées</h2>
+  </div>
+
+  <p class="empty" *ngIf="orders.length === 0">Aucune commande payée.</p>
+
+  <div class="tableWrap" *ngIf="orders.length > 0">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Order #</th>
+          <th>Date</th>
+          <th>Total</th>
+          <th>Status</th>
+          <th style="width: 140px;"></th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <ng-container *ngFor="let o of orders; trackBy: trackById">
+          <tr>
+            <td class="mono">{{ o.orderNumber }}</td>
+            <td>{{ o.createdAt | date:'medium' }}</td>
+            <td class="right">{{ o.total | currency: currencyCode:'symbol':'1.2-2' }}</td>
+            <td><span [class]="badgeClass(o.status)">{{ o.status }}</span></td>
+            <td class="right">
+              <button class="btn" type="button" (click)="toggleDetails(o.id)">
+                {{ expandedId === o.id ? 'Masquer' : 'Détails' }}
+              </button>
+            </td>
+          </tr>
+
+          <tr *ngIf="expandedId === o.id" class="detailsRow">
+            <td colspan="5">
+              <div class="details">
+                <div class="block">
+                  <div class="blockTitle">Client</div>
+                  <div><strong>Nom:</strong> {{ o.customerName }}</div>
+                  <div><strong>Tél:</strong> {{ o.phone }}</div>
+                  <div><strong>Adresse:</strong> {{ o.address }}</div>
+                </div>
+
+                <div class="block">
+                  <div class="blockTitle">Paiement</div>
+                  <div><strong>Méthode:</strong> {{ o.paymentMethod }}</div>
+                </div>
+
+                <div class="block">
+                  <div class="blockTitle">Statut</div>
+                  <div><strong>Status:</strong> {{ o.status }}</div>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+  </div>
+</section>

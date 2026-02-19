@@ -1,0 +1,9 @@
+<app-navbar
+    class="app__nav"
+    [user]="currentUser$ | async"
+    (logout)="onLogout()"
+></app-navbar>
+
+<main class="app__content">
+    <ng-content></ng-content>
+</main>

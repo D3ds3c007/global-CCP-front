@@ -1,27 +1,14 @@
-<app-navbar [user]="currentUser$ | async" (logout)="onLogout()"></app-navbar>
-
-<main class="storefront">
-  <div class="storefront__container">
-    <aside class="storefront__filters">
-      @if (categories$ | async; as categories) {
-        <app-advanced-search-panel
-          [categories]="categories"
-          [query]="query()"
-          (queryChange)="onQueryChange($event)"
-          (clearFilters)="onClearFilters()"
-        ></app-advanced-search-panel>
-      }
-    </aside>
-
-    <section class="storefront__content">
-      @if (topProducts$ | async; as topProducts) {
-        <app-top-products-section
-          [products]="topProducts"
-          [addingProductId]="addingProductId()"
-          [addedProductId]="addedProductId()"
-          (addToCart)="onAddToCart($event)"
-        ></app-top-products-section>
-      }
+<app-storefront-layout class="store__content">
+      <section class="storefront__results">
+        @if (topProducts$ | async; as topProducts) {
+          <app-top-products-section
+            [products]="topProducts"
+            [addingProductId]="addingProductId()"
+            [addedProductId]="addedProductId()"
+            (addToCart)="onAddToCart($event)"
+          ></app-top-products-section>
+        }
+      </section>
 
       <section class="storefront__results">
         <div class="results__header">
@@ -52,7 +39,5 @@
             (pageChange)="onPageChange($event)"
           ></app-pagination>
         }
-      </section>
     </section>
-  </div>
-</main>
+</app-storefront-layout>

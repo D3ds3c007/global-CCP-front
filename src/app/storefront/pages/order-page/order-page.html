@@ -1,0 +1,17 @@
+
+<app-details-layout>
+  <ng-container>
+    <app-checkout-header
+      [tabs]="[
+        { label: 'Payment', link: ['/cart'] },
+        { label: 'Order', link: ['/orders'] },
+        { label: 'Historique', link: ['/history'] }
+      ]"
+    ></app-checkout-header>
+    <app-order></app-order>
+  </ng-container>
+
+  <ng-template #notFound>
+    <p>Produit introuvable.</p>
+  </ng-template>
+</app-details-layout>

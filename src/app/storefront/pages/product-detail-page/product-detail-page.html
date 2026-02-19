@@ -1,0 +1,13 @@
+<app-details-layout>
+  <ng-container *ngIf="product$ | async as product; else notFound">
+    <app-product-details
+      *ngIf="product; else notFound"
+      [product]="product"
+      (addToCart)="onAddToCart($event)"
+    ></app-product-details>
+  </ng-container>
+
+  <ng-template #notFound>
+    <p>Produit introuvable.</p>
+  </ng-template>
+</app-details-layout>
