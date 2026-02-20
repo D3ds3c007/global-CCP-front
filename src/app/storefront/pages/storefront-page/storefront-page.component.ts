@@ -15,24 +15,27 @@ import { AdvancedSearchPanelComponent } from '../../components/advanced-search/a
 import { TopProductsSectionComponent } from '../../components/top-products-section/top-products-section.component';
 import { ProductGridComponent } from '../../components/product-grid/product-grid.component';
 import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
+import { StorefrontLayoutComponent } from "../storefront-layout.component/storefront-layout.component";
+import { StorefrontStateService  } from '../../services/store-front-state';
 
 @Component({
   selector: 'app-storefront-page',
   templateUrl: './storefront-page.component.html',
   styleUrl: './storefront-page.component.css',
+  providers: [StorefrontStateService ],
   imports: [
     AsyncPipe,
-    NavbarComponent,
-    AdvancedSearchPanelComponent,
     TopProductsSectionComponent,
     ProductGridComponent,
-    PaginationComponent
-  ]
+    PaginationComponent,
+    StorefrontLayoutComponent,
+]
 })
 export class StorefrontPageComponent {
   private readonly authState = inject(AuthStateService);
   private readonly productService = inject(ProductService);
   private readonly cartService = inject(CartService);
+  readonly state = inject(StorefrontStateService );
 
   readonly currentUser$ = this.authState.currentUser$;
 

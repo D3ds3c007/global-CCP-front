@@ -1,12 +1,18 @@
 @if (product(); as item) {
   <nz-card class="product-card" [nzCover]="coverTpl">
     <ng-template #coverTpl>
-      <img
-        [ngSrc]="item.imageUrl"
-        width="320"
-        height="220"
-        [alt]="item.name"
-      />
+      <a
+        class="product-card__coverLink"
+        [routerLink]="['/product', item.id]"
+        [attr.aria-label]="'Voir le produit ' + item.name"
+      >
+        <img
+          [ngSrc]="item.imageUrl"
+          width="320"
+          height="220"
+          [alt]="item.name"
+        />
+      </a>
     </ng-template>
 
     <nz-card-meta [nzTitle]="item.name" [nzDescription]="item.storeName"></nz-card-meta>

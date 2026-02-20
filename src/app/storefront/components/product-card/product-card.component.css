@@ -1,3 +1,13 @@
+.product-card__coverLink {
+  display: block;
+}
+
+.product-card__coverLink img {
+  display: block;
+  width: 100%;
+  height: auto;
+  cursor: pointer;
+}
 .product-card {
   border-radius: 14px;
   overflow: hidden;

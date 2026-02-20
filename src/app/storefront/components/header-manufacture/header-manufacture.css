@@ -1,0 +1,104 @@
+:host {
+  display: block;
+  box-sizing: border-box;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+/* Carte globale */
+.boutique {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 22px 24px;
+  max-width: 980px;
+
+  /* look “clean” */
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+/* Ligne du haut: logo + infos */
+.header {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+}
+
+/* Logo à gauche */
+.logo {
+  width: 64px;
+  height: 64px;
+  border-radius: 12px;
+  object-fit: cover;
+
+  background: #e5e7eb;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+/* Bloc texte à droite */
+.title {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Nom (très visible) */
+.name {
+  margin: 0;
+  font-size: 34px;
+  line-height: 1.05;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #0b0f19;
+}
+
+/* Contacts sous le nom */
+.contact {
+  list-style: none;
+  padding: 0;
+  margin: 8px 0 0;
+/* 
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace; */
+  font-size: 14px;
+  color: #6b7280; /* gris moyen */
+}
+
+.contact li {
+  margin: 2px 0;
+}
+
+.contact strong {
+  font-weight: 400; /* comme sur la capture, pas trop “bold” */
+  color: inherit;
+}
+
+/* Description en bas */
+.description {
+  margin: 18px 0 0;
+  color: #6b7280;
+  font-size: 16px;
+  line-height: 1.55;
+  max-width: 92%;
+
+  /* si ta description contient des \n, ils seront respectés */
+  white-space: pre-line;
+}
+
+/* Responsive */
+@media (max-width: 560px) {
+  .boutique {
+    padding: 16px;
+  }
+
+  .name {
+    font-size: 26px;
+  }
+
+  .logo {
+    width: 56px;
+    height: 56px;
+  }
+}

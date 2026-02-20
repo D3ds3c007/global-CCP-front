@@ -1,0 +1,23 @@
+<app-navbar class="app__nav" [user]="currentUser$ | async" (logout)="onLogout()"></app-navbar>
+
+<main class="storefront">
+    <div class="center__bar">
+        <app-center-bar></app-center-bar>
+    </div>
+    <div class="storefront__container">
+        <aside class="storefront__filters">
+            @if (categories$ | async; as categories) {
+                <app-advanced-search-panel
+                [categories]="categories"
+                [query]="query()"
+                (queryChange)="onQueryChange($event)"
+                (clearFilters)="onClearFilters()"
+                ></app-advanced-search-panel>
+            }
+        </aside>
+        <section class="storefront__content">
+            <ng-content></ng-content>
+        </section>
+
+    </div>
+</main>
