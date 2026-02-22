@@ -13,6 +13,7 @@ import { SubmitButtonComponent } from '../../../shared/components/buttons/submit
 import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
 import { NzAlertModule } from 'ng-zorro-antd/alert';
 import { AuthStateService } from '../../../core/services/auth-state.service';
+import { AuthSessionService } from '../../services/auth-session.service';
 
 type LoginFormGroup = {
   email: FormControl<string>;
@@ -40,6 +41,7 @@ export class LoginPageComponent {
   private readonly fb = inject(NonNullableFormBuilder);
   private readonly authService = inject(AuthService);
   private readonly authState = inject(AuthStateService);
+  private readonly authSession = inject(AuthSessionService);
   private readonly router = inject(Router);
 
   readonly loading = signal(false);
@@ -81,15 +83,16 @@ export class LoginPageComponent {
         next: result => {
           console.log('Login success', result);
           this.authState.setUser(result.user);
-          console.log('User info fetched', this.authState.getUserFromStorage());
           this.apiError.set(null);
          //call authService.me() to get user info
             this.authService.me().subscribe({
               next: res => {
                 console.log('Current user', res.user.role);
+                this.authSession.resetCache(); // reset cache to force refresh of user info in guards and other parts of the app
                 if (res.user.role === 'SHOP') this.router.navigate(['/shop/dashboard']);
                 else if (res.user.role === 'ADMIN') this.router.navigate(['/admin/dashboard']);
-                else this.router.navigate(['/']);
+                else window.location.href = '/'; // full reload to reset any cached state, can be improved with a proper state management and route guards
+                
               },
               error: error => {
                 console.error('Error fetching user info', error);
