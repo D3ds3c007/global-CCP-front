@@ -7,12 +7,14 @@ import { CartPage } from './pages/cart-page/cart-page';
 import { CheckoutPage } from './pages/checkout-page/checkout-page';
 import { OrderPage } from './pages/order-page/order-page';
 import { HistoryPage } from './pages/history-page/history-page';
+import { authGuard } from '../core/guards/auth.guard';
 
 export const STOREFRONT_ROUTES: Routes = [
   {
     path: 'history',
     component: HistoryPage,
-    title: 'History'
+    title: 'History',
+    canMatch: [authGuard]
   },
   {
     path: 'orders',

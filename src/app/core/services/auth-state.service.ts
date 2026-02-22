@@ -6,7 +6,7 @@ export interface User {
   id: string;
   fullName: string;
   email: string;
-  shops: any[]; // à typer selon les besoins
+  shops: any[];
 }
 
 const LS_USER_KEY = 'auth_user_v1';
@@ -16,16 +16,26 @@ export class AuthStateService {
   private readonly platformId = inject(PLATFORM_ID);
   private readonly isBrowser = isPlatformBrowser(this.platformId);
 
-  private readonly userSubject = new BehaviorSubject<User | null>(null);
+  private readonly userSubject = new BehaviorSubject<User | null>(this.loadFromStorage());
   readonly currentUser$: Observable<User | null> = this.userSubject.asObservable();
-  
 
   setUser(user: User | null): void {
-    if (!this.isBrowser) return;
+    // ✅ always update memory
     this.userSubject.next(user ? { ...user } : null);
-    this.saveUser(user);
+
+    // ✅ only persist in browser
+    if (this.isBrowser) this.saveToStorage(user);
   }
-  private saveUser(user: User | null): void {
+
+  logout(): void {
+    this.setUser(null);
+  }
+
+  get snapshot(): User | null {
+    return this.userSubject.value;
+  }
+
+  private saveToStorage(user: User | null): void {
     if (!user) {
       localStorage.removeItem(LS_USER_KEY);
       return;
@@ -33,22 +43,14 @@ export class AuthStateService {
     localStorage.setItem(LS_USER_KEY, JSON.stringify(user));
   }
 
-    getUserFromStorage(): User | null {
-    if (!this.isBrowser) return null; // safeguard for SSR
-    const stored = localStorage.getItem(LS_USER_KEY);
-    if (!stored) return null;
+  private loadFromStorage(): User | null {
+    if (!this.isBrowser) return null;
     try {
-      return JSON.parse(stored) as User;
+      const raw = localStorage.getItem(LS_USER_KEY);
+      return raw ? (JSON.parse(raw) as User) : null;
     } catch {
+      localStorage.removeItem(LS_USER_KEY);
       return null;
     }
-  }
-
-  loginMock(user: User): void {
-    this.userSubject.next({ ...user });
-  }
-
-  logout(): void {
-    this.userSubject.next(null);
   }
 }
