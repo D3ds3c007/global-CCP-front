@@ -16,22 +16,22 @@ export class App implements OnInit {
   constructor(private auth: AuthService, private authState: AuthStateService) {}
 
    ngOnInit(): void {
-    // this.auth.me().pipe(
-    //   catchError(() => of(null))
-    // ).subscribe((res) => {
-    //   if (!res?.user) {
-    //     this.authState.setUser(null);
-    //     return;
-    //   }
+    this.auth.me().pipe(
+      catchError(() => of(null))
+    ).subscribe((res) => {
+      if (!res?.user) {
+        this.authState.setUser(null);
+        return;
+      }
 
-    //   const user: User = {
-    //     id: res.user.id,
-    //     fullName: res.user.fullName,
-    //     email: res.user.email,
-    //     shops: res.user.shops ?? [],
-    //   };
+      const user: User = {
+        id: res.user.id,
+        fullName: res.user.fullName,
+        email: res.user.email,
+        shops: res.user.shops ?? [],
+      };
 
-    //   this.authState.setUser(user);
-    // });
+      this.authState.setUser(user);
+    });
   }
 }
