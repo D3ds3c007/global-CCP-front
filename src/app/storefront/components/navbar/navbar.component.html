@@ -9,8 +9,10 @@
     <a class="cart-btn" routerLink="/cart">
       <span nz-icon nzType="shopping-cart" nzTheme="outline"></span>
 
-      @if (cartCount() > 0) {
-        <span class="cart-badge">{{ cartCount() }}</span>
+      @if (cartCount$ | async; as cartCount) {
+        @if (cartCount > 0) {
+          <span class="cart-badge">{{ cartCount }}</span>
+        }
       }
     </a>
 
