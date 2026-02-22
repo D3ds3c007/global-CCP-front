@@ -21,26 +21,36 @@ export const STOREFRONT_ROUTES: Routes = [
   {
     path: 'orders',
     component: OrderPage,
-    title: 'Orders'
+    title: 'Orders',
+    canMatch: [authGuard, roleGuard],
+    data:{ roles: ['BUYER'] }
   },
   {
     path: 'checkout',
     component: CheckoutPage,
-    title: 'Checkout'
+    title: 'Checkout',
+    canMatch: [authGuard, roleGuard],
+    data:{ roles: ['BUYER'] }
   },
   {
     path: 'cart',
     component: CartPage,
-    title: 'Cart'
+    title: 'Cart',
+    canMatch: [authGuard, roleGuard],
+    data:{ roles: ['BUYER'] }
   },
   { path: 'product/:id',
     component: ProductDetailsPage,
-    title: 'Product Details'
+    title: 'Product Details',
+    canMatch: [authGuard, roleGuard],
+    data:{ roles: ['BUYER'] }
   },
   {
     path: 'manufacturers',
     component: ManufacturePage,
-    title: 'Manufacturers'
+    title: 'Manufacturers',
+    canMatch: [authGuard, roleGuard],
+    data:{ roles: ['BUYER'] }
   },
   {
     path: '',

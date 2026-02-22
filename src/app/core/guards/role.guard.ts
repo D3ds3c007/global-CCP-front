@@ -26,9 +26,7 @@ export const roleGuard: CanMatchFn = (route) => {
 
    return session.ensureMeLoaded().pipe(
     map((user) => {
-      console.log('roleGuard user', user, 'allowed roles:', allowed);
       const me = user as MeUser | null; // only for guard logic
-      console.log('roleGuard me', me?.user.role);
       if (!me) return router.createUrlTree(['/auth/login']);
       if (allowed.length === 0) { console.log('No roles required, allowing access'); return true; }
 
