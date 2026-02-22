@@ -7,10 +7,14 @@ import { AuthSessionService } from '../../auth/services/auth-session.service';
 type Role = 'BUYER' | 'SHOP' | 'ADMIN';
 
 type MeUser = {
-  id: string;
-  fullName: string;
-  email: string;
-  role: Role;
+  user:{
+    id: string;
+    fullName: string;
+    email: string;
+    role: Role;
+    shops: any[];
+  }
+ 
 };
 
 
@@ -22,11 +26,13 @@ export const roleGuard: CanMatchFn = (route) => {
 
    return session.ensureMeLoaded().pipe(
     map((user) => {
+      console.log('roleGuard user', user, 'allowed roles:', allowed);
       const me = user as MeUser | null; // only for guard logic
+      console.log('roleGuard me', me?.user.role);
       if (!me) return router.createUrlTree(['/auth/login']);
-      if (allowed.length === 0) return true;
+      if (allowed.length === 0) { console.log('No roles required, allowing access'); return true; }
 
-      return allowed.includes(me.role)
+      return allowed.includes(me.user.role)
         ? true
         : router.createUrlTree(['/forbidden']);
     })

@@ -8,13 +8,15 @@ import { CheckoutPage } from './pages/checkout-page/checkout-page';
 import { OrderPage } from './pages/order-page/order-page';
 import { HistoryPage } from './pages/history-page/history-page';
 import { authGuard } from '../core/guards/auth.guard';
+import { roleGuard } from '../core/guards/role.guard';
 
 export const STOREFRONT_ROUTES: Routes = [
   {
     path: 'history',
     component: HistoryPage,
     title: 'History',
-    canMatch: [authGuard]
+    canMatch: [authGuard, roleGuard],
+    data:{ roles: ['BUYER'] }
   },
   {
     path: 'orders',
