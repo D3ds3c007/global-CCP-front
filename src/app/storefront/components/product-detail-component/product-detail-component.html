@@ -31,6 +31,8 @@
       </div>
     </div>
 
+    <!-- TODO : -->
+
     <!-- 1/3 : Infos + commande -->
     <aside class="panel">
       <div class="price">
@@ -86,4 +88,14 @@
       <div class="note" *ngIf="isOutOfStock">Produit indisponible pour le moment.</div>
     </aside>
   </div>
+
+  <section class="product-description" *ngIf="product.description as description">
+    <h2>Description</h2>
+    <p>{{ description }}</p>
+  </section>
+
+  <section class="product-description" *ngIf="!product.description">
+    <h2>Description</h2>
+    <p>Aucune description disponible pour ce produit.</p>
+  </section>
 </section>

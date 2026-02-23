@@ -6,10 +6,10 @@ import { catchError, combineLatest, finalize, map, of, shareReplay, startWith, s
 import { toObservable } from '@angular/core/rxjs-interop';
 import { StorefrontLayoutComponent } from "../storefront-layout.component/storefront-layout.component";
 import { StorefrontStateService  } from '../../services/store-front-state';
-import { HeaderManufacture } from '../../components/header-manufacture/header-manufacture';
 import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
 import { ProductGridComponent } from '../../components/product-grid/product-grid.component';
 import { AsyncPipe } from '@angular/common';
+import { ManufactureService } from '../../services/manufacture-service';
 
 
 
@@ -18,7 +18,6 @@ import { AsyncPipe } from '@angular/common';
   selector: 'app-manufacture-page',
   providers: [StorefrontStateService ],
   imports: [
-    HeaderManufacture,
     StorefrontLayoutComponent,
     AsyncPipe,
     ProductGridComponent,
@@ -31,6 +30,7 @@ export class ManufacturePage {
   private readonly authState = inject(AuthStateService);
   private readonly productService = inject(ProductService);
   private readonly cartService = inject(CartService);
+  private readonly manufactureService = inject(ManufactureService);
   readonly state = inject(StorefrontStateService );
 
   readonly currentUser$ = this.authState.currentUser$;
@@ -45,6 +45,7 @@ export class ManufacturePage {
 
   readonly categories$ = this.productService.getCategories().pipe(shareReplay(1));
   readonly topProducts$ = this.productService.getTopProducts().pipe(shareReplay(1));
+  readonly boutique$ = this.manufactureService.getBoutiqueMock().pipe(shareReplay(1));
 
   private readonly searchResult$ = combineLatest([
     toObservable(this.query),
@@ -65,7 +66,8 @@ export class ManufacturePage {
       )
     ),
     tap(() => this.loading.set(false)),
-    startWith({ items: [], total: 0 })
+    startWith({ items: [], total: 0 }),
+    shareReplay(1)
   );
 
   readonly products$ = this.searchResult$.pipe(map(result => result.items));
