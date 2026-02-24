@@ -4,8 +4,6 @@ import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthStateService } from '../../../core/services/auth-state.service';
-import { AuthService } from '../../../auth/services/auth.service';
-import { AuthSessionService } from '../../../auth/services/auth-session.service';
 
 type NavItem = {
   label: string;
@@ -28,24 +26,13 @@ type NavItem = {
 })
 export class Sidebar {
   private readonly authState = inject(AuthStateService);
-  private readonly authService = inject(AuthService);
-  private readonly session = inject(AuthSessionService);
-    
-  
 
   @Output() logout = new EventEmitter<void>();
 
   readonly user$ = this.authState.currentUser$;
 
-
   collapsed = false;
   search = '';
-
-  // user = {
-  //   name: 'Gustavo Xavier',
-  //   role: 'Admin',
-  //   avatarUrl: 'https://i.pravatar.cc/80?img=12',
-  // };
 
   nav: NavItem[] = [
     { label: 'Dashboard', icon: 'space_dashboard', route: '/owner/dashboard' },
