@@ -1,0 +1,20 @@
+<div class="goal">
+  <div class="gauge">
+    <svg viewBox="0 0 200 120">
+      <path class="track" d="M 30 100 A 70 70 0 0 1 170 100" />
+
+      <path
+        class="progress"
+        d="M 30 100 A 70 70 0 0 1 170 100"
+        [attr.stroke-dasharray]="dashArray"
+        [attr.stroke-dashoffset]="dashOffset"
+      />
+    </svg>
+
+    <div class="center">
+      <div class="pct">{{ percent }}%</div>
+    </div>
+  </div>
+
+  <a class="link" href="javascript:void(0)">All goals →</a>
+</div>

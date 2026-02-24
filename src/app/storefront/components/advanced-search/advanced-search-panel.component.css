@@ -1,0 +1,15 @@
+.search-panel {
+  border-radius: 16px;
+}
+
+.search-panel__body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+@media (max-width: 900px) {
+  .search-panel {
+    border-radius: 14px;
+  }
+}

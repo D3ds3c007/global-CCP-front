@@ -1,0 +1,11 @@
+<section class="auth-layout" [attr.aria-labelledby]="titleId()">
+  <nz-card class="auth-card">
+    <header class="auth-header">
+      <h1 class="auth-title" [id]="titleId()">{{ title() }}</h1>
+      <p class="auth-subtitle">{{ subtitle() }}</p>
+    </header>
+    <div class="auth-content">
+      <ng-content></ng-content>
+    </div>
+  </nz-card>
+</section>

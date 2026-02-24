@@ -1,0 +1,15 @@
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.stat {
+  background: #f8fafc;
+  border: 1px solid #eef2f7;
+  border-radius: 14px;
+  padding: 12px;
+
+  .k { color: #64748b; font-size: 12px; }
+  .v { margin-top: 6px; font-size: 22px; font-weight: 800; color: #0f172a; }
+}

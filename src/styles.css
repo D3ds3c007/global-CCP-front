@@ -1,1 +1,62 @@
-/* You can add global styles to this file, and also import other style files */
+@import url('ng-zorro-antd/ng-zorro-antd.min.css');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&display=swap');
+
+:root {
+	color-scheme: light;
+	--bg-1: #f7f7ff;
+	--bg-2: #eef2ff;
+	--bg-3: #e7f1ff;
+	--surface: #ffffff;
+	--surface-glass: rgba(255, 255, 255, 0.78);
+	--text-strong: #0f172a;
+	--text-muted: #475569;
+	--brand: #1d4ed8;
+	--brand-2: #6366f1;
+	--brand-3: #38bdf8;
+	--brand-soft: rgba(29, 78, 216, 0.16);
+	--border: rgba(148, 163, 184, 0.4);
+	--border-strong: rgba(148, 163, 184, 0.7);
+	--shadow: 0 20px 40px rgba(15, 23, 42, 0.08);
+	--shadow-strong: 0 28px 50px rgba(15, 23, 42, 0.12);
+	--ring: rgba(59, 130, 246, 0.4);
+	--danger: #b42318;
+	--danger-bg: rgba(254, 242, 242, 0.9);
+}
+
+* {
+	box-sizing: border-box;
+}
+
+html,
+body {
+	height: 100%;
+	margin: 0;
+}
+
+body {
+	font-family: "Space Grotesk", "Segoe UI", sans-serif;
+	color: var(--text-strong);
+	background:
+		radial-gradient(circle at top left, rgba(99, 102, 241, 0.18), transparent 50%),
+		radial-gradient(circle at top right, rgba(56, 189, 248, 0.22), transparent 55%),
+		linear-gradient(160deg, var(--bg-2), var(--bg-1) 40%, var(--bg-3) 85%);
+	min-height: 100vh;
+}
+
+a {
+	color: var(--brand);
+}
+
+button,
+input,
+select,
+textarea {
+	font-family: inherit;
+}
+
+.app-surface {
+	background: var(--surface);
+	border: 1px solid var(--border);
+	border-radius: 16px;
+	box-shadow: var(--shadow);
+}

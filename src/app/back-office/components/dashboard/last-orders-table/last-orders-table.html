@@ -1,0 +1,35 @@
+<div class="head">
+  <h3>Dernières commandes</h3>
+</div>
+
+<table *ngIf="orders.length; else empty">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Client</th>
+      <th>Statut</th>
+      <th>Date</th>
+      <th class="right">Total</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr *ngFor="let o of orders">
+      <td class="mono">{{ o.id }}</td>
+      <td>{{ o.customer }}</td>
+      <td>
+        <span class="pill" [class.pend]="o.status==='pending'"
+                         [class.conf]="o.status==='confirmed'"
+                         [class.del]="o.status==='delivered'">
+          {{ o.status }}
+        </span>
+      </td>
+      <td>{{ o.createdAt | date:'short' }}</td>
+      <td class="right">{{ o.total | currency:'EUR' }}</td>
+    </tr>
+  </tbody>
+</table>
+
+<ng-template #empty>
+  <div class="empty">Aucune commande récente.</div>
+</ng-template>

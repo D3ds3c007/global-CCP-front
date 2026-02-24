@@ -1,0 +1,11 @@
+<nav class="headerActions" aria-label="Checkout header actions">
+  <a
+    *ngFor="let t of tabs"
+    class="pill"
+    [routerLink]="t.link"
+    routerLinkActive="active"
+    [routerLinkActiveOptions]="{ exact: true }"
+  >
+    {{ t.label }}
+  </a>
+</nav>

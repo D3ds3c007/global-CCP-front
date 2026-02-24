@@ -1,0 +1,19 @@
+.head { display:flex; align-items:baseline; justify-content:space-between; gap:12px; }
+h3 { margin: 0; font-size: 14px; }
+.muted { color:#64748b; font-size: 12px; }
+
+.row {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid #f1f5f9;
+
+  &:last-child { border-bottom: 0; }
+}
+
+.name { font-weight: 600; color:#0f172a; }
+.stock { font-size: 12px; color:#334155; }
+.stock.danger { color:#b91c1c; font-weight: 700; }
+
+.empty { margin-top: 10px; color:#64748b; font-size: 13px; }

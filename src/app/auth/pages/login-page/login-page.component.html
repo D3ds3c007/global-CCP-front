@@ -1,0 +1,60 @@
+<app-auth-form-layout
+  title="Welcome back"
+  subtitle="Sign in to your shop dashboard."
+  titleId="login-title"
+>
+  <form class="auth-form" [formGroup]="form" (ngSubmit)="onSubmit()">
+    @if (apiError()) {
+      <nz-alert nzType="error" [nzMessage]="apiError()" nzShowIcon></nz-alert>
+    }
+
+    
+
+    <div class="field-group">
+      <app-email-input
+        id="login-email"
+        label="Email address"
+        placeholder="you@shop.com"
+        autocomplete="email"
+        formControlName="email"
+        [invalid]="isInvalid('email')"
+      ></app-email-input>
+      <app-form-error
+        [errors]="form.controls.email.errors"
+        [touched]="form.controls.email.touched"
+        [submitted]="submitted()"
+      ></app-form-error>
+    </div>
+
+    <div class="field-group">
+      <app-password-input
+        id="login-password"
+        label="Password"
+        placeholder="Enter your password"
+        autocomplete="current-password"
+        formControlName="password"
+        [invalid]="isInvalid('password')"
+      ></app-password-input>
+      <app-form-error
+        [errors]="form.controls.password.errors"
+        [touched]="form.controls.password.touched"
+        [submitted]="submitted()"
+      ></app-form-error>
+    </div>
+
+    <label class="checkbox-row" nz-checkbox formControlName="rememberMe">
+      Remember me
+    </label>
+
+    <app-submit-button
+      label="Sign in"
+      [loading]="loading()"
+      [disabled]="isSubmitDisabled()"
+    ></app-submit-button>
+  </form>
+
+  <p class="auth-footer">
+    No account yet?
+    <a routerLink="/auth/register">Create one</a>
+  </p>
+</app-auth-form-layout>

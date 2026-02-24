@@ -1,0 +1,11 @@
+<button
+  nz-button
+  nzType="primary"
+  nzBlock
+  type="submit"
+  [nzLoading]="loading()"
+  [disabled]="disabled()"
+  [attr.aria-busy]="loading() ? 'true' : 'false'"
+>
+  {{ label() }}
+</button>

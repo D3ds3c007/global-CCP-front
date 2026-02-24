@@ -1,0 +1,17 @@
+<div class="input-field">
+  <label class="input-label" [for]="id()">{{ label() }}</label>
+  <input
+    nz-input
+    class="input-control"
+    [id]="id()"
+    [type]="type()"
+    [placeholder]="placeholder()"
+    [autocomplete]="autocomplete()"
+    [attr.inputmode]="inputMode()"
+    [value]="value"
+    [disabled]="isDisabled"
+    [class.input-control--invalid]="invalid()"
+    (input)="handleInput($event)"
+    (blur)="handleBlur()"
+  />
+</div>

@@ -1,0 +1,17 @@
+<div class="input-field">
+  <label class="input-label" [for]="id()">{{ label() }}</label>
+  <nz-select
+    class="input-control"
+    [id]="id()"
+    [ngModel]="value"
+    [nzDisabled]="isDisabled"
+    [nzPlaceHolder]="placeholder()"
+    [class.input-control--invalid]="invalid()"
+    (ngModelChange)="handleChange($event)"
+    (blur)="handleBlur()"
+  >
+    @for (option of options(); track option.value) {
+      <nz-option [nzLabel]="option.label" [nzValue]="option.value"></nz-option>
+    }
+  </nz-select>
+</div>

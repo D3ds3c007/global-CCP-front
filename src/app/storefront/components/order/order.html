@@ -1,0 +1,74 @@
+<section class="orders">
+  <h2 class="title">My Orders</h2>
+
+  <article class="order-card" *ngFor="let o of orders; trackBy: trackById">
+    <!-- Header row -->
+    <div class="order-head">
+      <div class="left">
+        <div class="order-number">{{ o.orderNumber }}</div>
+        <div class="order-meta">
+          <span>{{ o.createdAt | date:'medium' }}</span>
+          <span class="dot">•</span>
+          <span>{{ o.items.length }} item(s)</span>
+        </div>
+      </div>
+
+      <div class="right">
+        <span [class]="badgeClass(o.status)">{{ o.status }}</span>
+        <div class="order-total">{{ o.total | currency:currencyCode }}</div>
+
+        <button class="details-btn" type="button" (click)="toggleDetails(o.id)">
+          {{ expandedId === o.id ? 'Hide details' : 'View details' }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Expandable details -->
+    <div class="details" *ngIf="expandedId === o.id">
+      <div class="grid">
+        <div class="block">
+          <div class="block-title">Customer</div>
+          <div class="kv"><span class="k">Name</span><span class="v">{{ o.customerName }}</span></div>
+          <div class="kv"><span class="k">Phone</span><span class="v">{{ o.phone }}</span></div>
+          <div class="kv"><span class="k">Address</span><span class="v">{{ o.address }}</span></div>
+        </div>
+
+        <div class="block">
+          <div class="block-title">Payment</div>
+          <div class="kv"><span class="k">Method</span><span class="v">{{ o.paymentMethod }}</span></div>
+          <div class="kv"><span class="k">Status</span><span class="v">{{ o.status }}</span></div>
+        </div>
+      </div>
+
+      <div class="block-title items-title">Items</div>
+
+      <div class="items">
+        <div class="item" *ngFor="let it of o.items; trackBy: trackByItemId">
+          <img *ngIf="it.imageUrl" class="thumb" [src]="it.imageUrl" [alt]="it.name" />
+
+          <div class="item-info">
+            <div class="item-name">{{ it.name }}</div>
+            <div class="item-meta">
+              Qty {{ it.quantity }} × {{ it.unitPrice | currency:currencyCode }}
+            </div>
+          </div>
+
+          <div class="item-total">
+            {{ itemLineTotal(it) | currency:currencyCode }}
+          </div>
+        </div>
+      </div>
+
+      <div class="summary">
+        <div class="sum-row">
+          <span>Subtotal</span>
+          <span>{{ orderSubtotal(o) | currency:currencyCode }}</span>
+        </div>
+        <div class="sum-row strong">
+          <span>Total</span>
+          <span>{{ o.total | currency:currencyCode }}</span>
+        </div>
+      </div>
+    </div>
+  </article>
+</section>

@@ -1,0 +1,22 @@
+.t { width: 100%; border-collapse: collapse; }
+th, td { padding: 10px 8px; border-bottom: 1px solid #f1f5f9; font-size: 13px; }
+th { text-align: left; color:#64748b; font-weight: 800; }
+.right { text-align: right; }
+.mono { font-family: ui-monospace, Menlo, Consolas, monospace; }
+
+tbody tr { cursor: pointer; }
+tbody tr.active { background: #fff7ed; }
+
+.pill {
+  padding: 4px 10px; border-radius: 999px;
+  font-size: 12px; font-weight: 800;
+  border: 1px solid #e2e8f0; background: #f8fafc; color: #334155;
+}
+.pill.pending { background:#fff7ed; border-color:#fed7aa; color:#9a3412; }
+.pill.confirmed { background:#eff6ff; border-color:#bfdbfe; color:#1d4ed8; }
+.pill.preparing { background:#f5f3ff; border-color:#ddd6fe; color:#6d28d9; }
+.pill.ready { background:#ecfeff; border-color:#a5f3fc; color:#155e75; }
+.pill.delivered { background:#ecfdf5; border-color:#a7f3d0; color:#065f46; }
+.pill.cancelled { background:#fff1f2; border-color:#fecdd3; color:#9f1239; }
+
+.empty { color:#64748b; font-size: 13px; }

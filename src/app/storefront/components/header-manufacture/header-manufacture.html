@@ -1,0 +1,34 @@
+<ng-container *ngIf="boutique$ | async as boutique; else loading">
+  <article class="boutique">
+    <div class="header">
+      <img
+        class="logo"
+        [src]="boutique.logoUrl"
+        [alt]="'Logo de ' + boutique.nom"
+        loading="lazy"
+      />
+
+      <div class="title">
+        <h2 class="name">{{ boutique.nom }}</h2>
+
+        <ul class="contact">
+          <li *ngIf="boutique.contact.telephone">
+            <strong>Tél:</strong> {{ boutique.contact.telephone }}
+          </li>
+          <li *ngIf="boutique.contact.email">
+            <strong>Email:</strong> {{ boutique.contact.email }}
+          </li>
+          <li *ngIf="boutique.contact.adresse">
+            <strong>Adresse:</strong> {{ boutique.contact.adresse }}
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <p class="description">{{ boutique.description }}</p>
+  </article>
+</ng-container>
+
+<ng-template #loading>
+  <p>Chargement...</p>
+</ng-template>

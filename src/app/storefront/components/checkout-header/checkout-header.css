@@ -1,0 +1,38 @@
+.headerActions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 10px 0;
+  justify-content: center;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 10px 14px;
+  border-radius: 12px;
+
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+
+  color: #111827;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 14px;
+
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.03);
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.pill:hover {
+  background: #f9fafb;
+  border-color: #d1d5db;
+}
+
+.pill.active {
+  border-color: #111827;
+  background: #111827;
+  color: #ffffff;
+}

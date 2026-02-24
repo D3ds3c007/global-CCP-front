@@ -1,0 +1,37 @@
+<div class="list" *ngIf="customers.length; else empty">
+  <div
+    class="row"
+    *ngFor="let c of customers"
+    [class.active]="c.id === selectedId"
+    (click)="select.emit(c.id)"
+  >
+    <div class="left">
+      <img class="avatar" [src]="c.avatarUrl" [alt]="c.fullName" />
+      <div class="meta">
+        <div class="name">{{ c.fullName }}</div>
+        <div class="company">{{ c.company }}</div>
+      </div>
+    </div>
+
+    <div class="actions" (click)="$event.stopPropagation()">
+      <button type="button" class="icon-btn" title="Call" (click)="call.emit(c)">
+        <span class="mi">call</span>
+      </button>
+      <button type="button" class="icon-btn" title="Edit" (click)="edit.emit(c)">
+        <span class="mi">edit</span>
+      </button>
+      <button type="button" class="icon-btn danger" title="Delete" (click)="remove.emit(c)">
+        <span class="mi">delete</span>
+      </button>
+      <button type="button" class="icon-btn" title="More">
+        <span class="mi">more_horiz</span>
+      </button>
+    </div>
+  </div>
+
+  <a class="all" href="javascript:void(0)">All customers →</a>
+</div>
+
+<ng-template #empty>
+  <div class="empty">Aucun client.</div>
+</ng-template>

@@ -1,0 +1,16 @@
+<div class="filters">
+  <input
+    [ngModel]="query.search"
+    (ngModelChange)="queryChange.emit({ search: $event })"
+    [ngModelOptions]="{ standalone: true }"
+    placeholder="Rechercher (id, buyer)..."
+  />
+
+  <select
+    [ngModel]="query.status"
+    (ngModelChange)="queryChange.emit({ status: $event })"
+    [ngModelOptions]="{ standalone: true }"
+  >
+    <option *ngFor="let s of statuses" [value]="s">{{ s }}</option>
+  </select>
+</div>

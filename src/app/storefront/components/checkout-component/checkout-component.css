@@ -1,0 +1,70 @@
+.checkout { max-width: 980px; margin: 0 auto; }
+.title { margin: 0 0 16px; }
+.empty { color: #6b7280; }
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 20px;
+  align-items: start;
+}
+
+.panel, .summary {
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 16px;
+  background: #fff;
+}
+
+.panelTitle, .summaryTitle { margin: 0 0 12px; }
+
+.field { display: grid; gap: 6px; margin-bottom: 12px; }
+.field input, .field textarea, .field select {
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  outline: none;
+}
+
+.error { color: #b91c1c; }
+.hint { color: #6b7280; }
+
+.divider { border: 0; border-top: 1px solid #e5e7eb; margin: 12px 0; }
+
+.radioGroup { display: grid; gap: 10px; margin: 8px 0 12px; }
+.radio { display: flex; gap: 10px; align-items: center; }
+
+.mmBox {
+  border: 1px dashed #e5e7eb;
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 12px;
+}
+
+.confirm {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #111827;
+  background: #111827;
+  color: #fff;
+  cursor: pointer;
+}
+.confirm:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.sumList { list-style: none; padding: 0; margin: 0 0 12px; display: grid; gap: 10px; }
+.sumItem { display: flex; justify-content: space-between; gap: 12px; }
+.sumName { font-weight: 600; }
+.sumMeta { color: #6b7280; font-size: 13px; }
+
+.sumRow { display: flex; justify-content: space-between; margin: 10px 0; }
+.total { font-size: 18px; }
+
+.paymentRecap { margin-top: 12px; color: #374151; font-size: 14px; display: grid; gap: 6px; }
+
+@media (max-width: 900px) {
+  .grid { grid-template-columns: 1fr; }
+}

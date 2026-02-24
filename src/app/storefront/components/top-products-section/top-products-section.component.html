@@ -1,0 +1,17 @@
+<section class="top-products">
+  <div class="top-products__header">
+    <h2>Top products</h2>
+    <p>Trending picks from verified suppliers.</p>
+  </div>
+
+  <div class="top-products__list">
+    @for (product of products(); track product.id) {
+      <app-product-card
+        [product]="product"
+        [isAdding]="addingProductId() === product.id"
+        [justAdded]="addedProductId() === product.id"
+        (addToCart)="onAddToCart($event)"
+      ></app-product-card>
+    }
+  </div>
+</section>

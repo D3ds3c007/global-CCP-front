@@ -1,0 +1,28 @@
+<header class="navbar">
+  <div class="navbar__brand">
+    <a class="brand-link" routerLink="/">{{ brand() }}</a>
+  </div>
+
+  <div class="navbar__spacer"></div>
+
+  <div class="navbar__actions">
+    <a class="cart-btn" routerLink="/cart">
+      <span nz-icon nzType="shopping-cart" nzTheme="outline"></span>
+
+      @if (cartCount$ | async; as cartCount) {
+        @if (cartCount > 0) {
+          <span class="cart-badge">{{ cartCount }}</span>
+        }
+      }
+    </a>
+
+    @if (user()) {
+      <span class="navbar__greeting">Hi, {{ user()!.fullName }}</span>
+      <button nz-button nzType="default" type="button" (click)="onLogout()">
+        Logout
+      </button>
+    } @else {
+      <a nz-button nzType="primary" routerLink="/auth/login">Sign In</a>
+    }
+  </div>
+</header>

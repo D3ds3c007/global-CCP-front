@@ -1,0 +1,28 @@
+.list { display: flex; flex-direction: column; gap: 10px; }
+
+.bar {
+  position: relative;
+  height: 34px;
+  border-radius: 8px;
+  background: #fde7b5;
+  overflow: hidden;
+}
+
+.fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  background: #f8d48b;
+}
+
+.label, .val {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+  color: #111827;
+}
+
+.label { left: 12px; }
+.val { right: 10px; font-weight: 700; }

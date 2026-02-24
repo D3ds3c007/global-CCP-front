@@ -1,0 +1,50 @@
+<div *ngIf="order; else empty" class="detail">
+  <div class="top">
+    <div>
+      <div class="id">{{ order.id }}</div>
+      <div class="meta">{{ order.createdAt }}</div>
+    </div>
+
+    <div class="actions">
+      <button class="btn" type="button" [disabled]="!nextStatus" (click)="advance.emit(order.id)">
+        Next status
+      </button>
+      <button class="btn danger" type="button" [disabled]="!canCancel" (click)="cancel.emit(order.id)">
+        Cancel
+      </button>
+    </div>
+  </div>
+
+  <app-order-timeline [status]="order.status" [history]="order.history"></app-order-timeline>
+
+  <div class="block">
+    <h4>Buyer contact</h4>
+    <div>{{ order.buyer.fullName }}</div>
+    <div class="muted">{{ order.buyer.email }} • {{ order.buyer.phone }}</div>
+  </div>
+
+  <div class="block">
+    <h4>Address</h4>
+    <div>{{ order.address.line1 }}</div>
+    <div class="muted">{{ order.address.city }} {{ order.address.zip }} • {{ order.address.country }}</div>
+  </div>
+
+  <div class="block">
+    <h4>Items</h4>
+    <div class="item" *ngFor="let it of order.items">
+      <img *ngIf="it.imageUrl" class="thumb" [src]="it.imageUrl" />
+      <div class="iname">{{ it.name }} <span class="muted">x{{ it.qty }}</span></div>
+      <div class="iprice">{{ (it.unitPrice * it.qty) | currency:'EUR' }}</div>
+    </div>
+  </div>
+
+  <div class="total">
+    <div><span>Subtotal</span><span>{{ order.subtotal | currency:'EUR' }}</span></div>
+    <div><span>Shipping</span><span>{{ order.shipping | currency:'EUR' }}</span></div>
+    <div class="grand"><span>Total</span><span>{{ order.total | currency:'EUR' }}</span></div>
+  </div>
+</div>
+
+<ng-template #empty>
+  <div class="empty">Sélectionne une commande.</div>
+</ng-template>

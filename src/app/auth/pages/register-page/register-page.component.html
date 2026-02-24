@@ -1,0 +1,105 @@
+<app-auth-form-layout
+  title="Create your account"
+  subtitle="Open a storefront or start shopping today."
+  titleId="register-title"
+>
+  <form class="auth-form" [formGroup]="form" (ngSubmit)="onSubmit()">
+    @if (apiError()) {
+      <nz-alert nzType="error" [nzMessage]="apiError()" nzShowIcon></nz-alert>
+    }
+    @if (apiError()) {
+      <div class="api-error" role="alert">{{ apiError() }}</div>
+    }
+    <div class="field-group">
+      <app-select-input
+        id="register-role"
+        label="Role"
+        placeholder="Choose your role"
+        [options]="roleOptions"
+        formControlName="role"
+        [invalid]="isInvalid('role')"
+      ></app-select-input>
+      <app-form-error
+        [errors]="form.controls.role.errors"
+        [touched]="form.controls.role.touched"
+        [submitted]="submitted()"
+      ></app-form-error>
+    </div>
+
+    <div class="field-group">
+      <app-text-input
+        id="register-fullname"
+        label="Full name"
+        placeholder="Alex Johnson"
+        autocomplete="name"
+        formControlName="fullName"
+        [invalid]="isInvalid('fullName')"
+      ></app-text-input>
+      <app-form-error
+        [errors]="form.controls.fullName.errors"
+        [touched]="form.controls.fullName.touched"
+        [submitted]="submitted()"
+      ></app-form-error>
+    </div>
+
+    <div class="field-group">
+      <app-email-input
+        id="register-email"
+        label="Email address"
+        placeholder="you@shop.com"
+        autocomplete="email"
+        formControlName="email"
+        [invalid]="isInvalid('email')"
+      ></app-email-input>
+      <app-form-error
+        [errors]="form.controls.email.errors"
+        [touched]="form.controls.email.touched"
+        [submitted]="submitted()"
+      ></app-form-error>
+    </div>
+
+    <div class="field-group">
+      <app-text-input
+        id="register-phone"
+        label="Phone"
+        placeholder="+14155552671"
+        autocomplete="tel"
+        inputMode="tel"
+        formControlName="phone"
+        [invalid]="isInvalid('phone')"
+      ></app-text-input>
+      <app-form-error
+        [errors]="form.controls.phone.errors"
+        [touched]="form.controls.phone.touched"
+        [submitted]="submitted()"
+      ></app-form-error>
+    </div>
+
+    <div class="field-group">
+      <app-password-input
+        id="register-password"
+        label="Password"
+        placeholder="Create a password"
+        autocomplete="new-password"
+        formControlName="password"
+        [invalid]="isInvalid('password')"
+      ></app-password-input>
+      <app-form-error
+        [errors]="form.controls.password.errors"
+        [touched]="form.controls.password.touched"
+        [submitted]="submitted()"
+      ></app-form-error>
+    </div>
+
+    <app-submit-button
+      label="Create account"
+      [loading]="loading()"
+      [disabled]="isSubmitDisabled()"
+    ></app-submit-button>
+  </form>
+
+  <p class="auth-footer">
+    Already have an account?
+    <a routerLink="/auth/login">Sign in</a>
+  </p>
+</app-auth-form-layout>

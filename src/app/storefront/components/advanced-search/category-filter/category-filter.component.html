@@ -1,0 +1,15 @@
+<div class="field">
+  <span class="field__label">Categories</span>
+  <div class="field__options">
+    @for (category of categories(); track category.id) {
+      <label
+        class="field__option"
+        nz-checkbox
+        [ngModel]="selectedIds().includes(category.id)"
+        (ngModelChange)="toggleSelection(category.id, $event)"
+      >
+        {{ category.name }}
+      </label>
+    }
+  </div>
+</div>

@@ -1,0 +1,12 @@
+<div class="field">
+  <label class="field__label" [for]="id()">{{ label() }}</label>
+  <input
+    nz-input
+    class="field__input"
+    [id]="id()"
+    type="search"
+    [placeholder]="placeholder()"
+    [value]="value()"
+    (input)="onInput($event)"
+  />
+</div>
