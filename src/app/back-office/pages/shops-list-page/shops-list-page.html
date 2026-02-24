@@ -1,11 +1,18 @@
-<section class="page">
-  <h1 class="title">LISTE SHOP</h1>
-
-  <div class="list" *ngIf="shops$ | async as shops; else loading">
-    <app-shop-row *ngFor="let s of shops" [shop]="s"></app-shop-row>
+<section class="page" *ngIf="vm$ | async as vm">
+    <div class="page-head">
+        <h1 class="title">List shop</h1>
+  </div>
+  <div class="list">
+    <app-shop-row *ngFor="let s of vm.shops" [shop]="s"></app-shop-row>
   </div>
 
-  <ng-template #loading>
-    <div class="loading">Loading...</div>
-  </ng-template>
+  <button class="fab" type="button" (click)="openCreate()">+</button>
+
+  <app-shop-dialog
+    *ngIf="dialogOpen"
+    mode="create"
+    [categories]="vm.categories"
+    (cancel)="closeDialog()"
+    (save)="onSave($event)"
+  ></app-shop-dialog>
 </section>

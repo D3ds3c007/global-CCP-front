@@ -2,3 +2,37 @@
 .title { margin: 0 0 14px; font-size: 22px; font-weight: 900; color: #0f172a; }
 .list { display: flex; flex-direction: column; gap: 12px; }
 .loading { color: #64748b; }
+
+.page{padding:18px;background:#f5f6fa;min-height:100vh}
+.title{margin:0 0 14px;font-size:22px;font-weight:900;color:#0f172a}
+.list{display:flex;flex-direction:column;gap:12px}
+
+/* bouton + flottant */
+.fab{
+  position:fixed;
+  right:28px;
+  bottom:28px;
+  width:64px;
+  height:64px;
+  border-radius:999px;
+  border:none;
+  background:#0b0f19;
+  color:#fff;
+  font-size:34px;
+  line-height:0;
+  cursor:pointer;
+  box-shadow:0 18px 40px rgba(0,0,0,0.25);
+}
+.page-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:14px;
+}
+
+.title{
+  margin:0;
+  font-size:22px;
+  font-weight:900;
+  color:#0f172a;
+}
