@@ -6,6 +6,11 @@ export const BACK_OFFICE_ROUTES: Routes = [
     path: '',
     component: BackOfficeLayout,
     children: [
+        {
+            path: 'customers',
+            loadComponent: () =>
+            import('./pages/customers-page/customers-page').then(m => m.CustomersPage),
+        },
       // /owner/dashboard => liste shops
       {
         path: 'dashboard',

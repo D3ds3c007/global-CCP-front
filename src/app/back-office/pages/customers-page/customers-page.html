@@ -1,0 +1,40 @@
+<section class="page" *ngIf="vm$ | async as vm">
+  <div class="kpis">
+    <app-dashboard-card [title]="vm.kpi1.title">
+      <app-kpi-card [data]="vm.kpi1"></app-kpi-card>
+    </app-dashboard-card>
+
+    <app-dashboard-card [title]="vm.kpi2.title">
+      <app-kpi-card [data]="vm.kpi2"></app-kpi-card>
+    </app-dashboard-card>
+  </div>
+
+  <app-dashboard-card title="Customers">
+    <div card-right class="sort">
+      <span>Sort by</span>
+      <select [ngModel]="vm.query.sort" (ngModelChange)="setSort($event)">
+        <option value="newest">Newest</option>
+        <option value="oldest">Oldest</option>
+      </select>
+    </div>
+
+    <!-- optionnel: search (amélioration) -->
+    <div class="search">
+      <input
+        [ngModel]="vm.query.search"
+        (ngModelChange)="setSearch($event)"
+        [ngModelOptions]="{ standalone: true }"
+        placeholder="Search customer..."
+      />
+    </div>
+
+    <app-customers-list
+      [customers]="vm.customers"
+      [selectedId]="vm.selectedId"
+      (select)="select($event)"
+      (edit)="onEdit($event)"
+      (call)="onCall($event)"
+      (remove)="onDelete($event)"
+    ></app-customers-list>
+  </app-dashboard-card>
+</section>
