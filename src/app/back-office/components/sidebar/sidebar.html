@@ -17,7 +17,7 @@
           class="item"
           *ngFor="let item of nav"
           [routerLink]="item.route"
-          routerLinkActive="active"
+          RouterLinkActive="ACTIVE"
         >
           <span class="mi">{{ item.icon }}</span>
           <span class="label" *ngIf="!collapsed">{{ item.label }}</span>

@@ -18,7 +18,7 @@
         <td class="right">{{ p.price === 0 ? 'FREE' : (p.price | currency:'EUR') }}</td>
         <td class="right">{{ p.stock }}</td>
         <td>
-          <span class="pill" [class.on]="p.status==='active'">{{ p.status }}</span>
+          <span class="pill" [class.on]="p.status==='ACTIVE'">{{ p.status }}</span>
         </td>
         <td class="right actions">
           <button type="button" (click)="toggle.emit(p)">toggle</button>

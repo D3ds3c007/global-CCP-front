@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 export type OrderStats = {
-  pending: number;
+  PENDING: number;
   confirmed: number;
   delivered: number;
 };

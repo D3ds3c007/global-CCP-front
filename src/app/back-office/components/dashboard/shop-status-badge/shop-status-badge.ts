@@ -7,8 +7,8 @@ import { ShopStatus } from '../../../services/dashboard-service';
   standalone: true,
   imports: [CommonModule],
   template: `
-    <span class="badge" [class.active]="status === 'active'" [class.pending]="status === 'pending'">
-      {{ status === 'active' ? 'Boutique active' : 'Boutique en attente' }}
+    <span class="badge" [class.ACTIVE]="status === 'ACTIVE'" [class.PENDING]="status === 'PENDING'">
+      {{ status === 'ACTIVE' ? 'Boutique ACTIVE' : 'Boutique en attente' }}
     </span>
   `,
   styles: [`
@@ -20,8 +20,8 @@ import { ShopStatus } from '../../../services/dashboard-service';
       border: 1px solid transparent;
       white-space: nowrap;
     }
-    .badge.active { background: #ecfdf5; color: #065f46; border-color: #a7f3d0; }
-    .badge.pending { background: #fff7ed; color: #9a3412; border-color: #fed7aa; }
+    .badge.ACTIVE { background: #ecfdf5; color: #065f46; border-color: #a7f3d0; }
+    .badge.PENDING { background: #fff7ed; color: #9a3412; border-color: #fed7aa; }
   `],
 })
 export class ShopStatusBadgeComponent {

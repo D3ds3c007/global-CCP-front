@@ -29,10 +29,12 @@ export class ShopDialogComponent implements OnChanges {
   previewUrl = '';
 
   form = this.fb.nonNullable.group({
+    _id: [''],
+    ownerId: [''],
     logoUrl: ['', [Validators.required]],
     name: ['', [Validators.required, Validators.minLength(2)]],
     categoryId: ['', [Validators.required]],
-    status: ['pending' as ShopStatus, [Validators.required]],
+    status: ['PENDING' as ShopStatus, [Validators.required]],
   });
 
   ngOnChanges(): void {
@@ -41,10 +43,12 @@ export class ShopDialogComponent implements OnChanges {
     const defaultLogo = 'https://picsum.photos/seed/newshop/120/120';
 
     this.form.reset({
+      _id: '',
+      ownerId: '',
       logoUrl: defaultLogo,
       name: '',
       categoryId: firstCat,
-      status: 'pending',
+      status: 'PENDING',
     });
 
     this.previewUrl = defaultLogo;
@@ -85,9 +89,15 @@ export class ShopDialogComponent implements OnChanges {
       return;
     }
 
+    const formValue = this.form.getRawValue();
+    const selectedCategory = this.categories.find(cat => cat.id === formValue.categoryId);
+
     this.save.emit({
       mode: this.mode,
-      value: this.form.getRawValue(),
+      value: {
+        ...formValue,
+        category: selectedCategory,
+      } as Omit<Shop, 'id'>,
     });
   }
 }

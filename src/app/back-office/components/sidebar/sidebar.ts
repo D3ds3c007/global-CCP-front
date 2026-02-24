@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, inject, Output } from '@angular/core';
-import { Router, RouterLinkActive } from '@angular/router';
+import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -22,8 +22,7 @@ type NavItem = {
   imports: [
     FormsModule,
     RouterLink,
-    CommonModule,
-    RouterLinkActive
+    CommonModule
   ],
 })
 export class Sidebar {

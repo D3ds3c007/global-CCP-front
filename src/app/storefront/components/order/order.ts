@@ -109,7 +109,7 @@ export class OrderComponent {
   badgeClass(status: OrderStatus) {
     return {
       PAID: 'badge paid',
-      PENDING: 'badge pending',
+      PENDING: 'badge PENDING',
       CANCELLED: 'badge cancelled',
     }[status];
   }
