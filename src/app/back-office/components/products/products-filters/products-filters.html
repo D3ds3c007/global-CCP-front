@@ -1,0 +1,29 @@
+<div class="filters">
+  <div class="search">
+    <input
+      [(ngModel)]="search"
+      (ngModelChange)="onSearch($event)"
+      [ngModelOptions]="{ standalone: true }"
+      placeholder="Rechercher..."
+    />
+  </div>
+
+  <select
+    [(ngModel)]="categoryId"
+    (ngModelChange)="onCategory($event)"
+    [ngModelOptions]="{ standalone: true }"
+  >
+    <option value="all">Toutes les catégories</option>
+    <option *ngFor="let c of categories" [value]="c.id">{{ c.name }}</option>
+  </select>
+
+  <select
+    [(ngModel)]="status"
+    (ngModelChange)="onStatus($event)"
+    [ngModelOptions]="{ standalone: true }"
+  >
+    <option value="all">Tous les statuts</option>
+    <option value="active">Active</option>
+    <option value="inactive">Inactive</option>
+  </select>
+</div>

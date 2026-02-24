@@ -1,0 +1,63 @@
+<section class="page" *ngIf="vm$ | async as vm">
+  <!-- Top KPI (comme screenshot) -->
+  <div class="kpis">
+    <app-dashboard-card [title]="'Total des commmande traitee'">
+      <app-kpi-card [data]="{
+        title: 'Total des commmande traitee',
+        percent: vm.kpis.processedOrdersPercent,
+        trend: 'up',
+        subtitle: 'Increase compared to last week',
+        linkText: 'Revenues report →'
+      }"></app-kpi-card>
+    </app-dashboard-card>
+
+    <app-dashboard-card [title]="'Commande en attente'">
+      <app-kpi-card [data]="{
+        title: 'Commande en attente',
+        percent: vm.kpis.pendingOrdersPercent,
+        subtitle: 'You closed 96 out of 100 deals',
+        linkText: 'All deals →'
+      }"></app-kpi-card>
+    </app-dashboard-card>
+  </div>
+
+  <!-- Recherche + filtres (AJOUT demandé) -->
+    <app-products-filters
+        [categories]="vm.categories"
+        [query]="vm.query"
+        (queryChange)="setQuery($event)"
+    ></app-products-filters>
+
+  <!-- Cards grid (comme screenshot) -->
+  <div class="cards">
+    <app-product-card
+        *ngFor="let p of vm.products"
+        [product]="p"
+        (edit)="openEdit($event)"
+        (remove)="onDelete($event)"
+        (toggle)="onToggle($event)"
+    ></app-product-card>
+  </div>
+
+  <!-- Table (AJOUT demandé) -->
+  <h3 class="section-title">Liste (table)</h3>
+    <app-products-table
+        [products]="vm.products"
+        (edit)="openEdit($event)"
+        (remove)="onDelete($event)"
+        (toggle)="onToggle($event)"
+    ></app-products-table>
+
+  <!-- Floating + button -->
+  <button class="fab" type="button" (click)="openCreate()" title="Ajouter">
+    +
+  </button>
+    <app-product-dialog
+        *ngIf="dialogOpen"
+        [mode]="dialogMode"
+        [product]="editing"
+        [categories]="vm.categories"
+        (cancel)="closeDialog()"
+        (save)="onDialogSave($event)"
+    ></app-product-dialog>
+</section>

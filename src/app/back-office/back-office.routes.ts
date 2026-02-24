@@ -1,18 +1,42 @@
 import { Routes } from '@angular/router';
-import { DashboardPage } from '../back-office/pages/dashboard-page/dashboard-page';
 import { BackOfficeLayout } from './pages/back-office-layout/back-office-layout';
 
 export const BACK_OFFICE_ROUTES: Routes = [
-    {
-        path: '',
-        component: BackOfficeLayout,
-        children: [
-            { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
-            {
-                path: 'dashboard',
-                loadComponent: () =>
-                import('./pages/dashboard-page/dashboard-page').then(m => m.DashboardPage),
-            },
-        ],
-    }
+  {
+    path: '',
+    component: BackOfficeLayout,
+    children: [
+      // /owner/dashboard => liste shops
+      {
+        path: 'dashboard',
+        loadComponent: () =>
+          import('./pages/shops-list-page/shops-list-page').then(m => m.ShopsListPage),
+      },
+
+      // /owner/dashboard/:shopId => page dashboard déjà terminée
+      {
+        path: 'dashboard/:shopId',
+        loadComponent: () =>
+          import('./pages/dashboard-page/dashboard-page').then(m => m.DashboardPage),
+      },
+
+      // /owner/products
+      {
+        path: 'products',
+        loadComponent: () =>
+          import('./pages/products-page/products-page').then(m => m.ProductsPage),
+      },
+      {
+        path: 'orders',
+        loadComponent: () =>
+            import('./pages/orders-page/orders-page').then(m => m.OrdersPage),
+    },
+
+      // default
+      { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
+
+      // optionnel: route inconnue => dashboard
+      { path: '**', redirectTo: 'dashboard' },
+    ],
+  },
 ];

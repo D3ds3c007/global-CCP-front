@@ -1,0 +1,20 @@
+.page { padding: 18px; background:#f5f6fa; min-height: 100vh; }
+.title { margin: 0 0 12px; font-size: 22px; font-weight: 900; color:#0f172a; }
+
+.grid {
+  margin-top: 12px;
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 14px;
+}
+
+.card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 14px;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+}
+
+@media (max-width: 1100px) {
+  .grid { grid-template-columns: 1fr; }
+}

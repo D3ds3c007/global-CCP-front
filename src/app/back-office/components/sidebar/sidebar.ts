@@ -35,10 +35,10 @@ export class Sidebar {
   };
 
   nav: NavItem[] = [
-    { label: 'Dashboard', icon: 'space_dashboard', route: 'owner/dashboard' },
-    { label: 'Customers', icon: 'group', route: 'owner/customers' },
-    { label: 'Products', icon: 'inventory_2', route: 'owner/products' },
-    { label: 'Orders', icon: 'public', route: 'owner/orders' },
+    { label: 'Dashboard', icon: 'space_dashboard', route: '/owner/dashboard' },
+    { label: 'Customers', icon: 'group', route: '/owner/customers' },
+    { label: 'Products', icon: 'inventory_2', route: '/owner/products' },
+    { label: 'Orders', icon: 'public', route: '/owner/orders' },
   ];
 
   toggle() {

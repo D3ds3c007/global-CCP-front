@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Product } from '../../../services/dashboard-service';
+import { LowStockProduct } from '../../../services/dashboard-service'; // adapte le chemin si besoin
 
 @Component({
   selector: 'app-low-stock',
@@ -10,5 +10,5 @@ import { Product } from '../../../services/dashboard-service';
   styleUrls: ['./low-stock.css'],
 })
 export class LowStockComponent {
-  @Input() products: Product[] = [];
+  @Input() products: LowStockProduct[] = [];
 }

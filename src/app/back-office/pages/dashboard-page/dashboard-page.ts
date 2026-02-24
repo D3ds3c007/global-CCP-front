@@ -1,5 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
+import { filter, switchMap } from 'rxjs';
 
 import { DashboardService } from '../../services/dashboard-service';
 
@@ -36,6 +38,15 @@ import { LastOrdersTableComponent } from '../../components/dashboard/last-orders
   styleUrls: ['./dashboard-page.css'],
 })
 export class DashboardPage {
+  private route = inject(ActivatedRoute);
   private ds = inject(DashboardService);
-  vm$ = this.ds.getOwnerDashboard();
+
+  vm$ = this.route.paramMap.pipe(
+    // on récupère shopId
+    switchMap((params) => {
+      const shopId = params.get('shopId');
+      if (!shopId) throw new Error('shopId manquant dans l’URL');
+      return this.ds.getOwnerDashboard(shopId);
+    })
+  );
 }

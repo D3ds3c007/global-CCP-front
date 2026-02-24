@@ -1,0 +1,35 @@
+<div class="table-wrap">
+  <table *ngIf="products.length; else empty">
+    <thead>
+      <tr>
+        <th>Image</th>
+        <th>Nom</th>
+        <th class="right">Prix</th>
+        <th class="right">Stock</th>
+        <th>Statut</th>
+        <th class="right">Actions</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let p of products">
+        <td><img class="thumb" [src]="p.imageUrl" [alt]="p.name" /></td>
+        <td class="name">{{ p.name }}</td>
+        <td class="right">{{ p.price === 0 ? 'FREE' : (p.price | currency:'EUR') }}</td>
+        <td class="right">{{ p.stock }}</td>
+        <td>
+          <span class="pill" [class.on]="p.status==='active'">{{ p.status }}</span>
+        </td>
+        <td class="right actions">
+          <button type="button" (click)="toggle.emit(p)">toggle</button>
+          <button type="button" (click)="edit.emit(p)">edit</button>
+          <button type="button" class="danger" (click)="remove.emit(p)">delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <ng-template #empty>
+    <div class="empty">Aucun produit.</div>
+  </ng-template>
+</div>

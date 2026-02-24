@@ -1,0 +1,25 @@
+<section class="page" *ngIf="vm$ | async as vm">
+  <h1 class="title">Orders</h1>
+
+  <app-orders-filters [query]="vm.query" (queryChange)="setQuery($event)"></app-orders-filters>
+
+  <div class="grid">
+    <div class="card">
+      <app-orders-table
+        [orders]="vm.orders"
+        [selectedId]="(selectedId$ | async)"
+        (selectOrder)="select($event)"
+      ></app-orders-table>
+    </div>
+
+    <div class="card">
+      <app-order-detail
+        [order]="vm.selectedOrder"
+        [nextStatus]="(nextStatus$ | async)"
+        [canCancel]="(canCancel$ | async) ?? false"
+        (advance)="advance($event)"
+        (cancel)="cancel($event)"
+      ></app-order-detail>
+    </div>
+  </div>
+</section>

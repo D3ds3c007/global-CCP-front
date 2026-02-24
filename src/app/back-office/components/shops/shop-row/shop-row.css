@@ -1,0 +1,39 @@
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 14px 16px;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+  text-decoration: none;
+  color: inherit;
+}
+
+.left { display: flex; align-items: center; gap: 12px; }
+
+.avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 999px;
+  background: #f1f5f9;
+  display: grid;
+  place-items: center;
+  font-size: 18px;
+}
+
+.name { font-weight: 800; color: #0f172a; }
+.meta { color: #64748b; font-size: 13px; margin-top: 2px; }
+.dot { margin: 0 8px; }
+
+.badge {
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-weight: 800;
+  font-size: 12px;
+  border: 1px solid transparent;
+}
+
+.badge.active { background: #dcfce7; color: #166534; border-color: #bbf7d0; }
+.badge.pending { background: #fff7ed; color: #9a3412; border-color: #fed7aa; }

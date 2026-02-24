@@ -1,0 +1,54 @@
+<div class="overlay" (click)="onBackdropClick()">
+  <div class="modal" (click)="$event.stopPropagation()">
+    <div class="head">
+      <h3>{{ mode === 'create' ? 'Créer un produit' : 'Modifier le produit' }}</h3>
+      <button class="x" type="button" (click)="cancel.emit()">✕</button>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="grid">
+        <label class="field">
+          <span>Image URL</span>
+          <input formControlName="imageUrl" />
+        </label>
+
+        <label class="field">
+          <span>Nom</span>
+          <input formControlName="name" />
+        </label>
+
+        <label class="field">
+          <span>Catégorie</span>
+          <select formControlName="categoryId">
+            <option *ngFor="let c of categories" [value]="c.id">{{ c.name }}</option>
+          </select>
+        </label>
+
+        <label class="field">
+          <span>Status</span>
+          <select formControlName="status">
+            <option value="active">active</option>
+            <option value="inactive">inactive</option>
+          </select>
+        </label>
+
+        <label class="field">
+          <span>Prix</span>
+          <input type="number" formControlName="price" />
+        </label>
+
+        <label class="field">
+          <span>Stock</span>
+          <input type="number" formControlName="stock" />
+        </label>
+      </div>
+
+      <div class="actions">
+        <button type="button" class="btn ghost" (click)="cancel.emit()">Annuler</button>
+        <button type="submit" class="btn primary">
+          {{ mode === 'create' ? 'Créer' : 'Enregistrer' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
