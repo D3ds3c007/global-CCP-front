@@ -14,6 +14,7 @@ export class AdminLayout {
     { kind: 'link', label: 'Dashboard', icon: 'space_dashboard', route: ['/admin', 'dashboard'] },
     { kind: 'link', label: 'Shop', icon: 'store', route: ['/admin', 'shops'] },
     { kind: 'link', label: 'Categories', icon: 'category', route: ['/admin', 'categories'] },
-    { kind: 'link', label: 'Users', icon: 'group', route: ['/admin', 'customers'] }, // page plus tard
+    { kind: 'link', label: 'Users', icon: 'group', route: ['/admin', 'customers'] },
+    { kind: 'link', label: 'Orders', icon: 'public', route: ['/admin', 'orders'] },
   ];
 }

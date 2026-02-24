@@ -1,0 +1,31 @@
+<table class="t" *ngIf="orders.length; else empty">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Shop</th>
+      <th>Buyer</th>
+      <th>Status</th>
+      <th>Date</th>
+      <th class="right">Total</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr
+      *ngFor="let o of orders"
+      (click)="selectOrder.emit(o.id)"
+      [class.active]="o.id === selectedId"
+    >
+      <td class="mono">{{ o.id }}</td>
+      <td class="name">{{ o.shopName }}</td>
+      <td>{{ o.buyer.fullName }}</td>
+      <td><span class="pill" [class]="o.status">{{ o.status }}</span></td>
+      <td>{{ o.createdAt | date:'short' }}</td>
+      <td class="right">{{ o.total | currency:'EUR' }}</td>
+    </tr>
+  </tbody>
+</table>
+
+<ng-template #empty>
+  <div class="empty">No orders.</div>
+</ng-template>

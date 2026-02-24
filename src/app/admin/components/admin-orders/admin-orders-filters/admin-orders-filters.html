@@ -1,0 +1,25 @@
+<div class="filters">
+  <input
+    [ngModel]="query.search"
+    (ngModelChange)="queryChange.emit({ search: $event })"
+    [ngModelOptions]="{ standalone: true }"
+    placeholder="Search (order id / buyer / shop)..."
+  />
+
+  <select
+    [ngModel]="query.shopId"
+    (ngModelChange)="queryChange.emit({ shopId: $event })"
+    [ngModelOptions]="{ standalone: true }"
+  >
+    <option value="all">All shops</option>
+    <option *ngFor="let s of shops" [value]="s.id">{{ s.name }}</option>
+  </select>
+
+  <select
+    [ngModel]="query.status"
+    (ngModelChange)="queryChange.emit({ status: $event })"
+    [ngModelOptions]="{ standalone: true }"
+  >
+    <option *ngFor="let s of statuses" [value]="s">{{ s }}</option>
+  </select>
+</div>
