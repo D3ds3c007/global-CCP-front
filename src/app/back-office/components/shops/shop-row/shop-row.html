@@ -1,0 +1,17 @@
+<a class="row" [routerLink]="['/owner/dashboard', shop.id]">
+  <div class="left">
+    <div class="avatar">🏬</div>
+
+    <div class="info">
+      <div class="name">{{ shop.name }}</div>
+      <div class="meta">
+        <span class="dot">•</span>
+        <span>Category : {{ shop.category }}</span>
+      </div>
+    </div>
+  </div>
+
+  <span class="badge" [class.active]="shop.status==='active'" [class.pending]="shop.status==='pending'">
+    {{ shop.status | uppercase }}
+  </span>
+</a>

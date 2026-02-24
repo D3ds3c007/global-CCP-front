@@ -1,0 +1,18 @@
+<div class="steps" *ngIf="status !== 'cancelled'; else cancelled">
+  <div class="step" *ngFor="let s of steps" [class.done]="isDone(s)" [class.current]="s===status">
+    <div class="dot"></div>
+    <div class="label">{{ s }}</div>
+  </div>
+</div>
+
+<ng-template #cancelled>
+  <div class="cancelled">Order cancelled</div>
+</ng-template>
+
+<div class="history" *ngIf="history.length">
+  <div class="h-row" *ngFor="let e of history">
+    <span class="h-pill">{{ e.status }}</span>
+    <span class="h-date">{{ e.at | date:'short' }}</span>
+    <span class="h-note" *ngIf="e.note">— {{ e.note }}</span>
+  </div>
+</div>

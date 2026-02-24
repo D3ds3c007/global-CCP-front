@@ -1,0 +1,12 @@
+<section class="card">
+  <header class="card__header">
+    <h3 class="card__title">{{ title }}</h3>
+    <div class="card__right">
+      <ng-content select="[card-right]"></ng-content>
+    </div>
+  </header>
+
+  <div class="card__body">
+    <ng-content></ng-content>
+  </div>
+</section>

@@ -1,0 +1,26 @@
+.kpi .value {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 4px 0 10px;
+}
+
+.pct {
+  font-size: 44px;
+  font-weight: 800;
+  letter-spacing: -1px;
+  color: #0f172a;
+}
+
+.subtitle {
+  color: #6b7280;
+  font-size: 13px;
+  margin-bottom: 22px;
+}
+
+.link {
+  color: #b45309;
+  font-size: 13px;
+  text-decoration: none;
+  font-weight: 600;
+}

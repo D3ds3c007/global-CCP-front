@@ -1,0 +1,34 @@
+<div class="p-card">
+  <div class="p-card__top">
+    <button class="icon-btn" type="button" (click)="toggle.emit(product)" title="Toggle active">
+      <span class="dot" [class.on]="product.status === 'active'"></span>
+    </button>
+
+    <button class="icon-btn" type="button" (click)="edit.emit(product)" title="Edit">
+      ✎
+    </button>
+  </div>
+
+  <div class="p-card__img">
+    <img [src]="product.imageUrl" [alt]="product.name" />
+  </div>
+
+  <div class="p-card__row">
+    <div class="name">{{ product.name }}</div>
+    <div class="price">
+      <ng-container *ngIf="product.price === 0; else money">FREE</ng-container>
+      <ng-template #money>{{ product.price | currency:'EUR' }}</ng-template>
+    </div>
+  </div>
+
+  <div class="p-card__desc">
+    Please add your content here. Keep it short and simple. And smile :)
+  </div>
+
+  <div class="p-card__meta">
+    <span class="chip">Stock: {{ product.stock }}</span>
+    <span class="chip">Status: {{ product.status }}</span>
+
+    <button class="link" type="button" (click)="remove.emit(product)">delete</button>
+  </div>
+</div>
