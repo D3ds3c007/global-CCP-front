@@ -1,8 +1,11 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, inject, Output } from '@angular/core';
 import { Router, RouterLinkActive } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { AuthStateService } from '../../../core/services/auth-state.service';
+import { AuthService } from '../../../auth/services/auth.service';
+import { AuthSessionService } from '../../../auth/services/auth-session.service';
 
 type NavItem = {
   label: string;
@@ -15,6 +18,7 @@ type NavItem = {
   selector: 'app-sidebar',
   templateUrl: './sidebar.html',
   styleUrls: ['./sidebar.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     FormsModule,
     RouterLink,
@@ -23,16 +27,25 @@ type NavItem = {
   ],
 })
 export class Sidebar {
+  private readonly authState = inject(AuthStateService);
+  private readonly authService = inject(AuthService);
+  private readonly session = inject(AuthSessionService);
+    
+  
+
   @Output() logout = new EventEmitter<void>();
+
+  readonly user$ = this.authState.currentUser$;
+
 
   collapsed = false;
   search = '';
 
-  user = {
-    name: 'Gustavo Xavier',
-    role: 'Admin',
-    avatarUrl: 'https://i.pravatar.cc/80?img=12',
-  };
+  // user = {
+  //   name: 'Gustavo Xavier',
+  //   role: 'Admin',
+  //   avatarUrl: 'https://i.pravatar.cc/80?img=12',
+  // };
 
   nav: NavItem[] = [
     { label: 'Dashboard', icon: 'space_dashboard', route: '/owner/dashboard' },
@@ -45,7 +58,17 @@ export class Sidebar {
     this.collapsed = !this.collapsed;
   }
 
-  onLogout() {
-    this.logout.emit();
+  onLogout(): void {
+    this.authService.logout().subscribe({
+      next: () => {
+        this.session.resetCache(); // reset cache to force refresh of user info in guards and other parts of the app
+        this.logout.emit();
+        window.location.href = '/auth/login'; // full reload to reset any cached state, can be improved with a proper state management and route guards
+      },
+      error: error => {
+        // even if logout API call fails, we still want to clear client state
+        this.logout.emit();
+      }
+    });
   }
 }

@@ -21,6 +21,8 @@ export const routes: Routes = [
 		path: 'owner',
 		loadChildren: () =>
 		import('./back-office/back-office.routes').then(m => m.BACK_OFFICE_ROUTES),
+		canMatch: [authGuard, roleGuard],
+        data: { roles: ['SHOP'] }
 	},
 
 

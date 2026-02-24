@@ -1,5 +1,7 @@
 import { Routes } from '@angular/router';
 import { BackOfficeLayout } from './pages/back-office-layout/back-office-layout';
+import { authGuard } from '../core/guards/auth.guard';
+import { roleGuard } from '../core/guards/role.guard';
 
 export const BACK_OFFICE_ROUTES: Routes = [
   {
@@ -16,6 +18,8 @@ export const BACK_OFFICE_ROUTES: Routes = [
         path: 'dashboard',
         loadComponent: () =>
           import('./pages/shops-list-page/shops-list-page').then(m => m.ShopsListPage),
+        // canMatch: [authGuard, roleGuard],
+        // data: { roles: ['SHOP'] }
       },
 
       // /owner/dashboard/:shopId => page dashboard déjà terminée
