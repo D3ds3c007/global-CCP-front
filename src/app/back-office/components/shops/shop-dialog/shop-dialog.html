@@ -38,14 +38,6 @@
             <option *ngFor="let c of categories" [value]="c.id">{{ c.name }}</option>
           </select>
         </label>
-
-        <label class="field">
-          <span>Status</span>
-          <select formControlName="status">
-            <option value="pending">pending</option>
-            <option value="active">active</option>
-          </select>
-        </label>
       </div>
 
       <div class="actions">
