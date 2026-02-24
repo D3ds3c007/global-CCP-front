@@ -10,6 +10,11 @@ export const routes: Routes = [
 		// pathMatch: 'full',
 		loadChildren: () => import('./storefront/storefront.routes').then(m => m.STOREFRONT_ROUTES)
 	},
+	{
+		path: 'owner',
+		loadChildren: () =>
+		import('./back-office/back-office.routes').then(m => m.BACK_OFFICE_ROUTES),
+	},
 
 
 	{ path: '**', redirectTo: '' }

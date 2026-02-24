@@ -1,0 +1,17 @@
+<div class="head">
+  <h3>Produits low stock</h3>
+  <span class="muted">{{ products.length }} article(s)</span>
+</div>
+
+<div *ngIf="products.length; else empty">
+  <div class="row" *ngFor="let p of products">
+    <div class="name">{{ p.name }}</div>
+    <div class="stock" [class.danger]="p.stock <= p.minStock">
+      {{ p.stock }} / min {{ p.minStock }}
+    </div>
+  </div>
+</div>
+
+<ng-template #empty>
+  <div class="empty">Aucun produit en low stock.</div>
+</ng-template>

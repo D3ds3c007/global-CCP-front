@@ -1,0 +1,62 @@
+.page {
+  padding: 18px;
+  background: #f5f6fa;
+  min-height: 100vh;
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+
+  h1 { margin: 0; font-size: 22px; color: #0f172a; }
+  p { margin: 6px 0 0; font-size: 13px; color: #64748b; }
+}
+
+/* GRID screenshot (12 colonnes) */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 14px;
+}
+
+/* Top row */
+.c1 { grid-column: span 4; }
+.c2 { grid-column: span 4; }
+.c3 { grid-column: span 4; }
+
+/* Second row */
+.c4 { grid-column: span 5; }
+.c5 { grid-column: span 7; }
+
+/* Bottom tiles alignées sous le bloc revenu (7 colonnes) */
+.t1 { grid-column: 6 / span 2; }
+.t2 { grid-column: 8 / span 2; }
+.t3 { grid-column: 10 / span 3; }
+
+.select { color: #64748b; font-size: 12px; font-weight: 600; }
+.caret { margin-left: 4px; }
+
+.big { font-size: 22px; font-weight: 800; color: #0f172a; }
+.accent { color: #f59e0b; font-weight: 800; margin-top: 2px; }
+.muted { color: #64748b; font-size: 12px; margin-top: 6px; }
+
+/* En plus */
+.extras {
+  margin-top: 16px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+.span-2 { grid-column: span 2; }
+
+/* Responsive simple */
+@media (max-width: 1100px) {
+  .c1,.c2,.c3 { grid-column: span 12; }
+  .c4,.c5 { grid-column: span 12; }
+  .t1,.t2,.t3 { grid-column: span 12; }
+  .extras { grid-template-columns: 1fr; }
+  .span-2 { grid-column: span 1; }
+}

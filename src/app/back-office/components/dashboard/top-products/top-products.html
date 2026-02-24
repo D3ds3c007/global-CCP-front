@@ -1,0 +1,13 @@
+<div *ngIf="products.length; else empty" class="list">
+  <div class="row" *ngFor="let p of products">
+    <div class="bar">
+      <div class="fill" [style.width]="width(p)"></div>
+      <div class="label">{{ p.name }}</div>
+      <div class="val">{{ p.valueK }}K</div>
+    </div>
+  </div>
+</div>
+
+<ng-template #empty>
+  <div class="empty">Aucun produit.</div>
+</ng-template>

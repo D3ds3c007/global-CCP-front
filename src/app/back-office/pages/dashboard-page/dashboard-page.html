@@ -1,0 +1,86 @@
+<section *ngIf="vm$ | async as vm; else loading">
+  <!-- HEADER -->
+  <div class="header">
+    <div>
+      <h1>Dashboard</h1>
+      <p>Overview</p>
+    </div>
+
+    <app-shop-status-badge
+      *ngIf="vm.shopStatus as st"
+      [status]="st"
+    ></app-shop-status-badge>
+  </div>
+
+  <!-- GRID screenshot -->
+  <div class="grid">
+    <!-- KPI 1 -->
+    <ng-container *ngIf="vm.kpiProcessed as k1">
+      <app-dashboard-card class="c1" [title]="k1.title">
+        <app-kpi-card [data]="k1"></app-kpi-card>
+      </app-dashboard-card>
+    </ng-container>
+
+    <!-- KPI 2 -->
+    <ng-container *ngIf="vm.kpiPending as k2">
+      <app-dashboard-card class="c2" [title]="k2.title">
+        <app-kpi-card [data]="k2"></app-kpi-card>
+      </app-dashboard-card>
+    </ng-container>
+
+    <!-- Quarter goal -->
+    <app-dashboard-card class="c3" title="Quarter goal">
+      <app-quarter-goal [percent]="vm.quarterGoalPercent"></app-quarter-goal>
+    </app-dashboard-card>
+
+    <!-- Top Products -->
+    <app-dashboard-card class="c4" title="Top Products">
+      <app-top-products [products]="vm.topProducts"></app-top-products>
+    </app-dashboard-card>
+
+    <!-- Revenu -->
+    <app-dashboard-card class="c5" title="Revenu">
+      <div card-right class="select">
+        Yearly <span class="caret">▾</span>
+      </div>
+
+      <app-revenue-chart [points]="vm.revenue"></app-revenue-chart>
+    </app-dashboard-card>
+
+    <!-- Bottom right tiles -->
+    <app-mini-tile class="t1" title="Top month" *ngIf="vm.topMonth as tm">
+      <div class="big">{{ tm.month }}</div>
+      <div class="accent">{{ tm.year }}</div>
+    </app-mini-tile>
+
+    <app-mini-tile class="t2" title="Top year" *ngIf="vm.topYear as ty">
+      <div class="big">{{ ty.year }}</div>
+      <div class="muted">{{ ty.soldK }}K sold so far</div>
+    </app-mini-tile>
+
+    <app-mini-tile class="t3" title="Top buyer" *ngIf="vm.topBuyer as tb">
+      <app-top-buyer-tile [buyer]="tb"></app-top-buyer-tile>
+    </app-mini-tile>
+  </div>
+
+  <!-- EN PLUS -->
+  <div class="extras">
+    <app-dashboard-card title="Stats : commandes">
+      <app-stats-cards [stats]="vm.orderStats"></app-stats-cards>
+    </app-dashboard-card>
+
+    <app-dashboard-card title="Produits low stock">
+      <app-low-stock [products]="vm.lowStock"></app-low-stock>
+    </app-dashboard-card>
+
+    <div class="span-2">
+      <app-dashboard-card title="Dernières commandes">
+        <app-last-orders-table [orders]="vm.lastOrders"></app-last-orders-table>
+      </app-dashboard-card>
+    </div>
+  </div>
+</section>
+
+<ng-template #loading>
+  <div style="padding: 18px;">Loading dashboard...</div>
+</ng-template>

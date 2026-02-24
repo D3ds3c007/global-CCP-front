@@ -1,0 +1,48 @@
+<aside class="sidebar" [class.is-collapsed]="collapsed">
+  <div class="card">
+    <!-- Top -->
+    <div class="top">
+      <div class="brand">
+        <div class="logo"></div>
+        <div class="title" *ngIf="!collapsed">Golden Market</div>
+      </div>
+
+      <div class="search" *ngIf="!collapsed">
+        <span class="mi">search</span>
+        <input [(ngModel)]="search" placeholder="Search" />
+      </div>
+
+      <nav class="nav">
+        <a
+          class="item"
+          *ngFor="let item of nav"
+          [routerLink]="item.route"
+          routerLinkActive="active"
+        >
+          <span class="mi">{{ item.icon }}</span>
+          <span class="label" *ngIf="!collapsed">{{ item.label }}</span>
+        </a>
+      </nav>
+    </div>
+
+    <!-- Bottom -->
+    <div class="bottom">
+      <div class="user" *ngIf="!collapsed">
+        <img class="avatar" [src]="user.avatarUrl" alt="avatar" />
+        <div class="meta">
+          <div class="name">{{ user.name }}</div>
+          <div class="badge">{{ user.role }}</div>
+        </div>
+      </div>
+
+      <button class="logout" (click)="onLogout()">
+        <span class="mi">logout</span>
+        <span *ngIf="!collapsed">Log out</span>
+      </button>
+
+      <button class="collapse-btn" (click)="toggle()" aria-label="toggle sidebar">
+        <span class="mi">{{ collapsed ? 'chevron_right' : 'chevron_left' }}</span>
+      </button>
+    </div>
+  </div>
+</aside>
