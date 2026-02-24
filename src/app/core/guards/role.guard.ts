@@ -1,36 +1,47 @@
-import { inject } from '@angular/core';
+import { inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { CanMatchFn, Router } from '@angular/router';
 import { map } from 'rxjs';
 import { AuthSessionService } from '../../auth/services/auth-session.service';
-
-
-type Role = 'BUYER' | 'SHOP' | 'ADMIN';
-
-type MeUser = {
-  user:{
-    id: string;
-    fullName: string;
-    email: string;
-    role: Role;
-    shops: any[];
-  }
- 
-};
-
+import { User, UserRole } from '../services/auth-state.service';
 
 export const roleGuard: CanMatchFn = (route) => {
   const session = inject(AuthSessionService);
   const router = inject(Router);
+  const platformId = inject(PLATFORM_ID);
+  const isBrowser = isPlatformBrowser(platformId);
 
-  const allowed = (route.data?.['roles'] as Role[] | undefined) ?? [];
+  const allowedRoles = (route.data?.['roles'] as UserRole[] | undefined) ?? [];
 
-   return session.ensureMeLoaded().pipe(
-    map((user) => {
-      const me = user as MeUser | null; // only for guard logic
-      if (!me) return router.createUrlTree(['/auth/login']);
-      if (allowed.length === 0) { console.log('No roles required, allowing access'); return true; }
+  // Avoid SSR redirects on direct URL entry; let the browser evaluate auth/role.
+  if (!isBrowser) return true;
 
-      return allowed.includes(me.user.role)
+  return session.ensureMeLoaded().pipe(
+    map((user: User | null) => {
+      console.log('RoleGuard - checking user:', user, 'allowed roles:', allowedRoles);
+      
+      // ✅ If no user, redirect to login
+      if (!user) {
+        console.warn('RoleGuard - no user found, redirecting to login');
+        return router.createUrlTree(['/auth/login']);
+      }
+
+      // ✅ If no roles are required, allow access
+      if (allowedRoles.length === 0) {
+        console.log('RoleGuard - no roles required, allowing access');
+        return true;
+      }
+
+      // ✅ Check if user has one of the allowed roles
+      if (!user.role) {
+        console.warn('RoleGuard - user has no role assigned, redirecting to login');
+        return router.createUrlTree(['/auth/login']);
+      }
+
+      const hasRole = allowedRoles.includes(user.role);
+      console.log('RoleGuard - user role:', user.role, 'has required role:', hasRole);
+
+      return hasRole
         ? true
         : router.createUrlTree(['/forbidden']);
     })

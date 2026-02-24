@@ -2,10 +2,13 @@ import { Injectable, inject, PLATFORM_ID } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { isPlatformBrowser } from '@angular/common';
 
+export type UserRole = 'BUYER' | 'SHOP' | 'ADMIN';
+
 export interface User {
   id: string;
   fullName: string;
   email: string;
+  role?: UserRole;
   shops: any[];
 }
 

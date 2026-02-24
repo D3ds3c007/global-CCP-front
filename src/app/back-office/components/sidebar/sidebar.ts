@@ -1,8 +1,9 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, inject, Output } from '@angular/core';
 import { Router, RouterLinkActive } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { AuthStateService } from '../../../core/services/auth-state.service';
 
 type NavItem = {
   label: string;
@@ -15,6 +16,7 @@ type NavItem = {
   selector: 'app-sidebar',
   templateUrl: './sidebar.html',
   styleUrls: ['./sidebar.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     FormsModule,
     RouterLink,
@@ -23,16 +25,14 @@ type NavItem = {
   ],
 })
 export class Sidebar {
+  private readonly authState = inject(AuthStateService);
+
   @Output() logout = new EventEmitter<void>();
+
+  readonly user$ = this.authState.currentUser$;
 
   collapsed = false;
   search = '';
-
-  user = {
-    name: 'Gustavo Xavier',
-    role: 'Admin',
-    avatarUrl: 'https://i.pravatar.cc/80?img=12',
-  };
 
   nav: NavItem[] = [
     { label: 'Dashboard', icon: 'space_dashboard', route: '/owner/dashboard' },

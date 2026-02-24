@@ -27,10 +27,10 @@
 
     <!-- Bottom -->
     <div class="bottom">
-      <div class="user" *ngIf="!collapsed">
-        <img class="avatar" [src]="user.avatarUrl" alt="avatar" />
+      <div class="user" *ngIf="!collapsed && (user$ | async) as user">
+        <!-- <img class="avatar" [src]="user.avatarUrl" alt="avatar" /> -->
         <div class="meta">
-          <div class="name">{{ user.name }}</div>
+          <div class="name">{{ user.fullName }}</div>
           <div class="badge">{{ user.role }}</div>
         </div>
       </div>
