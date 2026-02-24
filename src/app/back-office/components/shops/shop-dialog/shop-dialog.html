@@ -1,0 +1,57 @@
+<div class="overlay" (click)="onBackdropClick()">
+  <div class="modal" (click)="$event.stopPropagation()">
+    <div class="head">
+      <h3>Créer une boutique</h3>
+      <button class="x" type="button" (click)="cancel.emit()">✕</button>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="img-block">
+        <div class="preview">
+          <img [src]="previewUrl || form.controls.logoUrl.value" alt="logo" />
+        </div>
+
+        <div class="img-actions">
+          <label class="file-btn">
+            Upload logo
+            <input type="file" accept="image/*" (change)="onPickFile($event)" hidden />
+          </label>
+
+          <div class="or">ou</div>
+
+          <label class="field">
+            <span>Logo URL</span>
+            <input formControlName="logoUrl" (input)="previewUrl = form.controls.logoUrl.value" />
+          </label>
+        </div>
+      </div>
+
+      <div class="grid">
+        <label class="field">
+          <span>Nom</span>
+          <input formControlName="name" />
+        </label>
+
+        <label class="field">
+          <span>Catégorie</span>
+          <select formControlName="categoryId">
+            <option *ngFor="let c of categories" [value]="c.id">{{ c.name }}</option>
+          </select>
+        </label>
+
+        <label class="field">
+          <span>Status</span>
+          <select formControlName="status">
+            <option value="pending">pending</option>
+            <option value="active">active</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="actions">
+        <button type="button" class="btn ghost" (click)="cancel.emit()">Annuler</button>
+        <button type="submit" class="btn primary">Créer</button>
+      </div>
+    </form>
+  </div>
+</div>
