@@ -7,7 +7,7 @@ export type ShopDialogMode = 'create';
 
 export type ShopDialogSave = {
   mode: ShopDialogMode;
-  value: Omit<Shop, 'id'>;
+  value: Omit<Shop, '_id'>;
 };
 
 @Component({
@@ -26,32 +26,60 @@ export class ShopDialogComponent implements OnChanges {
 
   private fb = inject(FormBuilder);
 
+  readonly defaultLogoUrl = 'https://picsum.photos/seed/newshop/120/120';
   previewUrl = '';
+  isDragOver = false;
+  selectedLogoFileName = '';
 
   form = this.fb.nonNullable.group({
     _id: [''],
     ownerId: [''],
     logoUrl: ['', [Validators.required]],
     name: ['', [Validators.required, Validators.minLength(2)]],
+    description: ['', [Validators.required]],
     categoryId: ['', [Validators.required]],
     status: ['PENDING' as ShopStatus, [Validators.required]],
+    openingHours: ['', [Validators.required]],
+    contact: this.fb.nonNullable.group({
+      phone: ['', [Validators.required]],
+      email: ['', [Validators.required, Validators.email]],
+      address: ['', [Validators.required]],
+    }),
+    socials: this.fb.nonNullable.group({
+      facebook: ['', [Validators.required]],
+      instagram: ['', [Validators.required]],
+      website: ['', [Validators.required]],
+    }),
   });
 
   ngOnChanges(): void {
     // defaults create
     const firstCat = this.categories[0]?.id ?? '';
-    const defaultLogo = 'https://picsum.photos/seed/newshop/120/120';
 
     this.form.reset({
       _id: '',
       ownerId: '',
-      logoUrl: defaultLogo,
+      logoUrl: this.defaultLogoUrl,
       name: '',
+      description: '',
       categoryId: firstCat,
       status: 'PENDING',
+      openingHours: '',
+      contact: {
+        phone: '',
+        email: '',
+        address: '',
+      },
+      socials: {
+        facebook: '',
+        instagram: '',
+        website: '',
+      },
     });
 
-    this.previewUrl = defaultLogo;
+    this.previewUrl = this.defaultLogoUrl;
+    this.isDragOver = false;
+    this.selectedLogoFileName = '';
   }
 
   onBackdropClick() {
@@ -62,25 +90,35 @@ export class ShopDialogComponent implements OnChanges {
     const input = ev.target as HTMLInputElement;
     const file = input.files?.[0] ?? null;
     if (!file) return;
+    this.processLogoFile(file, input);
+  }
 
-    if (!file.type.startsWith('image/')) {
-      alert('Veuillez choisir une image.');
-      input.value = '';
-      return;
-    }
-    if (file.size > 2 * 1024 * 1024) {
-      alert('Image trop grande (max 2MB).');
-      input.value = '';
-      return;
-    }
+  onDragOver(ev: DragEvent): void {
+    ev.preventDefault();
+    this.isDragOver = true;
+  }
 
-    const reader = new FileReader();
-    reader.onload = () => {
-      const dataUrl = String(reader.result);
-      this.previewUrl = dataUrl;
-      this.form.controls.logoUrl.setValue(dataUrl);
-    };
-    reader.readAsDataURL(file);
+  onDragLeave(ev: DragEvent): void {
+    ev.preventDefault();
+    this.isDragOver = false;
+  }
+
+  onDrop(ev: DragEvent): void {
+    ev.preventDefault();
+    this.isDragOver = false;
+
+    const file = ev.dataTransfer?.files?.[0] ?? null;
+    if (!file) return;
+
+    this.processLogoFile(file);
+  }
+
+  onRemoveLogo(): void {
+    this.setLogo(this.defaultLogoUrl);
+  }
+
+  get hasCustomLogo(): boolean {
+    return this.form.controls.logoUrl.value !== this.defaultLogoUrl;
   }
 
   onSubmit() {
@@ -90,14 +128,58 @@ export class ShopDialogComponent implements OnChanges {
     }
 
     const formValue = this.form.getRawValue();
-    const selectedCategory = this.categories.find(cat => cat.id === formValue.categoryId);
+    const selectedCategory =
+      this.categories.find(cat => cat.id === formValue.categoryId) ??
+      { id: formValue.categoryId, name: formValue.categoryId };
 
     this.save.emit({
       mode: this.mode,
       value: {
-        ...formValue,
+        ownerId: formValue.ownerId,
+        logoUrl: formValue.logoUrl,
+        name: formValue.name,
+        description: formValue.description,
+        status: formValue.status,
+        openingHours: formValue.openingHours,
+        contact: {
+          phone: formValue.contact.phone,
+          email: formValue.contact.email,
+          address: formValue.contact.address,
+        },
+        socials: {
+          facebook: formValue.socials.facebook,
+          instagram: formValue.socials.instagram,
+          website: formValue.socials.website,
+        },
         category: selectedCategory,
-      } as Omit<Shop, 'id'>,
+      } as Omit<Shop, '_id'>,
     });
+  }
+
+  private processLogoFile(file: File, input?: HTMLInputElement): void {
+    if (!file.type.startsWith('image/')) {
+      alert('Veuillez choisir une image.');
+      if (input) input.value = '';
+      return;
+    }
+    if (file.size > 2 * 1024 * 1024) {
+      alert('Image trop grande (max 2MB).');
+      if (input) input.value = '';
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      const dataUrl = String(reader.result);
+      this.setLogo(dataUrl, file.name);
+      if (input) input.value = '';
+    };
+    reader.readAsDataURL(file);
+  }
+
+  private setLogo(value: string, fileName = ''): void {
+    this.previewUrl = value;
+    this.form.controls.logoUrl.setValue(value);
+    this.selectedLogoFileName = fileName;
   }
 }

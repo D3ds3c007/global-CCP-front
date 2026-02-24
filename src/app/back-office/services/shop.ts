@@ -14,6 +14,12 @@ export interface contactInfo {
   address: string;
 }
 
+export interface SocialsInfo {
+  facebook: string;
+  instagram: string;
+  website: string;
+}
+
 export interface category {
   id: string;
   name: string;
@@ -28,7 +34,9 @@ export interface Shop {
   coverUrl?: string;
   ownerId: string;
   description?: string;
+  openingHours?: string;
   contact?: contactInfo;
+  socials?: SocialsInfo;
 }
 
 export interface ShopsQuery {
@@ -114,6 +122,22 @@ export class ShopsBackService {
       status: sh.status,
       logoUrl: sh.logoUrl,
       ownerId: user.id,
+      description: sh.description,
+      openingHours: sh.openingHours,
+      contact: sh.contact
+        ? {
+            email: sh.contact.email ?? '',
+            phone: sh.contact.phone ?? '',
+            address: sh.contact.address ?? '',
+          }
+        : undefined,
+      socials: sh.socials
+        ? {
+            facebook: sh.socials.facebook ?? '',
+            instagram: sh.socials.instagram ?? '',
+            website: sh.socials.website ?? '',
+          }
+        : undefined,
     }));
 
     console.log('Seeded shops', store);
