@@ -49,7 +49,7 @@
         <label class="field">
           <span>Catégorie</span>
           <select formControlName="categoryId">
-            <option *ngFor="let c of categories" [value]="c.id">{{ c.name }}</option>
+            <option *ngFor="let c of categories" [value]="c._id">{{ c.name }}</option>
           </select>
         </label>
 

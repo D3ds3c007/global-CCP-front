@@ -1,12 +1,17 @@
 import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, combineLatest, map, Observable } from 'rxjs';
 import { AuthStateService } from '../../core/services/auth-state.service';
+import { environment } from '../../../environments/environment';
+import { HttpClient, HttpParams } from '@angular/common/http';
 
 export type ShopStatus = 'PENDING' | 'ACTIVE';
 
 export interface ShopCategory {
-  id: string;
+  _id: string;
   name: string;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
 }
 export interface contactInfo {
   email: string;
@@ -51,13 +56,16 @@ export interface ShopsVM {
   shops: Shop[];
 }
 
+
 @Injectable({ providedIn: 'root' })
 export class ShopsBackService {
-  private readonly categoriesSubject = new BehaviorSubject<ShopCategory[]>([
-    { id: 'tech', name: 'TECH' },
-    { id: 'food', name: 'FOOD' },
-    { id: 'fashion', name: 'FASHION' },
-  ]);
+  private apiUrl = environment.apiUrl;
+  
+  private readonly categoriesSubject = new BehaviorSubject<ShopCategory[]>([]);
+  readonly categories$ = this.categoriesSubject.asObservable();
+
+  readonly categories: ShopCategory[] = [];
+
   private readonly authState = inject(AuthStateService);
   private readonly currentUser$ = this.authState.currentUser$;
   private readonly shopsSubject = new BehaviorSubject<Shop[]>(this.seedShops());
@@ -68,7 +76,6 @@ export class ShopsBackService {
     status: 'all',
   });
 
-  readonly categories$ = this.categoriesSubject.asObservable();
   readonly query$ = this.querySubject.asObservable();
 
   readonly shopsFiltered$ = combineLatest([this.shopsSubject, this.querySubject]).pipe(
@@ -89,6 +96,21 @@ export class ShopsBackService {
     shops: this.shopsFiltered$,
   });
 
+  constructor(private http: HttpClient) {
+    // this.loadCategories();
+  } 
+
+  setCategories(categories: ShopCategory[]): void {
+    this.categoriesSubject.next(categories);
+  }
+
+  loadCategories(): Observable<ShopCategory[]> {
+
+    const params = new HttpParams().set('type', 'SHOP');
+
+    return this.http.get<ShopCategory[]>(`${this.apiUrl}categories`, { params, withCredentials: true });
+  }
+
   setQuery(patch: Partial<ShopsQuery>) {
     this.querySubject.next({ ...this.querySubject.value, ...patch });
   }
@@ -104,10 +126,6 @@ export class ShopsBackService {
   }
 
   private seedShops(): Shop[] {
-    // return [
-    //   { id: 'massin', name: 'MassIn', categoryId: 'tech', status: 'ACTIVE', logoUrl: 'https://picsum.photos/seed/massin/120/120' },
-    //   { id: 'fresh', name: 'Fresh Market', categoryId: 'food', status: 'PENDING', logoUrl: 'https://picsum.photos/seed/fresh/120/120' },
-    // ];
 
     //retunr shops from currentuser$
     const user = this.authState.snapshot;
@@ -145,4 +163,6 @@ export class ShopsBackService {
 
 
   }
+
+   
 }
