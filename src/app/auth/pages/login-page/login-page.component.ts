@@ -89,7 +89,7 @@ export class LoginPageComponent {
               next: res => {
                 console.log('Current user', res.user.role);
                 this.authSession.resetCache(); // reset cache to force refresh of user info in guards and other parts of the app
-                if (res.user.role === 'SHOP') this.router.navigate(['/shop/dashboard']);
+                if (res.user.role === 'SHOP') this.router.navigate(['/owner/dashboard']);
                 else if (res.user.role === 'ADMIN') this.router.navigate(['/admin/dashboard']);
                 else window.location.href = '/'; // full reload to reset any cached state, can be improved with a proper state management and route guards
                 

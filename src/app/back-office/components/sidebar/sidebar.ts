@@ -45,7 +45,17 @@ export class Sidebar {
     this.collapsed = !this.collapsed;
   }
 
-  onLogout() {
-    this.logout.emit();
+  onLogout(): void {
+    this.authService.logout().subscribe({
+      next: () => {
+        this.session.resetCache(); // reset cache to force refresh of user info in guards and other parts of the app
+        this.logout.emit();
+        window.location.href = '/auth/login'; // full reload to reset any cached state, can be improved with a proper state management and route guards
+      },
+      error: error => {
+        // even if logout API call fails, we still want to clear client state
+        this.logout.emit();
+      }
+    });
   }
 }
