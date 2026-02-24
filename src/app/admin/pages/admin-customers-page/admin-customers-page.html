@@ -1,4 +1,4 @@
-<section class="page" *ngIf="vm$ | async as vm">
+<section class="page" *ngIf="vm$ | async as vm; else loading">
   <div class="kpis">
     <app-dashboard-card [title]="vm.kpi1.title">
       <app-kpi-card [data]="vm.kpi1"></app-kpi-card>
@@ -10,12 +10,22 @@
   </div>
 
   <app-dashboard-card title="Customers">
-    <div card-right class="sort">
-      <span>Sort by</span>
-      <select [ngModel]="vm.query.sort" (ngModelChange)="setSort($event)">
-        <option value="newest">Newest</option>
-        <option value="oldest">Oldest</option>
-      </select>
+    <div class="controls">
+      <input
+        class="search"
+        [ngModel]="vm.query.search"
+        (ngModelChange)="setSearch($event)"
+        [ngModelOptions]="{ standalone: true }"
+        placeholder="Search customer..."
+      />
+
+      <div class="sort">
+        <span>Sort by</span>
+        <select [ngModel]="vm.query.sort" (ngModelChange)="setSort($event)">
+          <option value="newest">Newest</option>
+          <option value="oldest">Oldest</option>
+        </select>
+      </div>
     </div>
 
     <app-admin-customers-list
@@ -27,3 +37,7 @@
     ></app-admin-customers-list>
   </app-dashboard-card>
 </section>
+
+<ng-template #loading>
+  <div style="padding: 18px;">Loading...</div>
+</ng-template>

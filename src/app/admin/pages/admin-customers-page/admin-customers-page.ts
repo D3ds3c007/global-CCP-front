@@ -34,6 +34,10 @@ export class AdminCustomersPage {
     this.service.setQuery({ sort: v });
   }
 
+  setSearch(v: string) {
+    this.service.setQuery({ search: v });
+  }
+
   select(id: string) { this.service.select(id); }
   toggleStatus(id: string) { this.service.toggleStatus(id); }
   remove(id: string) {

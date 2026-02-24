@@ -1,10 +1,18 @@
-.page{padding:18px;background:#f5f6fa;min-height:100vh}
+.controls{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin: 6px 0 10px;
+}
 
-.kpis{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:14px;
-  margin-bottom:14px;
+.search{
+  flex:1;
+  border:1px solid #eef2f7;
+  border-radius:14px;
+  padding:10px 12px;
+  background:#fff;
+  outline:none;
 }
 
 .sort{
@@ -14,6 +22,7 @@
   color:#64748b;
   font-weight:800;
   font-size:12px;
+  white-space:nowrap;
 }
 
 .sort select{
@@ -26,5 +35,6 @@
 }
 
 @media (max-width: 900px){
-  .kpis{grid-template-columns:1fr}
+  .controls{flex-direction:column; align-items:stretch;}
+  .sort{justify-content:space-between;}
 }
