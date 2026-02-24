@@ -6,12 +6,33 @@
     </div>
 
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
-      <div class="grid">
-        <label class="field">
-          <span>Image URL</span>
-          <input formControlName="imageUrl" />
-        </label>
 
+      <!-- IMAGE: upload + preview + url -->
+      <div class="img-block">
+        <div class="preview">
+          <img [src]="previewUrl || form.controls.imageUrl.value" alt="preview" />
+        </div>
+
+        <div class="img-actions">
+          <label class="file-btn">
+            Upload image
+            <input type="file" accept="image/*" (change)="onPickFile($event)" hidden />
+          </label>
+
+          <div class="or">ou</div>
+
+          <label class="field">
+            <span>Image URL</span>
+            <input
+              formControlName="imageUrl"
+              (input)="previewUrl = form.controls.imageUrl.value"
+            />
+          </label>
+        </div>
+      </div>
+
+      <!-- FORM GRID -->
+      <div class="grid">
         <label class="field">
           <span>Nom</span>
           <input formControlName="name" />
