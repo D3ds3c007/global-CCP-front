@@ -1,0 +1,44 @@
+<div class="wrap">
+  <table *ngIf="shops.length; else empty">
+    <thead>
+      <tr>
+        <th>Logo</th>
+        <th>Name</th>
+        <th>Category</th>
+        <th>Status</th>
+        <th class="right">ID</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let s of shops">
+        <td>
+          <img class="logo" [src]="s.logoUrl" alt="logo" />
+        </td>
+
+        <td class="name">{{ s.name }}</td>
+        <td>{{ s.categoryName }}</td>
+
+        <td>
+          <select
+            class="status"
+            [ngClass]="s.status"
+            [ngModel]="s.status"
+            (ngModelChange)="statusChange.emit({ id: s.id, status: $event })"
+            [ngModelOptions]="{ standalone: true }"
+          >
+            <option value="pending">pending</option>
+            <option value="active">active</option>
+            <option value="banned">banned</option>
+          </select>
+        </td>
+
+        <td class="right mono">{{ s.id }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <ng-template #empty>
+    <div class="empty">No shops.</div>
+  </ng-template>
+</div>

@@ -1,0 +1,16 @@
+<div class="chips">
+  <div
+    class="chip"
+    *ngFor="let c of categories"
+    [class.active]="c.status==='active'"
+    [class.inactive]="c.status==='inactive'"
+  >
+    <button class="chip-main" type="button" (click)="edit.emit(c)">
+      {{ c.name }} <span class="type">{{ c.type }}</span>
+    </button>
+
+    <button class="chip-toggle" type="button" (click)="toggle.emit(c.id)">
+      {{ c.status === 'active' ? 'ON' : 'OFF' }}
+    </button>
+  </div>
+</div>

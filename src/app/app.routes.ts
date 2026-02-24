@@ -15,6 +15,11 @@ export const routes: Routes = [
 		loadChildren: () =>
 		import('./back-office/back-office.routes').then(m => m.BACK_OFFICE_ROUTES),
 	},
+	{
+		path: 'admin',
+		loadChildren: () =>
+		import('./admin/admin.routes').then(m => m.ADMIN_ROUTES),
+	},
 
 
 	{ path: '**', redirectTo: '' }
