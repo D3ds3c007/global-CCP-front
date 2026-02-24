@@ -4,6 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthStateService } from '../../../core/services/auth-state.service';
+import { AuthService } from '../../../auth/services/auth.service';
+import { AuthSessionService } from '../../../auth/services/auth-session.service';
 
 type NavItem = {
   label: string;
@@ -26,6 +28,8 @@ type NavItem = {
 })
 export class Sidebar {
   private readonly authState = inject(AuthStateService);
+  private readonly authService = inject(AuthService);
+  private readonly session = inject(AuthSessionService);
 
   @Output() logout = new EventEmitter<void>();
 
@@ -52,7 +56,7 @@ export class Sidebar {
         this.logout.emit();
         window.location.href = '/auth/login'; // full reload to reset any cached state, can be improved with a proper state management and route guards
       },
-      error: error => {
+      error: (error: unknown) => {
         // even if logout API call fails, we still want to clear client state
         this.logout.emit();
       }
