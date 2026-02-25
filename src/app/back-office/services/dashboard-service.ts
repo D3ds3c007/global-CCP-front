@@ -55,16 +55,12 @@ export interface OwnerDashboardVM {
   // screenshot
   kpiProcessed: KpiCard;
   kpiPENDING: KpiCard;
-  quarterGoalPercent: number;
+  kpiDELIVERED: KpiCard;
   topProducts: TopProduct[];
   revenue: RevenuePoint[];
-  topMonth: { month: string; year: number };
-  topYear: { year: number; soldK: number };
   topBuyer: TopBuyer;
-
   // en plus
   shopStatus: ShopStatus;
-  orderStats: OrderStats;
   lowStock: LowStockProduct[];
   lastOrders: Order[];
 }
@@ -84,17 +80,21 @@ export class DashboardService {
         percent: Math.round(rand(10, 25)),
         trend: 'up',
         subtitle: 'Increase compared to last week',
-        linkText: 'Revenues report →',
+        linkText: '',
       },
 
       kpiPENDING: {
         title: 'Commande en attente',
         percent: Math.round(rand(1, 10)),
         subtitle: 'You closed 96 out of 100 deals',
-        linkText: 'All deals →',
+        linkText: '',
       },
-
-      quarterGoalPercent: 84,
+      kpiDELIVERED: {
+        title: 'Commande livrée',
+        percent: Math.round(rand(1, 10)),
+        subtitle: 'You closed 96 out of 100 deals',
+        linkText: '',
+      },
 
       topProducts: [
         { name: 'COMPUTER', valueK: 120 },
@@ -108,9 +108,6 @@ export class DashboardService {
         valueK: Math.round(10 + i * 8 + rand(0, 18)),
       })),
 
-      topMonth: { month: 'November', year: 2019 },
-      topYear: { year: 2023, soldK: 96 },
-
       topBuyer: {
         name: 'Maggie Johnson',
         company: 'Oasis Organic Inc.',
@@ -118,12 +115,6 @@ export class DashboardService {
       },
 
       shopStatus: seed % 2 === 0 ? 'ACTIVE' : 'PENDING',
-
-      orderStats: {
-        PENDING: Math.round(rand(1, 8)),
-        confirmed: Math.round(rand(5, 25)),
-        delivered: Math.round(rand(20, 120)),
-      },
 
       lowStock: [
         { id: 'p1', name: 'Keyboard', stock: 3, minStock: 10 },

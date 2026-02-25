@@ -28,10 +28,12 @@
       </app-dashboard-card>
     </ng-container>
 
-    <!-- Quarter goal -->
-    <app-dashboard-card class="c3" title="Quarter goal">
-      <app-quarter-goal [percent]="vm.quarterGoalPercent"></app-quarter-goal>
-    </app-dashboard-card>
+    <!-- KPI 3 -->
+    <ng-container *ngIf="vm.kpiDELIVERED as k3">
+      <app-dashboard-card class="c3" [title]="k3.title">
+        <app-kpi-card [data]="k3"></app-kpi-card>
+      </app-dashboard-card>
+    </ng-container>
 
     <!-- Top Products -->
     <app-dashboard-card class="c4" title="Top Products">
@@ -47,17 +49,6 @@
       <app-revenue-chart [points]="vm.revenue"></app-revenue-chart>
     </app-dashboard-card>
 
-    <!-- Bottom right tiles -->
-    <app-mini-tile class="t1" title="Top month" *ngIf="vm.topMonth as tm">
-      <div class="big">{{ tm.month }}</div>
-      <div class="accent">{{ tm.year }}</div>
-    </app-mini-tile>
-
-    <app-mini-tile class="t2" title="Top year" *ngIf="vm.topYear as ty">
-      <div class="big">{{ ty.year }}</div>
-      <div class="muted">{{ ty.soldK }}K sold so far</div>
-    </app-mini-tile>
-
     <app-mini-tile class="t3" title="Top buyer" *ngIf="vm.topBuyer as tb">
       <app-top-buyer-tile [buyer]="tb"></app-top-buyer-tile>
     </app-mini-tile>
@@ -65,10 +56,6 @@
 
   <!-- EN PLUS -->
   <div class="extras">
-    <app-dashboard-card title="Stats : commandes">
-      <app-stats-cards [stats]="vm.orderStats"></app-stats-cards>
-    </app-dashboard-card>
-
     <app-dashboard-card title="Produits low stock">
       <app-low-stock [products]="vm.lowStock"></app-low-stock>
     </app-dashboard-card>
