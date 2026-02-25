@@ -23,6 +23,10 @@
   font-size: 18px;
 }
 
+.avatar-img {
+  object-fit: cover;
+}
+
 .name { font-weight: 800; color: #0f172a; }
 .meta { color: #64748b; font-size: 13px; margin-top: 2px; }
 .dot { margin: 0 8px; }

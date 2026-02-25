@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { BackOfficeLayout } from './pages/back-office-layout/back-office-layout';
 import { authGuard } from '../core/guards/auth.guard';
 import { roleGuard } from '../core/guards/role.guard';
+import { activeShopGuard } from '../core/guards/active-shop.guard';
 
 export const BACK_OFFICE_ROUTES: Routes = [
   {
@@ -27,6 +28,7 @@ export const BACK_OFFICE_ROUTES: Routes = [
         path: 'dashboard/:shopId',
         loadComponent: () =>
           import('./pages/dashboard-page/dashboard-page').then(m => m.DashboardPage),
+        canActivate: [activeShopGuard],
       },
 
       // /owner/products
