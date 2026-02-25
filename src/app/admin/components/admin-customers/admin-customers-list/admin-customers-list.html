@@ -1,0 +1,46 @@
+<div class="list">
+  <!-- header row like screenshot -->
+  <div class="list-head">
+    <div></div>
+    <div class="col">TYPE</div>
+    <div class="col right">STATUS</div>
+  </div>
+
+  <div
+    class="row"
+    *ngFor="let c of customers"
+    [class.active]="isActiveRow(c.id)"
+    (click)="select.emit(c.id)"
+  >
+    <div class="left">
+      <img class="avatar" [src]="c.avatarUrl" [alt]="c.fullName" />
+      <div class="meta">
+        <div class="name">{{ c.fullName }}</div>
+        <div class="company">{{ c.company }}</div>
+      </div>
+    </div>
+
+    <div class="type">{{ c.type }}</div>
+
+    <div class="right-side">
+      <span class="status" [class.active]="c.status==='active'" [class.inactive]="c.status==='inactive'" [class.banned]="c.status==='banned'">
+        {{ c.status | uppercase }}
+      </span>
+
+      <!-- actions visible like screenshot (mostly on active row) -->
+      <div class="actions" [class.show]="isActiveRow(c.id)" (click)="$event.stopPropagation()">
+        <button type="button" class="icon-btn" title="Message"><span class="mi">chat_bubble_outline</span></button>
+        <button type="button" class="icon-btn" title="Favorite"><span class="mi">star_outline</span></button>
+        <button type="button" class="icon-btn" title="Toggle status" (click)="toggleStatus.emit(c.id)">
+          <span class="mi">toggle_on</span>
+        </button>
+        <button type="button" class="icon-btn danger" title="Delete" (click)="remove.emit(c.id)">
+          <span class="mi">delete</span>
+        </button>
+        <button type="button" class="icon-btn" title="More"><span class="mi">more_horiz</span></button>
+      </div>
+    </div>
+  </div>
+
+  <a class="all" href="javascript:void(0)">All customers →</a>
+</div>

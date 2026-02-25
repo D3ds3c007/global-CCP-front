@@ -1,0 +1,43 @@
+<div class="overlay" (click)="onBackdropClick()">
+  <div class="modal" (click)="$event.stopPropagation()">
+    <div class="head">
+      <h3>{{ mode === 'create' ? 'Create category' : 'Edit category' }}</h3>
+      <button class="x" type="button" (click)="cancel.emit()">✕</button>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="grid">
+        <label class="field full">
+          <span>Name</span>
+          <input formControlName="name" />
+        </label>
+
+        <label class="field full">
+          <span>Type</span>
+          <select formControlName="type">
+            <option value="SHOP">SHOP</option>
+            <option value="PRODUCT">PRODUCT</option>
+          </select>
+        </label>
+
+        <div class="field full">
+          <span>Status</span>
+          <label class="switch">
+            <input type="checkbox" formControlName="active" />
+            <span class="slider"></span>
+          </label>
+          <div class="hint">
+            {{ form.controls.active.value ? 'ACTIVE' : 'INACTIVE' }}
+          </div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button type="button" class="btn ghost" (click)="cancel.emit()">Cancel</button>
+        <button type="submit" class="btn primary">
+          {{ mode === 'create' ? 'CREATE' : 'SAVE' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

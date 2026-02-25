@@ -1,0 +1,16 @@
+<section class="page" *ngIf="vm$ | async as vm">
+  <h1 class="title">List shop (Admin)</h1>
+
+  <app-dashboard-card title="Shops">
+    <app-admin-shops-filters
+      [categories]="vm.categories"
+      [query]="vm.query"
+      (queryChange)="setQuery($event)"
+    ></app-admin-shops-filters>
+
+    <app-admin-shops-table
+      [shops]="vm.shops"
+      (statusChange)="onStatusChange($event)"
+    ></app-admin-shops-table>
+  </app-dashboard-card>
+</section>

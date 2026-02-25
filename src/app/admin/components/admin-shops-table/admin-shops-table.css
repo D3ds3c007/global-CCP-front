@@ -1,0 +1,62 @@
+.wrap{
+  background:#fff;
+  border-radius:16px;
+  padding:14px;
+  box-shadow:0 8px 24px rgba(15,23,42,0.06);
+}
+
+table{width:100%; border-collapse:collapse;}
+th,td{padding:10px 8px; border-bottom:1px solid #f1f5f9; font-size:13px;}
+th{color:#64748b; font-weight:800; text-align:left;}
+.right{text-align:right;}
+
+.logo{
+  width:44px;height:34px;
+  border-radius:10px;
+  object-fit:cover;
+  background:#f1f5f9;
+}
+.name{font-weight:900;color:#0f172a;}
+.mono{font-family: ui-monospace, Menlo, Consolas, monospace;}
+
+.empty{color:#64748b;font-size:13px;}
+
+/* select status (base) */
+.status{
+  border:1px solid #eef2f7;
+  border-radius:6px;
+  padding:8px 12px;
+  background:#fff;
+  font-weight:900;
+  text-transform:uppercase;
+  outline:none;
+  cursor:pointer;
+
+  /* optionnel: look plus propre */
+  appearance:none;
+  -webkit-appearance:none;
+  -moz-appearance:none;
+}
+
+/* focus */
+.status:focus{
+  box-shadow:0 0 0 3px rgba(245,158,11,0.25);
+  border-color:#f59e0b;
+}
+
+/* couleurs selon valeur (tu mets [ngClass]="s.status") */
+.status.active{
+  background:#c7f3c7;
+  border-color:#b7e7b7;
+  color:#0f172a;
+}
+.status.pending{
+  background:#ffd38a;
+  border-color:#ffc66a;
+  color:#0f172a;
+}
+.status.banned{
+  background:#ff3b00;
+  border-color:#ff3b00;
+  color:#ffffff;
+}

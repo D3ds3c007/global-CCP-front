@@ -1,0 +1,32 @@
+<section class="page" *ngIf="vm$ | async as vm">
+  <div class="page-head">
+    <h1 class="title">Categories</h1>
+  </div>
+
+  <app-dashboard-card title="">
+    <app-categories-filters
+      [query]="vm.query"
+      [statuses]="vm.statuses"
+      [types]="vm.types"
+      (queryChange)="setQuery($event)"
+    ></app-categories-filters>
+
+    <app-categories-chips
+      [categories]="vm.categories"
+      (edit)="openEdit($event)"
+      (toggle)="toggle($event)"
+    ></app-categories-chips>
+  </app-dashboard-card>
+
+  <!-- Bouton + -->
+  <button class="fab" type="button" (click)="openCreate()" title="Create category">+</button>
+
+  <!-- Popup -->
+  <app-category-dialog
+    *ngIf="dialogOpen"
+    [mode]="dialogMode"
+    [category]="editing"
+    (cancel)="closeDialog()"
+    (save)="onSave($event)"
+  ></app-category-dialog>
+</section>

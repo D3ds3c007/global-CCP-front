@@ -1,0 +1,62 @@
+<section class="page" *ngIf="vm$ | async as vm">
+  <div class="grid">
+    <!-- KPI row -->
+    <app-dashboard-card class="c1" [title]="vm.kpiTotalShops.title">
+      <app-kpi-card [data]="vm.kpiTotalShops"></app-kpi-card>
+    </app-dashboard-card>
+
+    <app-dashboard-card class="c2" [title]="vm.kpiPendingShops.title">
+      <app-kpi-card [data]="vm.kpiPendingShops"></app-kpi-card>
+    </app-dashboard-card>
+
+    <app-dashboard-card class="c3" [title]="vm.kpiBannedShops.title">
+      <app-kpi-card [data]="vm.kpiBannedShops"></app-kpi-card>
+    </app-dashboard-card>
+
+    <!-- Commissions chart -->
+    <app-dashboard-card class="c4" title="Commissions">
+      <div card-right class="select">Yearly ▾</div>
+      <app-revenue-chart [points]="vm.commissions"></app-revenue-chart>
+    </app-dashboard-card>
+
+    <!-- Top MAGASIN -->
+    <app-dashboard-card class="c5" title="Top MAGASIN">
+      <app-top-products [products]="vm.topMagasins"></app-top-products>
+    </app-dashboard-card>
+
+    <!-- mini tiles -->
+    <app-mini-tile class="t1" title="Top month">
+      <div class="big">{{ vm.topMonth.month }}</div>
+      <div class="accent">{{ vm.topMonth.year }}</div>
+    </app-mini-tile>
+
+    <app-mini-tile class="t2" title="Top year">
+      <div class="big">{{ vm.topYear.year }}</div>
+      <div class="muted">{{ vm.topYear.soldK }}K sold so far</div>
+    </app-mini-tile>
+
+    <app-mini-tile class="t3" title="Top buyer">
+      <app-top-buyer-tile [buyer]="vm.topBuyer"></app-top-buyer-tile>
+    </app-mini-tile>
+
+    <!-- quarter goals (2 cards) -->
+    <app-dashboard-card class="q1" title="Quarter goal">
+      <app-quarter-goal [percent]="vm.quarterGoal1"></app-quarter-goal>
+    </app-dashboard-card>
+
+    <app-dashboard-card class="q2" title="Quarter goal">
+      <app-quarter-goal [percent]="vm.quarterGoal2"></app-quarter-goal>
+    </app-dashboard-card>
+
+    <!-- Top Customers -->
+    <app-dashboard-card class="c6" title="Top Customers">
+      <div card-right class="select">Sort by Newest ▾</div>
+
+      <!-- réutilisation composant existant customers-list -->
+      <app-customers-list
+        [customers]="vm.topCustomers"
+        [selectedId]="null"
+      ></app-customers-list>
+    </app-dashboard-card>
+  </div>
+</section>
