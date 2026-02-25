@@ -1,10 +1,10 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router';
-import { BehaviorSubject, combineLatest, filter, switchMap, tap } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
+import { BehaviorSubject, combineLatest, filter, map, switchMap } from 'rxjs';
 
 import { DashboardService, RevenueFilter } from '../../services/dashboard-service';
-import { SelectedShopContext, SelectedShopStateService } from '../../services/selected-shop-state.service';
+import { SelectedShopStateService } from '../../services/selected-shop-state.service';
 
 import { DashboardCardComponent } from '../../components/dashboard/dashboard-card/dashboard-card';
 import { KpiCardComponent } from '../../components/dashboard/kpi-card/kpi-card';
@@ -36,7 +36,6 @@ import { LastOrdersTableComponent } from '../../components/dashboard/last-orders
 })
 export class DashboardPage {
   private readonly route = inject(ActivatedRoute);
-  private readonly router = inject(Router);
   private readonly selectedShopState = inject(SelectedShopStateService);
   private readonly ds = inject(DashboardService);
 
@@ -47,25 +46,19 @@ export class DashboardPage {
   readonly loading$ = this.ds.loading$;
   readonly error$ = this.ds.error$;
 
-  private readonly shopContext$ = this.selectedShopState.selectedShop$.pipe(
-    tap((shop) => {
-      if (!shop?._id) {
-        void this.router.navigate(['/shop']);
-      }
-    }),
-    filter((shop): shop is SelectedShopContext => !!shop && !!shop._id)
+  readonly contextError$ = combineLatest([this.route.paramMap, this.selectedShopState.selectedShop$]).pipe(
+    map(([params, selected]) => {
+      const routeShopId = params.get('shopId');
+      if (!selected?._id) return 'No selected shop context. Please select a shop first.';
+      if (routeShopId && routeShopId !== selected._id) return 'Selected shop does not match the dashboard route. Please reselect a shop.';
+      return null;
+    })
   );
 
-  readonly vm$ = combineLatest([this.route.paramMap, this.shopContext$, this.revenueFilter$]).pipe(
-    tap(([params, shop]) => {
+  readonly vm$ = combineLatest([this.route.paramMap, this.selectedShopState.selectedShop$, this.revenueFilter$]).pipe(
+    filter(([params, selected]) => {
       const routeShopId = params.get('shopId');
-      if (routeShopId && routeShopId !== shop._id) {
-        void this.router.navigate(['/shop']);
-      }
-    }),
-    filter(([params, shop]) => {
-      const routeShopId = params.get('shopId');
-      return !routeShopId || routeShopId === shop._id;
+      return !!selected?._id && (!routeShopId || routeShopId === selected._id);
     }),
     switchMap(([, , revenueFilter]) => this.ds.getOwnerDashboard(revenueFilter))
   );

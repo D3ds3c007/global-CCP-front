@@ -1,65 +1,73 @@
-<section *ngIf="vm$ | async as vm; else loading">
-  <div class="header">
-    <div>
-      <h1>Dashboard</h1>
-      <p>Overview</p>
-    </div>
-
-    <app-shop-status-badge *ngIf="vm.shopStatus as st" [status]="st"></app-shop-status-badge>
+<ng-container *ngIf="contextError$ | async as contextError; else dashboardContent">
+  <div style="padding: 18px; border: 1px solid #e5e7eb; border-radius: 12px; background: #fff; color: #334155;">
+    {{ contextError }}
   </div>
+</ng-container>
 
-  <div *ngIf="error$ | async as error" style="margin-bottom: 12px; padding: 10px 12px; border-radius: 10px; border: 1px solid #fecaca; background: #fef2f2; color: #991b1b; font-size: 13px;">
-    {{ error }}
-  </div>
-
-  <div class="grid">
-    <ng-container *ngIf="vm.kpiPENDING as kPending">
-      <app-dashboard-card class="c1" [title]="kPending.title" style="grid-column: span 3;">
-        <app-kpi-card [data]="kPending"></app-kpi-card>
-      </app-dashboard-card>
-    </ng-container>
-
-    <ng-container *ngIf="vm.kpiProcessed as kProcessed">
-      <app-dashboard-card class="c2" [title]="kProcessed.title" style="grid-column: span 3;">
-        <app-kpi-card [data]="kProcessed"></app-kpi-card>
-      </app-dashboard-card>
-    </ng-container>
-
-    <ng-container *ngIf="vm.kpiDELIVERED as kDelivered">
-      <app-dashboard-card class="c3" [title]="kDelivered.title" style="grid-column: span 3;">
-        <app-kpi-card [data]="kDelivered"></app-kpi-card>
-      </app-dashboard-card>
-    </ng-container>
-
-    <app-dashboard-card class="c4" title="Revenu" style="grid-column: span 3;">
-      <div card-right class="select">
-        <select #revenueSelect [value]="revenueFilter" (change)="setRevenueFilter(revenueSelect.value)" style="border: 0; background: transparent; color: inherit; font: inherit; cursor: pointer;">
-          <option value="month">Month</option>
-          <option value="year">Year</option>
-        </select>
-        <span class="caret">v</span>
+<ng-template #dashboardContent>
+  <section *ngIf="vm$ | async as vm; else loading">
+    <div class="header">
+      <div>
+        <h1>Dashboard</h1>
+        <p>Overview</p>
       </div>
 
-      <app-revenue-chart [points]="vm.revenue"></app-revenue-chart>
-    </app-dashboard-card>
+      <app-shop-status-badge *ngIf="vm.shopStatus as st" [status]="st"></app-shop-status-badge>
+    </div>
 
-    <app-dashboard-card title="Produits low stock" style="grid-column: span 5;">
-      <app-low-stock [products]="vm.lowStock"></app-low-stock>
-    </app-dashboard-card>
+    <div *ngIf="error$ | async as error" style="margin-bottom: 12px; padding: 10px 12px; border-radius: 10px; border: 1px solid #fecaca; background: #fef2f2; color: #991b1b; font-size: 13px;">
+      {{ error }}
+    </div>
 
-    <app-dashboard-card title="Top Product" style="grid-column: span 4;">
-      <app-top-products [products]="vm.topProducts"></app-top-products>
-    </app-dashboard-card>
+    <div class="grid">
+      <ng-container *ngIf="vm.kpiPENDING as kPending">
+        <app-dashboard-card class="c1" [title]="kPending.title" style="grid-column: span 3;">
+          <app-kpi-card [data]="kPending"></app-kpi-card>
+        </app-dashboard-card>
+      </ng-container>
 
-    <app-mini-tile title="Top buyer" *ngIf="vm.topBuyer as tb" style="grid-column: span 3;">
-      <app-top-buyer-tile [buyer]="tb"></app-top-buyer-tile>
-    </app-mini-tile>
+      <ng-container *ngIf="vm.kpiProcessed as kProcessed">
+        <app-dashboard-card class="c2" [title]="kProcessed.title" style="grid-column: span 3;">
+          <app-kpi-card [data]="kProcessed"></app-kpi-card>
+        </app-dashboard-card>
+      </ng-container>
 
-    <app-dashboard-card title="Dernieres commandes (mock)" style="grid-column: span 12;">
-      <app-last-orders-table [orders]="vm.lastOrders"></app-last-orders-table>
-    </app-dashboard-card>
-  </div>
-</section>
+      <ng-container *ngIf="vm.kpiDELIVERED as kDelivered">
+        <app-dashboard-card class="c3" [title]="kDelivered.title" style="grid-column: span 3;">
+          <app-kpi-card [data]="kDelivered"></app-kpi-card>
+        </app-dashboard-card>
+      </ng-container>
+
+      <app-dashboard-card class="c4" title="Revenu" style="grid-column: span 3;">
+        <div card-right class="select">
+          <select #revenueSelect [value]="revenueFilter" (change)="setRevenueFilter(revenueSelect.value)" style="border: 0; background: transparent; color: inherit; font: inherit; cursor: pointer;">
+            <option value="month">Month</option>
+            <option value="year">Year</option>
+          </select>
+          <span class="caret">v</span>
+        </div>
+
+        <app-revenue-chart [points]="vm.revenue"></app-revenue-chart>
+      </app-dashboard-card>
+
+      <app-dashboard-card title="Produits low stock" style="grid-column: span 5;">
+        <app-low-stock [products]="vm.lowStock"></app-low-stock>
+      </app-dashboard-card>
+
+      <app-dashboard-card title="Top Product" style="grid-column: span 4;">
+        <app-top-products [products]="vm.topProducts"></app-top-products>
+      </app-dashboard-card>
+
+      <app-mini-tile title="Top buyer" *ngIf="vm.topBuyer as tb" style="grid-column: span 3;">
+        <app-top-buyer-tile [buyer]="tb"></app-top-buyer-tile>
+      </app-mini-tile>
+
+      <app-dashboard-card title="Dernieres commandes (mock)" style="grid-column: span 12;">
+        <app-last-orders-table [orders]="vm.lastOrders"></app-last-orders-table>
+      </app-dashboard-card>
+    </div>
+  </section>
+</ng-template>
 
 <ng-template #loading>
   <div style="padding: 18px;" *ngIf="loading$ | async; else idleState">Loading dashboard...</div>
