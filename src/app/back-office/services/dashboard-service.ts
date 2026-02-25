@@ -1,6 +1,9 @@
-import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { delay } from 'rxjs/operators';
+import { inject, Injectable } from '@angular/core';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { BehaviorSubject, defer, forkJoin, Observable, of, throwError } from 'rxjs';
+import { catchError, finalize, map } from 'rxjs/operators';
+import { environment } from '../../../environments/environment';
+import { SelectedShopStateService } from './selected-shop-state.service';
 
 export type ShopStatus = 'PENDING' | 'ACTIVE';
 
@@ -52,95 +55,290 @@ export interface LowStockProduct {
 }
 
 export interface OwnerDashboardVM {
-  // screenshot
   kpiProcessed: KpiCard;
   kpiPENDING: KpiCard;
-  quarterGoalPercent: number;
+  kpiDELIVERED: KpiCard;
   topProducts: TopProduct[];
   revenue: RevenuePoint[];
-  topMonth: { month: string; year: number };
-  topYear: { year: number; soldK: number };
   topBuyer: TopBuyer;
-
-  // en plus
   shopStatus: ShopStatus;
-  orderStats: OrderStats;
   lowStock: LowStockProduct[];
   lastOrders: Order[];
 }
 
+export type RevenueFilter = 'month' | 'year';
+
+interface OrderCountResponse {
+  orders: number;
+}
+
+interface ApiLowStockProduct {
+  _id: string;
+  name: string;
+  stock: number;
+}
+
+interface LowStockResponse {
+  count: number;
+  products: ApiLowStockProduct[];
+}
+
+interface ApiTopProduct {
+  productId: string;
+  name: string;
+  totalQty: number;
+  totalRevenue: number;
+}
+
+interface TopProductsResponse {
+  topProducts: ApiTopProduct[];
+}
+
+interface ApiTopCustomer {
+  customerId: string;
+  name?: string;
+  email?: string;
+  totalRevenue?: number;
+}
+
+interface TopCustomersResponse {
+  topCustomers: ApiTopCustomer[];
+}
+
+interface TotalRevenueResponse {
+  totalRevenue: number;
+}
+
 @Injectable({ providedIn: 'root' })
 export class DashboardService {
-  getOwnerDashboard(shopId: string): Observable<OwnerDashboardVM> {
-    // petite variation selon shopId (simulation)
-    const seed = this.hash(shopId);
-    const rand = (min: number, max: number) => min + ((seed % 100) / 100) * (max - min);
+  private readonly http = inject(HttpClient);
+  private readonly selectedShopState = inject(SelectedShopStateService);
+  private readonly apiUrl = environment.apiUrl;
 
-    const years = [2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023];
+  private readonly loadingSubject = new BehaviorSubject<boolean>(false);
+  readonly loading$ = this.loadingSubject.asObservable();
 
-    const vm: OwnerDashboardVM = {
+  private readonly errorSubject = new BehaviorSubject<string | null>(null);
+  readonly error$ = this.errorSubject.asObservable();
+
+  getOwnerDashboard(revenueFilter: RevenueFilter = 'month'): Observable<OwnerDashboardVM> {
+    return defer(() => {
+      const selectedShop = this.selectedShopState.snapshot;
+      const shopId = selectedShop?._id;
+
+      if (!shopId) {
+        const message = 'No selected shop context.';
+        this.errorSubject.next(message);
+        return throwError(() => new Error(message));
+      }
+
+      const now = new Date();
+      const revenueParams = this.buildRevenueParams(revenueFilter, now);
+
+      this.loadingSubject.next(true);
+      this.errorSubject.next(null);
+
+      return forkJoin({
+        pendingCount: this.getOrderCount(shopId, 'PENDING'),
+        processedCount: this.getOrderCount(shopId, 'CONFIRMED'),
+        deliveredCount: this.getOrderCount(shopId, 'DELIVERED'),
+        lowStock: this.getLowStock(shopId),
+        topProducts: this.getTopProducts(shopId),
+        topCustomers: this.getTopCustomers(shopId),
+        revenueTotal: this.getRevenueTotal(shopId, revenueParams),
+      }).pipe(
+        map((data) =>
+          this.buildVm({
+            shopId,
+            shopStatus: this.normalizeShopStatus(selectedShop.status),
+            revenueFilter,
+            now,
+            pendingCount: data.pendingCount,
+            processedCount: data.processedCount,
+            deliveredCount: data.deliveredCount,
+            lowStock: data.lowStock,
+            topProducts: data.topProducts,
+            topCustomers: data.topCustomers,
+            revenueTotal: data.revenueTotal,
+          })
+        ),
+        catchError((err: unknown) => {
+          this.errorSubject.next(this.readErrorMessage(err));
+          return of(
+            this.buildVm({
+              shopId,
+              shopStatus: this.normalizeShopStatus(selectedShop.status),
+              revenueFilter,
+              now,
+              pendingCount: 0,
+              processedCount: 0,
+              deliveredCount: 0,
+              lowStock: [],
+              topProducts: [],
+              topCustomers: [],
+              revenueTotal: 0,
+            })
+          );
+        }),
+        finalize(() => this.loadingSubject.next(false))
+      );
+    });
+  }
+
+  private getOrderCount(shopId: string, status: 'PENDING' | 'CONFIRMED' | 'DELIVERED'): Observable<number> {
+    const params = new HttpParams().set('status', status);
+    return this.http
+      .get<OrderCountResponse>(`${this.apiUrl}orders/shop/${shopId}`, { params, withCredentials: true })
+      .pipe(map((res) => Number(res.orders ?? 0)));
+  }
+
+  private getLowStock(shopId: string): Observable<LowStockProduct[]> {
+    return this.http
+      .get<LowStockResponse>(`${this.apiUrl}products/low-stock/shop/${shopId}`, { withCredentials: true })
+      .pipe(
+        map((res) =>
+          (res.products ?? [])
+            .filter((p) => Number(p.stock ?? 0) < 5)
+            .map((p) => ({
+              id: String(p._id),
+              name: String(p.name ?? ''),
+              stock: Number(p.stock ?? 0),
+              minStock: 5,
+            }))
+        ),
+        catchError(() => of([]))
+      );
+  }
+
+  private getTopProducts(shopId: string): Observable<TopProduct[]> {
+    return this.http
+      .get<TopProductsResponse>(`${this.apiUrl}shops/${shopId}/top-products-by-revenue`, { withCredentials: true })
+      .pipe(
+        map((res) =>
+          (res.topProducts ?? []).slice(0, 1).map((p) => ({
+            name: String(p.name ?? 'N/A').toUpperCase(),
+            valueK: this.toK(p.totalRevenue ?? 0),
+          }))
+        )
+      );
+  }
+
+  private getTopCustomers(shopId: string): Observable<TopBuyer[]> {
+    return this.http
+      .get<TopCustomersResponse>(`${this.apiUrl}shops/${shopId}/top-customers`, { withCredentials: true })
+      .pipe(
+        map((res) =>
+          (res.topCustomers ?? []).map((c) => {
+            const seed = String(c.customerId ?? c.email ?? c.name ?? 'buyer');
+            return {
+              name: String(c.name ?? 'Unknown buyer'),
+              company: String(c.email ?? 'Top customer'),
+              avatarUrl: `https://i.pravatar.cc/80?u=${encodeURIComponent(seed)}`,
+            };
+          })
+        )
+      );
+  }
+
+  private getRevenueTotal(shopId: string, params: HttpParams): Observable<number> {
+    return this.http
+      .get<TotalRevenueResponse>(`${this.apiUrl}shops/${shopId}/total-revenue`, { params, withCredentials: true })
+      .pipe(map((res) => Number(res.totalRevenue ?? 0)));
+  }
+
+  private buildRevenueParams(filter: RevenueFilter, now: Date): HttpParams {
+    const year = now.getFullYear();
+    const month = now.getMonth() + 1;
+
+    if (filter === 'year') {
+      return new HttpParams().set('year', String(year));
+    }
+
+    return new HttpParams().set('year', String(year)).set('month', String(month));
+  }
+
+  private buildVm(input: {
+    shopId: string;
+    shopStatus: ShopStatus;
+    revenueFilter: RevenueFilter;
+    now: Date;
+    pendingCount: number;
+    processedCount: number;
+    deliveredCount: number;
+    lowStock: LowStockProduct[];
+    topProducts: TopProduct[];
+    topCustomers: TopBuyer[];
+    revenueTotal: number;
+  }): OwnerDashboardVM {
+    const { shopId, shopStatus, revenueFilter, now } = input;
+
+    return {
       kpiProcessed: {
-        title: 'Total des commmande traitee',
-        percent: Math.round(rand(10, 25)),
-        trend: 'up',
-        subtitle: 'Increase compared to last week',
-        linkText: 'Revenues report →',
+        title: 'Commandes traitees',
+        percent: input.processedCount,
+        trend: input.processedCount > 0 ? 'up' : undefined,
+        subtitle: 'Statut CONFIRMED',
+        linkText: '',
       },
-
       kpiPENDING: {
-        title: 'Commande en attente',
-        percent: Math.round(rand(1, 10)),
-        subtitle: 'You closed 96 out of 100 deals',
-        linkText: 'All deals →',
+        title: 'Commandes en attente',
+        percent: input.pendingCount,
+        subtitle: 'Statut PENDING',
+        linkText: '',
       },
-
-      quarterGoalPercent: 84,
-
-      topProducts: [
-        { name: 'COMPUTER', valueK: 120 },
-        { name: 'KEYBOARD', valueK: 80 },
-        { name: 'SCREEN', valueK: 70 },
-        { name: 'MOUSE', valueK: 50 },
-      ],
-
-      revenue: years.map((y, i) => ({
-        year: y,
-        valueK: Math.round(10 + i * 8 + rand(0, 18)),
-      })),
-
-      topMonth: { month: 'November', year: 2019 },
-      topYear: { year: 2023, soldK: 96 },
-
-      topBuyer: {
-        name: 'Maggie Johnson',
-        company: 'Oasis Organic Inc.',
-        avatarUrl: 'https://i.pravatar.cc/80?img=12',
+      kpiDELIVERED: {
+        title: 'Commandes livrees',
+        percent: input.deliveredCount,
+        subtitle: 'Statut DELIVERED',
+        linkText: '',
       },
-
-      shopStatus: seed % 2 === 0 ? 'ACTIVE' : 'PENDING',
-
-      orderStats: {
-        PENDING: Math.round(rand(1, 8)),
-        confirmed: Math.round(rand(5, 25)),
-        delivered: Math.round(rand(20, 120)),
-      },
-
-      lowStock: [
-        { id: 'p1', name: 'Keyboard', stock: 3, minStock: 10 },
-        { id: 'p2', name: 'Mouse', stock: 5, minStock: 15 },
+      topProducts: input.topProducts,
+      revenue: [
+        {
+          year: revenueFilter === 'month' ? now.getMonth() + 1 : now.getFullYear(),
+          valueK: this.toK(input.revenueTotal),
+        },
       ],
-
-      lastOrders: [
-        { id: `ORD-${1000 + (seed % 80)}`, customer: 'Amine', total: 120, status: 'PENDING', createdAt: new Date().toISOString() },
-        { id: `ORD-${1001 + (seed % 80)}`, customer: 'Sara', total: 260, status: 'confirmed', createdAt: new Date().toISOString() },
-      ],
+      topBuyer:
+        input.topCustomers[0] ?? {
+          name: 'Aucun client',
+          company: 'Aucune commande',
+          avatarUrl: 'https://i.pravatar.cc/80?u=empty-buyer',
+        },
+      shopStatus,
+      lowStock: input.lowStock,
+      lastOrders: this.buildMockLastOrders(shopId),
     };
+  }
 
-    return of(vm).pipe(delay(200));
+  private buildMockLastOrders(shopId: string): Order[] {
+    const seed = this.hash(shopId);
+    const nowIso = new Date().toISOString();
+
+    return [
+      { id: `ORD-${1000 + (seed % 80)}`, customer: 'Amine', total: 120, status: 'PENDING', createdAt: nowIso },
+      { id: `ORD-${1001 + (seed % 80)}`, customer: 'Sara', total: 260, status: 'confirmed', createdAt: nowIso },
+    ];
+  }
+
+  private normalizeShopStatus(status: string | undefined): ShopStatus {
+    return String(status ?? '').toUpperCase() === 'ACTIVE' ? 'ACTIVE' : 'PENDING';
+  }
+
+  private toK(value: number): number {
+    const asK = Number(value) / 1000;
+    return Math.max(Math.round(asK * 10) / 10, value > 0 ? 0.1 : 0);
+  }
+
+  private readErrorMessage(err: unknown): string {
+    if (typeof err === 'object' && err !== null) {
+      const maybeError = err as { error?: { message?: string }; message?: string };
+      return maybeError.error?.message || maybeError.message || 'Dashboard load failed';
+    }
+    return 'Dashboard load failed';
   }
 
   private hash(s: string): number {
-    // hash simple pour varier les données selon shopId
     let h = 0;
     for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0;
     return Math.abs(h);

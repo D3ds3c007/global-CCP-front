@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { map } from 'rxjs';
 import { AuthService } from '../../../auth/services/auth.service';
 import { AuthSessionService } from '../../../auth/services/auth-session.service';
 import { AuthStateService } from '../../../core/services/auth-state.service';
@@ -42,6 +43,11 @@ export class Sidebar {
 
   readonly user$ = this.authState.currentUser$;
   readonly selectedShop$ = this.selectedShopState.selectedShop$;
+  readonly baseNav: NavItem[] = [{ kind: 'link', label: 'My Shops', icon: 'storefront', route: ['/shop'] }];
+  readonly exactLinkActiveOptions = { exact: true };
+  readonly shopNav$ = this.selectedShop$.pipe(
+    map((selectedShop) => (selectedShop ? this.buildShopNav(selectedShop) : []))
+  );
 
   collapsed = false;
   search = '';
@@ -68,20 +74,6 @@ export class Sidebar {
     this.collapsed = !this.collapsed;
   }
 
-  getBaseNav(): NavItem[] {
-    return [{ kind: 'link', label: 'My Shops', icon: 'storefront', route: ['/shop'] }];
-  }
-
-  getShopNav(selectedShop: SelectedShopContext): NavItem[] {
-    const id = selectedShop._id;
-    return [
-      { kind: 'link', label: 'Dashboard', icon: 'space_dashboard', route: ['/shop', id, 'dashboard'] },
-      { kind: 'link', label: 'Customers', icon: 'group', route: ['/shop', id, 'customers'] },
-      { kind: 'link', label: 'Products', icon: 'inventory_2', route: ['/shop', id, 'products'] },
-      { kind: 'link', label: 'Orders', icon: 'receipt_long', route: ['/shop', id, 'orders'] },
-    ];
-  }
-
   backToMyShops(): void {
     this.selectedShopState.clear();
     this.router.navigate(['/shop']);
@@ -100,5 +92,15 @@ export class Sidebar {
         this.logout.emit();
       },
     });
+  }
+
+  private buildShopNav(selectedShop: SelectedShopContext): NavItem[] {
+    const id = selectedShop._id;
+    return [
+      { kind: 'link', label: 'Dashboard', icon: 'space_dashboard', route: ['/shop', id, 'dashboard'] },
+      { kind: 'link', label: 'Customers', icon: 'group', route: ['/shop', id, 'customers'] },
+      { kind: 'link', label: 'Products', icon: 'inventory_2', route: ['/shop', id, 'products'] },
+      { kind: 'link', label: 'Orders', icon: 'receipt_long', route: ['/shop', id, 'orders'] },
+    ];
   }
 }
