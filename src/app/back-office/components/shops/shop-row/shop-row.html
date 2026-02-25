@@ -1,6 +1,8 @@
-<a class="row" [routerLink]="['/owner/dashboard', shop._id]">
+<a class="row" [routerLink]="['/owner/dashboard', shop._id]" (click)="onRowClick($event)">
   <div class="left">
-    <div class="avatar">🏬</div>
+    <picture>
+      <img src="{{ apiUrl }}pictures/{{ shop.logoUrl }}" alt="Shop avatar" class="avatar">
+    </picture>
 
     <div class="info">
       <div class="name">{{ shop.name }}</div>

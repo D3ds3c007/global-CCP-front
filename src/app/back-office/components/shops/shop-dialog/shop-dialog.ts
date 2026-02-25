@@ -1,14 +1,14 @@
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
-import { ShopCategory, ShopStatus, Shop, ShopsBackService } from '../../../services/shop';
-import { Subject, takeUntil, Observable } from 'rxjs';
+import { CreateShopPayload, ShopCategory, ShopStatus, Shop, ShopsBackService } from '../../../services/shop.service';
+import { Subject, takeUntil, Observable, finalize } from 'rxjs';
 
 export type ShopDialogMode = 'create';
 
 export type ShopDialogSave = {
   mode: ShopDialogMode;
-  value: Omit<Shop, '_id'>;
+  value: CreateShopPayload;
 };
 
 @Component({
@@ -29,7 +29,7 @@ export class ShopDialogComponent implements OnInit, OnChanges, OnDestroy {
   @Input() categories: ShopCategory[] = []; // à fournir par le parent pour éviter de s'abonner dans ce composant
 
   @Output() cancel = new EventEmitter<void>();
-  @Output() save = new EventEmitter<ShopDialogSave>();
+  @Output() created = new EventEmitter<Shop>();
 
   private fb = inject(FormBuilder);
   
@@ -37,25 +37,28 @@ export class ShopDialogComponent implements OnInit, OnChanges, OnDestroy {
   previewUrl = '';
   isDragOver = false;
   selectedLogoFileName = '';
+  private selectedLogoFile: File | null = null;
+  submitting = false;
+  submitError = '';
 
   form = this.fb.nonNullable.group({
     _id: [''],
     ownerId: [''],
-    logoUrl: ['', [Validators.required]],
+    logoUrl: [''],
     name: ['', [Validators.required, Validators.minLength(2)]],
-    description: ['', [Validators.required]],
+    description: [''],
     categoryId: ['', [Validators.required]],
     status: ['PENDING' as ShopStatus, [Validators.required]],
-    openingHours: ['', [Validators.required]],
+    openingHours: [''],
     contact: this.fb.nonNullable.group({
       phone: ['', [Validators.required]],
-      email: ['', [Validators.required, Validators.email]],
-      address: ['', [Validators.required]],
+      email: ['', [Validators.email]],
+      address: [''],
     }),
     socials: this.fb.nonNullable.group({
-      facebook: ['', [Validators.required]],
-      instagram: ['', [Validators.required]],
-      website: ['', [Validators.required]],
+      facebook: [''],
+      instagram: [''],
+      website: [''],
     }),
   });
   ngOnInit(): void {
@@ -113,6 +116,9 @@ export class ShopDialogComponent implements OnInit, OnChanges, OnDestroy {
     this.previewUrl = this.defaultLogoUrl;
     this.isDragOver = false;
     this.selectedLogoFileName = '';
+    this.selectedLogoFile = null;
+    this.submitting = false;
+    this.submitError = '';
   }
 
   ngOnDestroy(): void {
@@ -152,6 +158,7 @@ export class ShopDialogComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   onRemoveLogo(): void {
+    this.selectedLogoFile = null;
     this.setLogo(this.defaultLogoUrl);
   }
 
@@ -168,30 +175,38 @@ export class ShopDialogComponent implements OnInit, OnChanges, OnDestroy {
     const formValue = this.form.getRawValue();
     const selectedCategory =
       this.categories.find(cat => cat._id === formValue.categoryId) ??
-      { id: formValue.categoryId, name: formValue.categoryId };
+      { _id: formValue.categoryId, name: formValue.categoryId, isActive: true, createdAt: '', updatedAt: '' };
 
-    this.save.emit({
-      mode: this.mode,
-      value: {
-        ownerId: formValue.ownerId,
-        logoUrl: formValue.logoUrl,
-        name: formValue.name,
-        description: formValue.description,
-        status: formValue.status,
-        openingHours: formValue.openingHours,
-        contact: {
-          phone: formValue.contact.phone,
-          email: formValue.contact.email,
-          address: formValue.contact.address,
-        },
-        socials: {
-          facebook: formValue.socials.facebook,
-          instagram: formValue.socials.instagram,
-          website: formValue.socials.website,
-        },
-        category: selectedCategory,
-      } as Omit<Shop, '_id'>,
-    });
+    const payload: CreateShopPayload = {
+      name: formValue.name.trim(),
+      description: formValue.description.trim(),
+      categoryId: formValue.categoryId,
+      categoryName: selectedCategory.name,
+      openingHours: formValue.openingHours.trim(),
+      phone: formValue.contact.phone.trim(),
+      email: formValue.contact.email.trim(),
+      address: formValue.contact.address.trim(),
+      facebook: formValue.socials.facebook.trim(),
+      instagram: formValue.socials.instagram.trim(),
+      website: formValue.socials.website.trim(),
+      logoFile: this.selectedLogoFile,
+    };
+
+    this.submitError = '';
+    this.submitting = true;
+
+    this.shopService.createShop(payload)
+      .pipe(finalize(() => { this.submitting = false; }))
+      .subscribe({
+        next: (shop) => this.created.emit(shop),
+        error: (err) => {
+          this.submitError =
+            err?.error?.error ||
+            err?.error?.message ||
+            err?.error?.details ||
+            'Failed to create shop.';
+        }
+      });
   }
 
   private processLogoFile(file: File, input?: HTMLInputElement): void {
@@ -209,6 +224,7 @@ export class ShopDialogComponent implements OnInit, OnChanges, OnDestroy {
     const reader = new FileReader();
     reader.onload = () => {
       const dataUrl = String(reader.result);
+      this.selectedLogoFile = file;
       this.setLogo(dataUrl, file.name);
       if (input) input.value = '';
     };

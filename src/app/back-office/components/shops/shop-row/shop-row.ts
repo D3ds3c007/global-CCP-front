@@ -1,7 +1,7 @@
-import { Component, Input } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { Shop } from '../../../services/shop';
+import { Shop, ShopsBackService } from '../../../services/shop.service';
 
 @Component({
   selector: 'app-shop-row',
@@ -12,4 +12,13 @@ import { Shop } from '../../../services/shop';
 })
 export class ShopRowComponent {
   @Input({ required: true }) shop!: Shop;
+  readonly apiUrl = inject(ShopsBackService)['apiUrl'];
+
+  onRowClick(event: MouseEvent): void {
+    if ((this.shop.status ?? '').toUpperCase() === 'ACTIVE') return;
+
+    event.preventDefault();
+    event.stopPropagation();
+    window.alert('This shop is not active yet.');
+  }
 }

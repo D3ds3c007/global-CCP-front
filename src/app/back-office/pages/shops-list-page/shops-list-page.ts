@@ -1,9 +1,9 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { ShopsBackService } from '../../services/shop'; // ✅
+import { Shop, ShopsBackService } from '../../services/shop.service';
 import { ShopRowComponent } from '../../components/shops/shop-row/shop-row';
-import { ShopDialogComponent, ShopDialogSave } from '../../components/shops/shop-dialog/shop-dialog';
+import { ShopDialogComponent } from '../../components/shops/shop-dialog/shop-dialog';
 
 @Component({
   selector: 'app-shops-list-page',
@@ -13,7 +13,7 @@ import { ShopDialogComponent, ShopDialogSave } from '../../components/shops/shop
   styleUrls: ['./shops-list-page.css'],
 })
 export class ShopsListPage {
-  private service = inject(ShopsBackService); // ✅
+  private service = inject(ShopsBackService);
 
   vm$ = this.service.vm$;
 
@@ -22,8 +22,7 @@ export class ShopsListPage {
   openCreate() { this.dialogOpen = true; }
   closeDialog() { this.dialogOpen = false; }
 
-  onSave(e: ShopDialogSave) {
-    this.service.create(e.value); // ✅
+  onCreated(_: Shop) {
     this.closeDialog();
   }
 }

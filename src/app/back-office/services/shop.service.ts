@@ -1,10 +1,10 @@
 import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject, combineLatest, map, Observable } from 'rxjs';
+import { BehaviorSubject, combineLatest, map, Observable, tap } from 'rxjs';
 import { AuthStateService } from '../../core/services/auth-state.service';
 import { environment } from '../../../environments/environment';
 import { HttpClient, HttpParams } from '@angular/common/http';
 
-export type ShopStatus = 'PENDING' | 'ACTIVE';
+export type ShopStatus = 'PENDING' | 'ACTIVE' | 'REJECTED' | 'SUSPENDED';
 
 export interface ShopCategory {
   _id: string;
@@ -42,6 +42,21 @@ export interface Shop {
   openingHours?: string;
   contact?: contactInfo;
   socials?: SocialsInfo;
+}
+
+export interface CreateShopPayload {
+  name: string;
+  description?: string;
+  categoryId: string;
+  categoryName?: string;
+  openingHours?: string;
+  phone: string;
+  email?: string;
+  address?: string;
+  facebook?: string;
+  instagram?: string;
+  website?: string;
+  logoFile?: File | null;
 }
 
 export interface ShopsQuery {
@@ -108,7 +123,9 @@ export class ShopsBackService {
 
     const params = new HttpParams().set('type', 'SHOP');
 
-    return this.http.get<ShopCategory[]>(`${this.apiUrl}categories`, { params, withCredentials: true });
+    return this.http
+      .get<ShopCategory[]>(`${this.apiUrl}categories`, { params, withCredentials: true })
+      .pipe(tap(categories => this.setCategories(categories ?? [])));
   }
 
   setQuery(patch: Partial<ShopsQuery>) {
@@ -123,6 +140,63 @@ export class ShopsBackService {
 
     const next: Shop[] = [{ _id: id, ...value }, ...this.shopsSubject.value];
     this.shopsSubject.next(next);
+  }
+
+  createShop(payload: CreateShopPayload): Observable<Shop> {
+    const formData = new FormData();
+    formData.append('name', payload.name);
+    formData.append('categoryId', payload.categoryId);
+    formData.append('phone', payload.phone);
+
+    if (payload.description?.trim()) formData.append('description', payload.description.trim());
+    if (payload.openingHours?.trim()) formData.append('openingHours', payload.openingHours.trim());
+    if (payload.email?.trim()) formData.append('email', payload.email.trim());
+    if (payload.address?.trim()) formData.append('address', payload.address.trim());
+    if (payload.facebook?.trim()) formData.append('facebook', payload.facebook.trim());
+    if (payload.instagram?.trim()) formData.append('instagram', payload.instagram.trim());
+    if (payload.website?.trim()) formData.append('website', payload.website.trim());
+    if (payload.logoFile) formData.append('logo', payload.logoFile);
+
+    return this.http
+      .post<{ message: string; shop: any }>(`${this.apiUrl}shops`, formData, { withCredentials: true })
+      .pipe(
+        map(res => this.mapApiShopToUi(res.shop, payload)),
+        tap(createdShop => this.prependShop(createdShop))
+      );
+  }
+
+  private prependShop(shop: Shop): void {
+    this.shopsSubject.next([shop, ...this.shopsSubject.value]);
+  }
+
+  private mapApiShopToUi(apiShop: any, payload?: CreateShopPayload): Shop {
+    const fallbackCategoryId = String(apiShop?.categoryId ?? payload?.categoryId ?? '');
+    const fallbackCategoryName = payload?.categoryName ?? fallbackCategoryId;
+
+    return {
+      _id: String(apiShop?._id ?? ''),
+      name: String(apiShop?.name ?? payload?.name ?? ''),
+      category: {
+        id: fallbackCategoryId,
+        name: fallbackCategoryName,
+      },
+      status: String(apiShop?.status ?? 'PENDING'),
+      logoUrl: String(apiShop?.logoUrl ?? 'default.png'),
+      coverUrl: apiShop?.coverUrl ?? undefined,
+      ownerId: String(apiShop?.ownerUserId ?? this.authState.snapshot?.id ?? ''),
+      description: apiShop?.description ?? payload?.description ?? '',
+      openingHours: apiShop?.openingHours ?? payload?.openingHours ?? '',
+      contact: {
+        phone: String(apiShop?.contact?.phone ?? payload?.phone ?? ''),
+        email: String(apiShop?.contact?.email ?? payload?.email ?? ''),
+        address: String(apiShop?.contact?.address ?? payload?.address ?? ''),
+      },
+      socials: {
+        facebook: String(apiShop?.socials?.facebook ?? payload?.facebook ?? ''),
+        instagram: String(apiShop?.socials?.instagram ?? payload?.instagram ?? ''),
+        website: String(apiShop?.socials?.website ?? payload?.website ?? ''),
+      },
+    };
   }
 
   private seedShops(): Shop[] {
