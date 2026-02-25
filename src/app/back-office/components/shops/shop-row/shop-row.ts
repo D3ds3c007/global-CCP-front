@@ -1,18 +1,21 @@
 import { Component, inject, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { Shop, ShopsBackService } from '../../../services/shop.service';
+import { SelectedShopStateService } from '../../../services/selected-shop-state.service';
 
 @Component({
   selector: 'app-shop-row',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule],
   templateUrl: './shop-row.html',
   styleUrls: ['./shop-row.css'],
 })
 export class ShopRowComponent implements OnChanges {
   @Input({ required: true }) shop!: Shop;
   readonly apiUrl = inject(ShopsBackService)['apiUrl'];
+  private readonly router = inject(Router);
+  private readonly selectedShopState = inject(SelectedShopStateService);
   imageLoadFailed = false;
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -43,10 +46,15 @@ export class ShopRowComponent implements OnChanges {
   }
 
   onRowClick(event: MouseEvent): void {
-    if (this.isActive) return;
-
     event.preventDefault();
     event.stopPropagation();
+
+    if (this.isActive) {
+      this.selectedShopState.setFromShop(this.shop);
+      this.router.navigate(['/shop', this.shop._id, 'dashboard']);
+      return;
+    }
+
     window.alert('This shop is not active yet.');
   }
 

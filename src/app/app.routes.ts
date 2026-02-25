@@ -18,11 +18,15 @@ export const routes: Routes = [
 		loadChildren: () => import('./storefront/storefront.routes').then(m => m.STOREFRONT_ROUTES),
 	},
 	{
-		path: 'owner',
+		path: 'shop',
 		loadChildren: () =>
 		import('./back-office/back-office.routes').then(m => m.BACK_OFFICE_ROUTES),
 		canMatch: [authGuard, roleGuard],
         data: { roles: ['SHOP'] }
+	},
+	{
+		path: 'owner',
+		redirectTo: 'shop'
 	},
 
 

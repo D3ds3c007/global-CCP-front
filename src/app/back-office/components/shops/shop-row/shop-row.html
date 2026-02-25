@@ -1,4 +1,4 @@
-<a class="row" [routerLink]="isActive ? ['/owner/dashboard', shop._id] : null" (click)="onRowClick($event)">
+<a class="row" [attr.href]="isActive ? '/shop/' + shop._id + '/dashboard' : null" (click)="onRowClick($event)">
   <div class="left">
     <ng-container *ngIf="logoSrc as src; else avatarFallback">
       <picture>

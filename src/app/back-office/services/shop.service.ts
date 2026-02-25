@@ -115,6 +115,14 @@ export class ShopsBackService {
     // this.loadCategories();
   } 
 
+  get shopsSnapshot(): Shop[] {
+    return this.shopsSubject.value;
+  }
+
+  findOwnedShopById(shopId: string): Shop | undefined {
+    return this.shopsSubject.value.find((shop) => String(shop._id) === String(shopId));
+  }
+
   setCategories(categories: ShopCategory[]): void {
     this.categoriesSubject.next(categories);
   }
