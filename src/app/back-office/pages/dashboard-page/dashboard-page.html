@@ -1,73 +1,70 @@
 <section *ngIf="vm$ | async as vm; else loading">
-  <!-- HEADER -->
   <div class="header">
     <div>
       <h1>Dashboard</h1>
       <p>Overview</p>
     </div>
 
-    <app-shop-status-badge
-      *ngIf="vm.shopStatus as st"
-      [status]="st"
-    ></app-shop-status-badge>
+    <app-shop-status-badge *ngIf="vm.shopStatus as st" [status]="st"></app-shop-status-badge>
   </div>
 
-  <!-- GRID screenshot -->
+  <div *ngIf="error$ | async as error" style="margin-bottom: 12px; padding: 10px 12px; border-radius: 10px; border: 1px solid #fecaca; background: #fef2f2; color: #991b1b; font-size: 13px;">
+    {{ error }}
+  </div>
+
   <div class="grid">
-    <!-- KPI 1 -->
-    <ng-container *ngIf="vm.kpiProcessed as k1">
-      <app-dashboard-card class="c1" [title]="k1.title">
-        <app-kpi-card [data]="k1"></app-kpi-card>
+    <ng-container *ngIf="vm.kpiPENDING as kPending">
+      <app-dashboard-card class="c1" [title]="kPending.title" style="grid-column: span 3;">
+        <app-kpi-card [data]="kPending"></app-kpi-card>
       </app-dashboard-card>
     </ng-container>
 
-    <!-- KPI 2 -->
-    <ng-container *ngIf="vm.kpiPENDING as k2">
-      <app-dashboard-card class="c2" [title]="k2.title">
-        <app-kpi-card [data]="k2"></app-kpi-card>
+    <ng-container *ngIf="vm.kpiProcessed as kProcessed">
+      <app-dashboard-card class="c2" [title]="kProcessed.title" style="grid-column: span 3;">
+        <app-kpi-card [data]="kProcessed"></app-kpi-card>
       </app-dashboard-card>
     </ng-container>
 
-    <!-- KPI 3 -->
-    <ng-container *ngIf="vm.kpiDELIVERED as k3">
-      <app-dashboard-card class="c3" [title]="k3.title">
-        <app-kpi-card [data]="k3"></app-kpi-card>
+    <ng-container *ngIf="vm.kpiDELIVERED as kDelivered">
+      <app-dashboard-card class="c3" [title]="kDelivered.title" style="grid-column: span 3;">
+        <app-kpi-card [data]="kDelivered"></app-kpi-card>
       </app-dashboard-card>
     </ng-container>
 
-    <!-- Top Products -->
-    <app-dashboard-card class="c4" title="Top Products">
-      <app-top-products [products]="vm.topProducts"></app-top-products>
-    </app-dashboard-card>
-
-    <!-- Revenu -->
-    <app-dashboard-card class="c5" title="Revenu">
+    <app-dashboard-card class="c4" title="Revenu" style="grid-column: span 3;">
       <div card-right class="select">
-        Yearly <span class="caret">▾</span>
+        <select #revenueSelect [value]="revenueFilter" (change)="setRevenueFilter(revenueSelect.value)" style="border: 0; background: transparent; color: inherit; font: inherit; cursor: pointer;">
+          <option value="month">Month</option>
+          <option value="year">Year</option>
+        </select>
+        <span class="caret">v</span>
       </div>
 
       <app-revenue-chart [points]="vm.revenue"></app-revenue-chart>
     </app-dashboard-card>
 
-    <app-mini-tile class="t3" title="Top buyer" *ngIf="vm.topBuyer as tb">
-      <app-top-buyer-tile [buyer]="tb"></app-top-buyer-tile>
-    </app-mini-tile>
-  </div>
-
-  <!-- EN PLUS -->
-  <div class="extras">
-    <app-dashboard-card title="Produits low stock">
+    <app-dashboard-card title="Produits low stock" style="grid-column: span 5;">
       <app-low-stock [products]="vm.lowStock"></app-low-stock>
     </app-dashboard-card>
 
-    <div class="span-2">
-      <app-dashboard-card title="Dernières commandes">
-        <app-last-orders-table [orders]="vm.lastOrders"></app-last-orders-table>
-      </app-dashboard-card>
-    </div>
+    <app-dashboard-card title="Top Product" style="grid-column: span 4;">
+      <app-top-products [products]="vm.topProducts"></app-top-products>
+    </app-dashboard-card>
+
+    <app-mini-tile title="Top buyer" *ngIf="vm.topBuyer as tb" style="grid-column: span 3;">
+      <app-top-buyer-tile [buyer]="tb"></app-top-buyer-tile>
+    </app-mini-tile>
+
+    <app-dashboard-card title="Dernieres commandes (mock)" style="grid-column: span 12;">
+      <app-last-orders-table [orders]="vm.lastOrders"></app-last-orders-table>
+    </app-dashboard-card>
   </div>
 </section>
 
 <ng-template #loading>
-  <div style="padding: 18px;">Loading dashboard...</div>
+  <div style="padding: 18px;" *ngIf="loading$ | async; else idleState">Loading dashboard...</div>
+</ng-template>
+
+<ng-template #idleState>
+  <div style="padding: 18px;">Preparing dashboard...</div>
 </ng-template>
