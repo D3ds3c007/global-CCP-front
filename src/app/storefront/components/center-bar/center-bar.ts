@@ -13,7 +13,7 @@ export class CenterBar {
   constructor(private router: Router) {}
 
   // Vérifie si la route actuelle correspond à l'onglet
-  isActive(route: string): boolean {
+  isACTIVE(route: string): boolean {
     return this.router.url === route;
   }
 

@@ -2,7 +2,7 @@
   <div
     class="row"
     *ngFor="let c of customers"
-    [class.active]="c.id === selectedId"
+    [class.ACTIVE]="c.id === selectedId"
     (click)="select.emit(c.id)"
   >
     <div class="left">

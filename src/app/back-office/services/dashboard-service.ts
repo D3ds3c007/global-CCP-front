@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { delay } from 'rxjs/operators';
 
-export type ShopStatus = 'pending' | 'active';
+export type ShopStatus = 'PENDING' | 'ACTIVE';
 
 export interface KpiCard {
   title: string;
@@ -29,12 +29,12 @@ export interface TopBuyer {
 }
 
 export interface OrderStats {
-  pending: number;
+  PENDING: number;
   confirmed: number;
   delivered: number;
 }
 
-export type OrderStatus = 'pending' | 'confirmed' | 'delivered';
+export type OrderStatus = 'PENDING' | 'confirmed' | 'delivered';
 
 export interface Order {
   id: string;
@@ -54,7 +54,7 @@ export interface LowStockProduct {
 export interface OwnerDashboardVM {
   // screenshot
   kpiProcessed: KpiCard;
-  kpiPending: KpiCard;
+  kpiPENDING: KpiCard;
   quarterGoalPercent: number;
   topProducts: TopProduct[];
   revenue: RevenuePoint[];
@@ -87,7 +87,7 @@ export class DashboardService {
         linkText: 'Revenues report →',
       },
 
-      kpiPending: {
+      kpiPENDING: {
         title: 'Commande en attente',
         percent: Math.round(rand(1, 10)),
         subtitle: 'You closed 96 out of 100 deals',
@@ -117,10 +117,10 @@ export class DashboardService {
         avatarUrl: 'https://i.pravatar.cc/80?img=12',
       },
 
-      shopStatus: seed % 2 === 0 ? 'active' : 'pending',
+      shopStatus: seed % 2 === 0 ? 'ACTIVE' : 'PENDING',
 
       orderStats: {
-        pending: Math.round(rand(1, 8)),
+        PENDING: Math.round(rand(1, 8)),
         confirmed: Math.round(rand(5, 25)),
         delivered: Math.round(rand(20, 120)),
       },
@@ -131,7 +131,7 @@ export class DashboardService {
       ],
 
       lastOrders: [
-        { id: `ORD-${1000 + (seed % 80)}`, customer: 'Amine', total: 120, status: 'pending', createdAt: new Date().toISOString() },
+        { id: `ORD-${1000 + (seed % 80)}`, customer: 'Amine', total: 120, status: 'PENDING', createdAt: new Date().toISOString() },
         { id: `ORD-${1001 + (seed % 80)}`, customer: 'Sara', total: 260, status: 'confirmed', createdAt: new Date().toISOString() },
       ],
     };

@@ -23,6 +23,10 @@
   font-size: 18px;
 }
 
+.avatar-img {
+  object-fit: cover;
+}
+
 .name { font-weight: 800; color: #0f172a; }
 .meta { color: #64748b; font-size: 13px; margin-top: 2px; }
 .dot { margin: 0 8px; }
@@ -37,3 +41,4 @@
 
 .badge.active { background: #dcfce7; color: #166534; border-color: #bbf7d0; }
 .badge.pending { background: #fff7ed; color: #9a3412; border-color: #fed7aa; }
+.badge.suspended { background: #fef2f2; color: #991b1b; border-color: #fecaca; }

@@ -5,14 +5,14 @@ th { text-align: left; color:#64748b; font-weight: 800; }
 .mono { font-family: ui-monospace, Menlo, Consolas, monospace; }
 
 tbody tr { cursor: pointer; }
-tbody tr.active { background: #fff7ed; }
+tbody tr.ACTIVE { background: #fff7ed; }
 
 .pill {
   padding: 4px 10px; border-radius: 999px;
   font-size: 12px; font-weight: 800;
   border: 1px solid #e2e8f0; background: #f8fafc; color: #334155;
 }
-.pill.pending { background:#fff7ed; border-color:#fed7aa; color:#9a3412; }
+.pill.PENDING { background:#fff7ed; border-color:#fed7aa; color:#9a3412; }
 .pill.confirmed { background:#eff6ff; border-color:#bfdbfe; color:#1d4ed8; }
 .pill.preparing { background:#f5f3ff; border-color:#ddd6fe; color:#6d28d9; }
 .pill.ready { background:#ecfeff; border-color:#a5f3fc; color:#155e75; }

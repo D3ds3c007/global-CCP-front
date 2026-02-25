@@ -1,4 +1,4 @@
-/* --- Steps (pending -> delivered) --- */
+/* --- Steps (PENDING -> delivered) --- */
 .steps {
   display: grid;
   grid-template-columns: repeat(5, 1fr);

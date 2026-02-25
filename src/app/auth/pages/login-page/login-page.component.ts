@@ -12,6 +12,8 @@ import { FormErrorComponent } from '../../../shared/components/form-error/form-e
 import { SubmitButtonComponent } from '../../../shared/components/buttons/submit-button/submit-button.component';
 import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
 import { NzAlertModule } from 'ng-zorro-antd/alert';
+import { AuthStateService } from '../../../core/services/auth-state.service';
+import { AuthSessionService } from '../../services/auth-session.service';
 
 type LoginFormGroup = {
   email: FormControl<string>;
@@ -38,6 +40,8 @@ type LoginFormGroup = {
 export class LoginPageComponent {
   private readonly fb = inject(NonNullableFormBuilder);
   private readonly authService = inject(AuthService);
+  private readonly authState = inject(AuthStateService);
+  private readonly authSession = inject(AuthSessionService);
   private readonly router = inject(Router);
 
   readonly loading = signal(false);
@@ -78,15 +82,17 @@ export class LoginPageComponent {
       .subscribe({
         next: result => {
           console.log('Login success', result);
+          this.authState.setUser(result.user);
           this.apiError.set(null);
          //call authService.me() to get user info
             this.authService.me().subscribe({
               next: res => {
-                
                 console.log('Current user', res.user.role);
-                if (res.user.role === 'SHOP') this.router.navigate(['/shop/dashboard']);
+                this.authSession.resetCache(); // reset cache to force refresh of user info in guards and other parts of the app
+                if (res.user.role === 'SHOP') this.router.navigate(['/shop']);
                 else if (res.user.role === 'ADMIN') this.router.navigate(['/admin/dashboard']);
-                else this.router.navigate(['/']);
+                else window.location.href = '/'; // full reload to reset any cached state, can be improved with a proper state management and route guards
+                
               },
               error: error => {
                 console.error('Error fetching user info', error);

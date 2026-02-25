@@ -14,5 +14,5 @@ export class OrdersFiltersComponent {
   @Input({ required: true }) query!: OrdersQuery;
   @Output() queryChange = new EventEmitter<Partial<OrdersQuery>>();
 
-  statuses: (OrderStatus | 'all')[] = ['all', 'pending', 'confirmed', 'preparing', 'ready', 'delivered', 'cancelled'];
+  statuses: (OrderStatus | 'all')[] = ['all', 'PENDING', 'confirmed', 'preparing', 'ready', 'delivered', 'cancelled'];
 }

@@ -1,9 +1,10 @@
-import { Component, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { ShopsBackService } from '../../services/shop'; // ✅
+import { Shop, ShopsBackService } from '../../services/shop.service';
+import { SelectedShopStateService } from '../../services/selected-shop-state.service';
 import { ShopRowComponent } from '../../components/shops/shop-row/shop-row';
-import { ShopDialogComponent, ShopDialogSave } from '../../components/shops/shop-dialog/shop-dialog';
+import { ShopDialogComponent } from '../../components/shops/shop-dialog/shop-dialog';
 
 @Component({
   selector: 'app-shops-list-page',
@@ -12,18 +13,22 @@ import { ShopDialogComponent, ShopDialogSave } from '../../components/shops/shop
   templateUrl: './shops-list-page.html',
   styleUrls: ['./shops-list-page.css'],
 })
-export class ShopsListPage {
-  private service = inject(ShopsBackService); // ✅
+export class ShopsListPage implements OnInit {
+  private service = inject(ShopsBackService);
+  private selectedShopState = inject(SelectedShopStateService);
 
   vm$ = this.service.vm$;
 
   dialogOpen = false;
 
+  ngOnInit(): void {
+    this.selectedShopState.clear();
+  }
+
   openCreate() { this.dialogOpen = true; }
   closeDialog() { this.dialogOpen = false; }
 
-  onSave(e: ShopDialogSave) {
-    this.service.create(e.value); // ✅
+  onCreated(_: Shop) {
     this.closeDialog();
   }
 }

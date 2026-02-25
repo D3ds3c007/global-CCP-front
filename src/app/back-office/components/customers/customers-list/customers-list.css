@@ -10,7 +10,7 @@
   cursor: pointer;
 
   &:hover { background: #f8fafc; }
-  &.active { background: #fff7ed; } /* bande beige comme screenshot */
+  &.ACTIVE { background: #fff7ed; } /* bande beige comme screenshot */
 }
 
 .left { display: flex; align-items: center; gap: 10px; }

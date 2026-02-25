@@ -66,7 +66,7 @@ thead th { background: #f9fafb; font-size: 13px; color: #374151; }
   border: 1px solid transparent;
 }
 .badge.paid { background: #ecfdf5; color: #065f46; border-color: #a7f3d0; }
-.badge.pending { background: #fffbeb; color: #92400e; border-color: #fde68a; }
+.badge.PENDING { background: #fffbeb; color: #92400e; border-color: #fde68a; }
 .badge.cancelled { background: #fef2f2; color: #991b1b; border-color: #fecaca; }
 
 .detailsRow td { background: #fafafa; }

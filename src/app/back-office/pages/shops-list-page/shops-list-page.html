@@ -1,9 +1,10 @@
 <section class="page" *ngIf="vm$ | async as vm">
-    <div class="page-head">
-        <h1 class="title">List shop</h1>
+  <div class="page-head">
+    <h1 class="title">My Shops</h1>
   </div>
+
   <div class="list">
-    <app-shop-row *ngFor="let s of vm.shops" [shop]="s"></app-shop-row>
+    <app-shop-row *ngFor="let s of vm.shops" [shop]="$any(s)"></app-shop-row>
   </div>
 
   <button class="fab" type="button" (click)="openCreate()">+</button>
@@ -11,8 +12,8 @@
   <app-shop-dialog
     *ngIf="dialogOpen"
     mode="create"
-    [categories]="vm.categories"
+    [categories]="$any(vm.categories)"
     (cancel)="closeDialog()"
-    (save)="onSave($event)"
+    (created)="closeDialog()"
   ></app-shop-dialog>
 </section>

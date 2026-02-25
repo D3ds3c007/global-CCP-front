@@ -3,17 +3,25 @@
   background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
   background-attachment: fixed;
   min-height: 100vh;
-  padding: 24px 0 48px;
+  padding: 104px 0 48px;
 }
 
 .app__nav {
-  position: sticky;
-
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
 }
 .center__bar {
   margin-bottom: 24px;
   display: flex;
   justify-content: center;
+}
+
+.storefront__filters {
+  position: sticky;
+  top: 120px;
 }
 
 .storefront__container {
@@ -74,6 +82,10 @@
 @media (max-width: 960px) {
   .storefront__container {
     grid-template-columns: 1fr;
+  }
+
+  .storefront__filters {
+    position: static;
   }
 }
 

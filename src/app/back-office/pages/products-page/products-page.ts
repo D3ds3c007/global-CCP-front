@@ -75,7 +75,7 @@ export class ProductsPage {
   }
 
   onToggle(p: any) {
-    this.facade.toggleActive(p.id);
+    this.facade.toggleACTIVE(p.id);
   }
 
   onDelete(p: any) {

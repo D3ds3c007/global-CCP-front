@@ -7,7 +7,7 @@
         <div class="title" *ngIf="!collapsed">{{ brand }}</div>
       </div>
 
-      <div class="search" *ngIf="!collapsed">
+      <div class="search" *ngIf="!collapsed && (selectedShop$ | async)">
         <span class="mi">search</span>
         <input [(ngModel)]="search" placeholder="Search" />
       </div>
@@ -19,6 +19,40 @@
             class="item"
             [routerLink]="item.route"
             routerLinkActive="active"
+      <ng-container *ngIf="(selectedShop$ | async) as selectedShop; else noShopContext">
+        <ng-container *ngIf="(user$ | async)?.role === 'SHOP'">
+          <div class="shop-context" *ngIf="!collapsed">
+        <div class="shop-context__label">Selected Shop</div>
+        <div class="shop-context__name">{{ selectedShop.name }}</div>
+          </div>
+
+          <button class="item item-button back-action" type="button" (click)="backToMyShops()">
+        <span class="mi">arrow_back</span>
+        <span class="label" *ngIf="!collapsed">Back to My Shops</span>
+          </button>
+
+          <nav class="nav">
+        <a
+          class="item"
+          *ngFor="let item of getShopNav(selectedShop)"
+          [routerLink]="item.route"
+          routerLinkActive="ACTIVE"
+        >
+          <span class="mi">{{ item.icon }}</span>
+          <span class="label" *ngIf="!collapsed">{{ item.label }}</span>
+        </a>
+          </nav>
+        </ng-container>
+      </ng-container>
+
+      <ng-template #noShopContext>
+        <nav class="nav">
+          <a
+            class="item"
+            *ngFor="let item of getBaseNav()"
+            [routerLink]="item.route"
+            routerLinkActive="ACTIVE"
+            [routerLinkActiveOptions]="{ exact: true }"
           >
             <span class="mi">{{ item.icon }}</span>
             <span class="label" *ngIf="!collapsed">{{ item.label }}</span>
@@ -29,14 +63,16 @@
           </div>
         </ng-container>
       </nav>
+        </nav>
+      </ng-template>
     </div>
 
     <!-- BOTTOM -->
     <div class="bottom">
-      <div class="user" *ngIf="!collapsed">
-        <img class="avatar" [src]="user.avatarUrl" alt="avatar" />
+      <div class="user" *ngIf="!collapsed && (user$ | async) as user">
+        <!-- <img class="avatar" [src]="user.avatarUrl" alt="avatar" /> -->
         <div class="meta">
-          <div class="name">{{ user.name }}</div>
+          <div class="name">{{ user.fullName }}</div>
           <div class="badge">{{ user.role }}</div>
         </div>
       </div>

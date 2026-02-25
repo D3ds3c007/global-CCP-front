@@ -1,28 +1,42 @@
 <div class="overlay" (click)="onBackdropClick()">
   <div class="modal" (click)="$event.stopPropagation()">
     <div class="head">
-      <h3>Créer une boutique</h3>
-      <button class="x" type="button" (click)="cancel.emit()">✕</button>
+      <h3>Creer une boutique</h3>
+      <button class="x" type="button" (click)="cancel.emit()">x</button>
     </div>
 
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
       <div class="img-block">
         <div class="preview">
-          <img [src]="previewUrl || form.controls.logoUrl.value" alt="logo" />
+          <img [src]="previewUrl || defaultLogoUrl" alt="Shop logo preview" />
         </div>
 
         <div class="img-actions">
-          <label class="file-btn">
-            Upload logo
-            <input type="file" accept="image/*" (change)="onPickFile($event)" hidden />
-          </label>
+          <div
+            class="dropzone"
+            [class.drag-over]="isDragOver"
+            (dragover)="onDragOver($event)"
+            (dragleave)="onDragLeave($event)"
+            (drop)="onDrop($event)"
+          >
+            <p class="dropzone-title">Glissez-deposez un logo ici</p>
+            <p class="dropzone-hint">PNG, JPG, WEBP | Max 2MB</p>
 
-          <div class="or">ou</div>
+            <div class="dropzone-actions">
+              <label class="file-btn">
+                {{ hasCustomLogo ? 'Replace logo' : 'Upload logo' }}
+                <input type="file" accept="image/*" (change)="onPickFile($event)" [disabled]="submitting" hidden />
+              </label>
 
-          <label class="field">
-            <span>Logo URL</span>
-            <input formControlName="logoUrl" (input)="previewUrl = form.controls.logoUrl.value" />
-          </label>
+              <button type="button" class="btn ghost" (click)="onRemoveLogo()" [disabled]="!hasCustomLogo || submitting">
+                Remove logo
+              </button>
+            </div>
+
+            <p class="file-meta" *ngIf="selectedLogoFileName">
+              {{ selectedLogoFileName }}
+            </p>
+          </div>
         </div>
       </div>
 
@@ -33,24 +47,64 @@
         </label>
 
         <label class="field">
-          <span>Catégorie</span>
+          <span>Categorie</span>
           <select formControlName="categoryId">
-            <option *ngFor="let c of categories" [value]="c.id">{{ c.name }}</option>
+            <option *ngFor="let c of categories" [value]="c._id">{{ c.name }}</option>
           </select>
         </label>
 
         <label class="field">
-          <span>Status</span>
-          <select formControlName="status">
-            <option value="pending">pending</option>
-            <option value="active">active</option>
-          </select>
+          <span>Description</span>
+          <input formControlName="description" />
+        </label>
+
+        <label class="field">
+          <span>Opening Hours</span>
+          <input formControlName="openingHours" placeholder="Mon-Sat 09:00-18:00" />
         </label>
       </div>
 
+      <div class="grid" formGroupName="contact">
+        <label class="field">
+          <span>Contact Phone</span>
+          <input formControlName="phone" />
+        </label>
+
+        <label class="field">
+          <span>Contact Email</span>
+          <input formControlName="email" type="email" />
+        </label>
+
+        <label class="field">
+          <span>Contact Address</span>
+          <input formControlName="address" />
+        </label>
+      </div>
+
+      <div class="grid" formGroupName="socials">
+        <label class="field">
+          <span>Facebook</span>
+          <input formControlName="facebook" />
+        </label>
+
+        <label class="field">
+          <span>Instagram</span>
+          <input formControlName="instagram" />
+        </label>
+
+        <label class="field">
+          <span>Website</span>
+          <input formControlName="website" />
+        </label>
+      </div>
+
+      <p class="error" *ngIf="submitError">{{ submitError }}</p>
+
       <div class="actions">
-        <button type="button" class="btn ghost" (click)="cancel.emit()">Annuler</button>
-        <button type="submit" class="btn primary">Créer</button>
+        <button type="button" class="btn ghost" (click)="cancel.emit()" [disabled]="submitting">Annuler</button>
+        <button type="submit" class="btn primary" [disabled]="submitting">
+          {{ submitting ? 'Creation...' : 'Creer' }}
+        </button>
       </div>
     </form>
   </div>

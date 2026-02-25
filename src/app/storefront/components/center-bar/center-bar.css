@@ -17,12 +17,12 @@
 }
 
 /* Style quand l'onglet est actif */
-.tab-item.active {
+.tab-item.ACTIVE {
   color: #ff6a00; /* Orange Alibaba */
 }
 
 /* La barre orange sous l'élément actif */
-.tab-item.active::after {
+.tab-item.ACTIVE::after {
     content: "";
     position: absolute;
     bottom: 0;

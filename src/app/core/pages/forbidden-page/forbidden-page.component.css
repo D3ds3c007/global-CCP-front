@@ -1,0 +1,89 @@
+:host {
+  display: block;
+  min-height: 100vh;
+  font-family: "Space Grotesk", "Segoe UI", sans-serif;
+}
+
+.forbidden-layout {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 16px;
+}
+
+.forbidden-card {
+  width: 100%;
+  max-width: 460px;
+  padding: 32px 28px;
+  text-align: center;
+}
+
+.forbidden-code {
+  margin: 0;
+  font-size: 56px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: var(--brand);
+}
+
+.forbidden-title {
+  margin: 12px 0 8px;
+  font-size: 28px;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: var(--text-strong);
+}
+
+.forbidden-subtitle {
+  margin: 0;
+  font-size: 15px;
+  color: var(--text-muted);
+}
+
+.forbidden-actions {
+  margin-top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.action-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  padding: 10px 14px;
+  border: 1px solid var(--border-strong);
+  border-radius: 10px;
+  text-decoration: none;
+  color: var(--text-strong);
+  background: var(--surface);
+  font-weight: 600;
+}
+
+.action-link-primary {
+  border-color: transparent;
+  background: linear-gradient(135deg, var(--brand), var(--brand-2));
+  color: #fff;
+}
+
+.action-link:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+@media (max-width: 480px) {
+  .forbidden-card {
+    padding: 24px 20px;
+  }
+
+  .forbidden-code {
+    font-size: 48px;
+  }
+
+  .forbidden-title {
+    font-size: 24px;
+  }
+}

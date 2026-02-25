@@ -114,6 +114,26 @@
   margin-top: 6px;
 }
 
+.shop-context {
+  border: 1px solid #eef2f7;
+  border-radius: 12px;
+  padding: 10px 12px;
+  background: #fafafa;
+}
+
+.shop-context__label {
+  font-size: 11px;
+  color: #64748b;
+  font-weight: 700;
+}
+
+.shop-context__name {
+  margin-top: 4px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
 .item {
   width: 100%;
   display: flex;
@@ -129,7 +149,7 @@
     background: #f7f8fb;
   }
 
-  &.active {
+  &.ACTIVE {
     background: #fff3d6;
     color: #b45309;
 
@@ -142,6 +162,17 @@
     font-weight: 500;
     white-space: nowrap;
   }
+}
+
+.item-button {
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+}
+
+.back-action {
+  color: #334155;
 }
 
 /* Bottom */
