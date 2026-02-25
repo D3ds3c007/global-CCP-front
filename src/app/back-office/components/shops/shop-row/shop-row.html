@@ -1,17 +1,29 @@
-<a class="row" [routerLink]="['/owner/dashboard', shop.id]">
+<a class="row" [attr.href]="isActive ? '/shop/' + shop._id + '/dashboard' : null" (click)="onRowClick($event)">
   <div class="left">
-    <div class="avatar">🏬</div>
+    <ng-container *ngIf="logoSrc as src; else avatarFallback">
+      <picture>
+        <img [src]="src" alt="Shop avatar" class="avatar avatar-img" (error)="onLogoError()">
+      </picture>
+    </ng-container>
+    <ng-template #avatarFallback>
+      <div class="avatar" aria-hidden="true">{{ initials }}</div>
+    </ng-template>
 
     <div class="info">
-      <div class="name">{{ shop.name }}</div>
+      <div class="name">{{ shopName }}</div>
       <div class="meta">
-        <span class="dot">•</span>
-        <span>Category : {{ shop.categoryId }}</span>
+        <span class="dot">.</span>
+        <span>Category : {{ categoryName }}</span>
       </div>
     </div>
   </div>
 
-  <span class="badge" [class.active]="shop.status==='active'" [class.pending]="shop.status==='pending'">
+  <span
+    class="badge"
+    [class.active]="shop.status==='ACTIVE'"
+    [class.pending]="shop.status==='PENDING'"
+    [class.suspended]="shop.status==='SUSPENDED'"
+  >
     {{ shop.status | uppercase }}
   </span>
 </a>

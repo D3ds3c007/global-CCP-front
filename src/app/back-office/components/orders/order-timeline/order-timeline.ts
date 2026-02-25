@@ -13,7 +13,7 @@ export class OrderTimelineComponent {
   @Input() status!: OrderStatus;
   @Input() history: OrderStatusEvent[] = [];
 
-  steps: OrderStatus[] = ['pending', 'confirmed', 'preparing', 'ready', 'delivered'];
+  steps: OrderStatus[] = ['PENDING', 'confirmed', 'preparing', 'ready', 'delivered'];
 
   isDone(step: OrderStatus): boolean {
     if (this.status === 'cancelled') return false;

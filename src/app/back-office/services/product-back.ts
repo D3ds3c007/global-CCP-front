@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, combineLatest, map } from 'rxjs';
 
-export type ProductStatus = 'active' | 'inactive';
+export type ProductStatus = 'ACTIVE' | 'inACTIVE';
 
 export interface Category {
   id: string;
@@ -26,7 +26,7 @@ export interface ProductsQuery {
 
 export interface ProductsKpis {
   processedOrdersPercent: number;
-  pendingOrdersPercent: number;
+  PENDINGOrdersPercent: number;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -47,7 +47,7 @@ export class ProductsBackService {
 
   private readonly kpisSubject = new BehaviorSubject<ProductsKpis>({
     processedOrdersPercent: 15,
-    pendingOrdersPercent: 4,
+    PENDINGOrdersPercent: 4,
   });
 
   readonly categories$ = this.categoriesSubject.asObservable();
@@ -79,10 +79,10 @@ export class ProductsBackService {
     this.querySubject.next({ ...this.querySubject.value, ...patch });
   }
 
-  toggleActive(productId: string) {
+  toggleACTIVE(productId: string) {
     const next: Product[] = this.productsSubject.value.map((p) =>
       p.id === productId
-        ? { ...p, status: (p.status === 'active' ? 'inactive' : 'active') as ProductStatus }
+        ? { ...p, status: (p.status === 'ACTIVE' ? 'inACTIVE' : 'ACTIVE') as ProductStatus }
         : p
     );
 
@@ -115,11 +115,11 @@ export class ProductsBackService {
     const img = (seed: string) => `https://picsum.photos/seed/${seed}/600/380`;
 
     const data: Product[] = [
-      { id: 'p1', imageUrl: img('pc'), name: 'Gaming Computer', price: 0, stock: 12, categoryId: 'cat-it', status: 'active' },
-      { id: 'p2', imageUrl: img('scaffold'), name: 'Scaffold Service', price: 0, stock: 3, categoryId: 'cat-construction', status: 'active' },
-      { id: 'p3', imageUrl: img('container'), name: 'Container Transport', price: 0, stock: 0, categoryId: 'cat-logistics', status: 'inactive' },
-      { id: 'p4', imageUrl: img('keyboard'), name: 'Keyboard', price: 49, stock: 5, categoryId: 'cat-it', status: 'active' },
-      { id: 'p5', imageUrl: img('mouse'), name: 'Mouse', price: 19, stock: 2, categoryId: 'cat-it', status: 'active' },
+      { id: 'p1', imageUrl: img('pc'), name: 'Gaming Computer', price: 0, stock: 12, categoryId: 'cat-it', status: 'ACTIVE' },
+      { id: 'p2', imageUrl: img('scaffold'), name: 'Scaffold Service', price: 0, stock: 3, categoryId: 'cat-construction', status: 'ACTIVE' },
+      { id: 'p3', imageUrl: img('container'), name: 'Container Transport', price: 0, stock: 0, categoryId: 'cat-logistics', status: 'inACTIVE' },
+      { id: 'p4', imageUrl: img('keyboard'), name: 'Keyboard', price: 49, stock: 5, categoryId: 'cat-it', status: 'ACTIVE' },
+      { id: 'p5', imageUrl: img('mouse'), name: 'Mouse', price: 19, stock: 2, categoryId: 'cat-it', status: 'ACTIVE' },
     ];
 
     return data;

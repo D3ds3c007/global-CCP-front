@@ -1,7 +1,7 @@
 <div class="p-card">
   <div class="p-card__top">
-    <button class="icon-btn" type="button" (click)="toggle.emit(product)" title="Toggle active">
-      <span class="dot" [class.on]="product.status === 'active'"></span>
+    <button class="icon-btn" type="button" (click)="toggle.emit(product)" title="Toggle ACTIVE">
+      <span class="dot" [class.on]="product.status === 'ACTIVE'"></span>
     </button>
 
     <button class="icon-btn" type="button" (click)="edit.emit(product)" title="Edit">

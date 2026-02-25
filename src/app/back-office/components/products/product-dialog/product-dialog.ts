@@ -40,7 +40,7 @@ export class ProductDialogComponent implements OnChanges {
     price: [0, [Validators.required, Validators.min(0)]],
     stock: [0, [Validators.required, Validators.min(0)]],
     categoryId: ['', [Validators.required]],
-    status: ['active' as ProductStatus, [Validators.required]],
+    status: ['ACTIVE' as ProductStatus, [Validators.required]],
   });
 
   ngOnChanges(): void {
@@ -69,7 +69,7 @@ export class ProductDialogComponent implements OnChanges {
         price: 0,
         stock: 0,
         categoryId: firstCat,
-        status: 'active',
+        status: 'ACTIVE',
       });
 
       this.previewUrl = defaultUrl;

@@ -78,7 +78,7 @@
   color: #166534;
   border-color: rgba(34, 197, 94, 0.25);
 }
-.badge.pending {
+.badge.PENDING {
   background: rgba(59, 130, 246, 0.12);
   color: #1e3a8a;
   border-color: rgba(59, 130, 246, 0.25);

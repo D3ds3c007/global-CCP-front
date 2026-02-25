@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, combineLatest, map } from 'rxjs';
 
 export type OrderStatus =
-  | 'pending'
+  | 'PENDING'
   | 'confirmed'
   | 'preparing'
   | 'ready'
@@ -57,7 +57,7 @@ export interface OrdersQuery {
   status: OrderStatus | 'all';
 }
 
-const STATUS_FLOW: OrderStatus[] = ['pending', 'confirmed', 'preparing', 'ready', 'delivered'];
+const STATUS_FLOW: OrderStatus[] = ['PENDING', 'confirmed', 'preparing', 'ready', 'delivered'];
 
 function nowIso() {
   return new Date().toISOString();
@@ -191,7 +191,7 @@ export class OrdersBackService {
     });
 
     return [
-      base('ORD-1001', 'pending', o1Items, o1Totals),
+      base('ORD-1001', 'PENDING', o1Items, o1Totals),
       base('ORD-1002', 'confirmed', o2Items, o2Totals),
       base('ORD-1003', 'preparing', o1Items, o1Totals),
     ];

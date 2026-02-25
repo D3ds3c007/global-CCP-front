@@ -82,7 +82,7 @@ interface BackendCategory {
   _id: string;
   name: string;
   type?: string;
-  isActive?: boolean;
+  isACTIVE?: boolean;
 }
 
 interface BackendCategoryListResponse {
@@ -124,7 +124,7 @@ export class ProductService {
       .pipe(
         map(response =>
           (response.categories ?? [])
-            .filter(category => category.isActive !== false)
+            .filter(category => category.isACTIVE !== false)
             .map(category => ({
               id: category._id,
               name: category.name

@@ -107,7 +107,7 @@
   background: rgba(17, 24, 39, 0.25);
   cursor: pointer;
 }
-.dot.active { background: rgba(17, 24, 39, 0.85); width: 18px; }
+.dot.ACTIVE { background: rgba(17, 24, 39, 0.85); width: 18px; }
 
 .panel {
   background: #f3f4f6;

@@ -31,7 +31,7 @@
   border-color: #d1d5db;
 }
 
-.pill.active {
+.pill.ACTIVE {
   border-color: #111827;
   background: #111827;
   color: #ffffff;

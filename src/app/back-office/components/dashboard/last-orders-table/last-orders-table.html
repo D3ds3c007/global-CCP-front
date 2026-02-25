@@ -18,7 +18,7 @@
       <td class="mono">{{ o.id }}</td>
       <td>{{ o.customer }}</td>
       <td>
-        <span class="pill" [class.pend]="o.status==='pending'"
+        <span class="pill" [class.pend]="o.status==='PENDING'"
                          [class.conf]="o.status==='confirmed'"
                          [class.del]="o.status==='delivered'">
           {{ o.status }}
