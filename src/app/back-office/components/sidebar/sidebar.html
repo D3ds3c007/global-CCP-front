@@ -12,28 +12,30 @@
         <input [(ngModel)]="search" placeholder="Search" />
       </div>
 
-      <ng-container *ngIf="selectedShop$ | async as selectedShop; else noShopContext">
-        <div class="shop-context" *ngIf="!collapsed">
-          <div class="shop-context__label">Selected Shop</div>
-          <div class="shop-context__name">{{ selectedShop.name }}</div>
-        </div>
+      <ng-container *ngIf="(selectedShop$ | async) as selectedShop; else noShopContext">
+        <ng-container *ngIf="(user$ | async)?.role === 'SHOP'">
+          <div class="shop-context" *ngIf="!collapsed">
+        <div class="shop-context__label">Selected Shop</div>
+        <div class="shop-context__name">{{ selectedShop.name }}</div>
+          </div>
 
-        <button class="item item-button back-action" type="button" (click)="backToMyShops()">
-          <span class="mi">arrow_back</span>
-          <span class="label" *ngIf="!collapsed">Back to My Shops</span>
-        </button>
+          <button class="item item-button back-action" type="button" (click)="backToMyShops()">
+        <span class="mi">arrow_back</span>
+        <span class="label" *ngIf="!collapsed">Back to My Shops</span>
+          </button>
 
-        <nav class="nav">
-          <a
-            class="item"
-            *ngFor="let item of getShopNav(selectedShop)"
-            [routerLink]="item.route"
-            routerLinkActive="ACTIVE"
-          >
-            <span class="mi">{{ item.icon }}</span>
-            <span class="label" *ngIf="!collapsed">{{ item.label }}</span>
-          </a>
-        </nav>
+          <nav class="nav">
+        <a
+          class="item"
+          *ngFor="let item of getShopNav(selectedShop)"
+          [routerLink]="item.route"
+          routerLinkActive="ACTIVE"
+        >
+          <span class="mi">{{ item.icon }}</span>
+          <span class="label" *ngIf="!collapsed">{{ item.label }}</span>
+        </a>
+          </nav>
+        </ng-container>
       </ng-container>
 
       <ng-template #noShopContext>
