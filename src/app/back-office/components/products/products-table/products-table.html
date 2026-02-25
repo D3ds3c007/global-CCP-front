@@ -12,7 +12,7 @@
     </thead>
 
     <tbody>
-      <tr *ngFor="let p of products">
+      <tr *ngFor="let p of products; trackBy: trackByProductId">
         <td><img class="thumb" [src]="p.imageUrl" [alt]="p.name" /></td>
         <td class="name">{{ p.name }}</td>
         <td class="right">{{ p.price === 0 ? 'FREE' : (p.price | currency:'EUR') }}</td>
@@ -21,9 +21,11 @@
           <span class="pill" [class.on]="p.status==='ACTIVE'">{{ p.status }}</span>
         </td>
         <td class="right actions">
-          <button type="button" (click)="toggle.emit(p)">toggle</button>
-          <button type="button" (click)="edit.emit(p)">edit</button>
-          <button type="button" class="danger" (click)="remove.emit(p)">delete</button>
+          <button type="button" [disabled]="isDisabled(p)" (click)="toggle.emit(p)">
+            {{ p.status === 'ACTIVE' ? 'deactivate' : 'activate' }}
+          </button>
+          <button type="button" [disabled]="isDisabled(p)" (click)="edit.emit(p)">edit</button>
+          <button type="button" class="danger" [disabled]="isDisabled(p)" (click)="remove.emit(p)">delete</button>
         </td>
       </tr>
     </tbody>

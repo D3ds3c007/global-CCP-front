@@ -1,10 +1,10 @@
 <div class="p-card">
   <div class="p-card__top">
-    <button class="icon-btn" type="button" (click)="toggle.emit(product)" title="Toggle ACTIVE">
+    <button class="icon-btn" type="button" [disabled]="actionsDisabled" (click)="toggle.emit(product)" title="Toggle ACTIVE">
       <span class="dot" [class.on]="product.status === 'ACTIVE'"></span>
     </button>
 
-    <button class="icon-btn" type="button" (click)="edit.emit(product)" title="Edit">
+    <button class="icon-btn" type="button" [disabled]="actionsDisabled" (click)="edit.emit(product)" title="Edit">
       ✎
     </button>
   </div>
@@ -29,6 +29,6 @@
     <span class="chip">Stock: {{ product.stock }}</span>
     <span class="chip">Status: {{ product.status }}</span>
 
-    <button class="link" type="button" (click)="remove.emit(product)">delete</button>
+    <button class="link" type="button" [disabled]="actionsDisabled" (click)="remove.emit(product)">delete</button>
   </div>
 </div>

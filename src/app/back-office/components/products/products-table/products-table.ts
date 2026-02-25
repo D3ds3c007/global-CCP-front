@@ -11,8 +11,16 @@ import { Product } from '../../../services/product-back';
 })
 export class ProductsTableComponent {
   @Input() products: Product[] = [];
+  @Input() disabledIds: string[] = [];
 
   @Output() edit = new EventEmitter<Product>();
   @Output() remove = new EventEmitter<Product>();
   @Output() toggle = new EventEmitter<Product>();
+
+  trackByProductId = (_index: number, p: Product): string => p._id || p.id;
+
+  isDisabled(p: Product): boolean {
+    const id = p._id || p.id;
+    return this.disabledIds.includes(id);
+  }
 }

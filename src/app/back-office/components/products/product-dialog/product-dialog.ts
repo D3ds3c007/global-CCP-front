@@ -1,14 +1,14 @@
 import { Component, EventEmitter, Input, OnChanges, Output, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
-import { Category, Product, ProductStatus } from '../../../services/product-back';
+import { Category, Product, ProductDraft, ProductStatus } from '../../../services/product-back';
 
 export type ProductDialogMode = 'create' | 'edit';
 
 export type ProductDialogSave = {
   mode: ProductDialogMode;
   id?: string;
-  value: Omit<Product, 'id'>; // on garde imageUrl final ici
+  value: ProductDraft; // on garde imageUrl final ici
 };
 
 @Component({

@@ -11,6 +11,7 @@ import { Product } from '../../../services/product-back';
 })
 export class ProductCardComponent {
   @Input({ required: true }) product!: Product;
+  @Input() actionsDisabled = false;
 
   @Output() edit = new EventEmitter<Product>();
   @Output() remove = new EventEmitter<Product>();
