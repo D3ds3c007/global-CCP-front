@@ -1,7 +1,41 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-
+import { BehaviorSubject, map, Observable } from 'rxjs';
+import { environment } from '../../../environments/environment';
+import { HttpClient } from '@angular/common/http';
+import { Product } from './product.service';
 export type OrderStatus = 'PAID' | 'PENDING' | 'CANCELLED';
+
+export interface OrderFromServer{
+fullName: any;
+  _id: string;
+  orderId: string;
+  buyerId: Buyer;
+  items: Item[];
+  total: number;
+  revenue: number;
+  status: OrderStatus;
+  address: string;
+  phone: string;
+  shopId: string;
+  paymentMethod: string;
+  createdAt: string; // ISO
+  updatedAt: string; // ISO
+}
+
+export interface Item{
+  _id: string;
+  productId: string;
+  qty: number;
+  priceSnapshot: number;
+  path: string;
+  name: string;
+}
+
+export interface Buyer{
+  _id: string;
+  fullName: string;
+  email: string;
+}
 
 export type OrderItem = {
   productId: string;
@@ -42,6 +76,12 @@ export type Order = {
 
 @Injectable({ providedIn: 'root' })
 export class OrderService {
+  private apiUrl = environment.apiUrl + 'orders';
+  constructor(private http: HttpClient) {
+    console.log('OrderService initialized');
+    this.loadOrders();
+  }
+  
   private readonly storageKey = 'storefront.orders.v1';
   private readonly subject = new BehaviorSubject<Order[]>(this.load());
   readonly orders$ = this.subject.asObservable();
@@ -92,4 +132,10 @@ export class OrderService {
       // ignore
     }
   }
+
+  loadOrders(): Observable<OrderFromServer[]> {
+  return this.http.get<{ orders: OrderFromServer[] }>(this.apiUrl, { withCredentials: true }).pipe(
+    map(res => res.orders)
+  );
+}
 }

@@ -7,7 +7,7 @@ import { catchError, map, shareReplay, switchMap, take } from 'rxjs/operators';
 
 import { CartItemsState, CartService } from '../../services/cart.service';
 import { ProductService } from '../../services/product.service';
-import { OrderService } from '../../services/order';
+import { OrderService } from '../../services/order.service';
 
 type PaymentMethod = 'COD' | 'MOBILE_MONEY';
 
