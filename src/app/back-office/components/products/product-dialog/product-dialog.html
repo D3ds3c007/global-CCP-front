@@ -72,7 +72,7 @@
               <button type="button" class="remove-thumb" (click)="removeExistingImage(i)" [disabled]="submitting">×</button>
             </div>
             <div class="thumb-card" *ngFor="let item of newImages; index as i">
-              <img [src]="pictureUrl + item.previewUrl" [alt]="item.name" />
+              <img [src]=" item.previewUrl" [alt]="item.name" />
               <button type="button" class="remove-thumb" (click)="removeNewImage(i)" [disabled]="submitting">×</button>
             </div>
           </div>

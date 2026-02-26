@@ -1,3 +1,4 @@
+import { provideHttpClient } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AdminCategoriesPage } from './admin-categories-page';
@@ -8,7 +9,8 @@ describe('AdminCategoriesPage', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AdminCategoriesPage]
+      imports: [AdminCategoriesPage],
+      providers: [provideHttpClient()],
     })
     .compileComponents();
 

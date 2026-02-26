@@ -14,4 +14,6 @@ export class CategoriesChipsComponent {
 
   @Output() edit = new EventEmitter<Category>();
   @Output() toggle = new EventEmitter<string>(); // id
+
+  trackByCategory = (_index: number, category: Category) => category._id ?? category.id;
 }
