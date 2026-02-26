@@ -68,11 +68,11 @@
 
           <div class="thumbs-edit" *ngIf="retainedImages.length || newImages.length; else noImages">
             <div class="thumb-card" *ngFor="let img of retainedImages; index as i">
-              <img [src]="img" alt="existing image" />
+              <img [src]="pictureUrl + img" alt="existing image" />
               <button type="button" class="remove-thumb" (click)="removeExistingImage(i)" [disabled]="submitting">×</button>
             </div>
             <div class="thumb-card" *ngFor="let item of newImages; index as i">
-              <img [src]="item.previewUrl" [alt]="item.name" />
+              <img [src]="pictureUrl + item.previewUrl" [alt]="item.name" />
               <button type="button" class="remove-thumb" (click)="removeNewImage(i)" [disabled]="submitting">×</button>
             </div>
           </div>
