@@ -1,7 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 
-import { AdminCategoriesBackService, Category } from '../../services/admin-categories-back';
+import {
+  AdminCategoriesBackService,
+  Category,
+  CategoryMutationResponse,
+} from '../../services/admin-categories-back';
 import { CategoriesFiltersComponent } from '../../components/categories/categories-filters/categories-filters';
 import { CategoriesChipsComponent } from '../../components/categories/categories-chips/categories-chips';
 import { CategoryDialogComponent, CategoryDialogMode, CategoryDialogSave } from '../../components/categories/category-dialog/category-dialog';
@@ -22,13 +26,19 @@ import { DashboardCardComponent } from '../../../back-office/components/dashboar
   templateUrl: './admin-categories-page.html',
   styleUrls: ['./admin-categories-page.css'],
 })
-export class AdminCategoriesPage {
+export class AdminCategoriesPage implements OnInit {
   private service = inject(AdminCategoriesBackService);
   vm$ = this.service.vm$;
 
   dialogOpen = false;
   dialogMode: CategoryDialogMode = 'create';
   editing?: Category;
+
+  ngOnInit(): void {
+    this.service.listCategories().subscribe({
+      error: (err: Error) => this.alertMessage(err.message),
+    });
+  }
 
   setQuery(patch: any) {
     this.service.setQuery(patch);
@@ -51,13 +61,24 @@ export class AdminCategoriesPage {
   }
 
   onSave(e: CategoryDialogSave) {
-    if (e.mode === 'create') this.service.create(e.value);
-    else this.service.update(e.id!, e.value);
-
-    this.closeDialog();
+    const request$ = e.mode === 'create' ? this.service.create(e.value) : this.service.update(e.id!, e.value);
+    request$.subscribe({
+      next: () => this.closeDialog(),
+      error: (err: Error) => this.alertMessage(err.message),
+    });
   }
 
   toggle(id: string) {
-    this.service.toggleStatus(id);
+    this.service.toggleStatus(id).subscribe({
+      next: (res: CategoryMutationResponse) => {
+        if (res.message) this.alertMessage(res.message);
+      },
+      error: (err: Error) => this.alertMessage(err.message),
+    });
+  }
+
+  private alertMessage(message: string) {
+    if (!message || typeof window === 'undefined') return;
+    window.alert(message);
   }
 }
