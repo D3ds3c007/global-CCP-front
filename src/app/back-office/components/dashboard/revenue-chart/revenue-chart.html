@@ -22,7 +22,7 @@
     <!-- x labels -->
     <g class="labels">
       <text *ngFor="let p of points; let i=index" [attr.x]="x(i)" [attr.y]="h-10" text-anchor="middle">
-        {{ p.year }}
+        {{ labelFor(p) }}
       </text>
     </g>
   </svg>

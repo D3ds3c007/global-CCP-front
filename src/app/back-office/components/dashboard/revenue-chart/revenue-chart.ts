@@ -11,6 +11,7 @@ import { RevenuePoint } from '../../../services/dashboard-service';
 })
 export class RevenueChartComponent {
   @Input() points: RevenuePoint[] = [];
+  private readonly monthLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
   w = 700;
   h = 240;
@@ -42,5 +43,12 @@ export class RevenueChartComponent {
 
     const line = this.points.map((p, i) => `${this.x(i)} ${this.y(p.valueK)}`).join(' L ');
     return `M ${startX} ${baseY} L ${line} L ${endX} ${baseY} Z`;
+  }
+
+  labelFor(point: RevenuePoint): string | number {
+    if (this.points.length === 12 && point.year >= 1 && point.year <= 12) {
+      return this.monthLabels[point.year - 1];
+    }
+    return point.year;
   }
 }
