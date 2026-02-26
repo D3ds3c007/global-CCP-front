@@ -6,6 +6,8 @@ import { NzTagModule } from 'ng-zorro-antd/tag';
 import { RouterLink } from '@angular/router';
 
 import { Product } from '../../services/product.service';
+import { environment } from '../../../../environments/environment';
+
 
 @Component({
   selector: 'app-product-card',
@@ -25,6 +27,7 @@ export class ProductCardComponent {
   readonly isAdding = input<boolean>(false);
   readonly justAdded = input<boolean>(false);
   readonly addToCart = output<string>();
+  readonly apiUrl = environment.pictureUrl;
 
   onAddToCart(): void {
     const product = this.product();

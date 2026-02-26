@@ -14,6 +14,7 @@
       *ngFor="let p of vm.products; trackBy: trackByProductId"
       [product]="p"
       [actionsDisabled]="isProductBusy(p)"
+      (view)="openDetails($event)"
       (edit)="openEdit($event)"
       (remove)="onDelete($event)"
       (toggle)="onToggle($event)"
@@ -24,6 +25,7 @@
   <app-products-table
     [products]="vm.products"
     [disabledIds]="busyProductIds"
+    (view)="openDetails($event)"
     (edit)="openEdit($event)"
     (remove)="onDelete($event)"
     (toggle)="onToggle($event)"
@@ -38,7 +40,11 @@
     [mode]="dialogMode"
     [product]="editing"
     [categories]="vm.categories"
+    [submitting]="dialogSubmitting"
+    [loading]="dialogLoading"
+    [errorMessage]="dialogErrorMessage"
     (cancel)="closeDialog()"
     (save)="onDialogSave($event)"
+    (editFromDetails)="onDialogEditFromDetails($event)"
   ></app-product-dialog>
 </section>

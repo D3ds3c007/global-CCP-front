@@ -1,8 +1,14 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { forkJoin } from 'rxjs';
 
-import { Product, ProductsBackService, ProductsQuery } from '../../services/product-back';
+import {
+  Product,
+  ProductDialogSubmit,
+  ProductsBackService,
+  ProductsQuery,
+} from '../../services/product-back';
 import { ProductsFiltersComponent } from '../../components/products/products-filters/products-filters';
 import { ProductCardComponent } from '../../components/products/product-card/product-card';
 import { ProductsTableComponent } from '../../components/products/products-table/products-table';
@@ -36,6 +42,9 @@ export class ProductsPage implements OnInit {
   dialogOpen = false;
   dialogMode: ProductDialogMode = 'create';
   editing?: Product;
+  dialogSubmitting = false;
+  dialogLoading = false;
+  dialogErrorMessage: string | null = null;
 
   loading = false;
   errorMessage: string | null = null;
@@ -45,7 +54,6 @@ export class ProductsPage implements OnInit {
 
   ngOnInit(): void {
     const shopId = this.selectedShopState.snapshot?._id?.trim() ?? '';
-
     if (!shopId) {
       this.noShopMessage = 'Please select a shop first.';
       this.router.navigate(['/shop']);
@@ -53,47 +61,89 @@ export class ProductsPage implements OnInit {
     }
 
     this.shopId = shopId;
-    this.loadProducts(shopId);
+    this.initPage(shopId);
   }
 
-  openCreate() {
+  openCreate(): void {
     this.dialogMode = 'create';
     this.editing = undefined;
+    this.dialogErrorMessage = null;
+    this.dialogSubmitting = false;
     this.dialogOpen = true;
   }
 
-  openEdit(p: Product) {
+  openEdit(p: Product): void {
     this.dialogMode = 'edit';
     this.editing = p;
+    this.dialogErrorMessage = null;
+    this.dialogSubmitting = false;
     this.dialogOpen = true;
   }
 
-  closeDialog() {
+  openDetails(p: Product): void {
+    this.dialogMode = 'details';
+    this.editing = p;
+    this.dialogErrorMessage = null;
+    this.dialogSubmitting = false;
+    this.dialogOpen = true;
+  }
+
+  closeDialog(): void {
+    if (this.dialogSubmitting) return;
     this.dialogOpen = false;
+    this.dialogErrorMessage = null;
+    this.dialogLoading = false;
   }
 
-  onDialogSave(e: ProductDialogSave) {
-    if (e.mode === 'create') {
-      this.facade.create(e.value);
-    } else {
-      this.facade.update(e.id!, e.value);
-    }
-    this.closeDialog();
+  onDialogSave(event: ProductDialogSave): void {
+    if (!this.shopId || this.dialogSubmitting) return;
+    this.dialogSubmitting = true;
+    this.dialogErrorMessage = null;
+
+    const submit = event as ProductDialogSubmit;
+    const request$ =
+      submit.mode === 'create'
+        ? this.facade.createProduct(this.shopId, submit.payload, submit.files)
+        : this.facade.updateProduct(
+            submit.id || '',
+            this.shopId,
+            submit.payload,
+            submit.files,
+            submit.retainedImages
+          );
+
+    request$.subscribe({
+      next: (product) => {
+        this.editing = product;
+      },
+      error: (err) => {
+        this.dialogSubmitting = false;
+        this.dialogErrorMessage = this.readError(err);
+      },
+      complete: () => {
+        this.dialogSubmitting = false;
+        this.dialogOpen = false;
+      },
+    });
   }
 
-  onEdit(p: Product) {
+  onDialogEditFromDetails(p: Product): void {
     this.openEdit(p);
   }
 
-  onAdd() {
+  onEdit(p: Product): void {
+    this.openEdit(p);
+  }
+
+  onAdd(): void {
     this.openCreate();
   }
 
-  setQuery(patch: Partial<ProductsQuery>) {
+  setQuery(patch: Partial<ProductsQuery>): void {
     this.facade.setQuery(patch);
   }
 
-  onToggle(p: Product) {
+  onToggle(p: Product): void {
     const productId = p._id || p.id;
     if (!this.shopId || !productId || this.isBusy(productId)) return;
 
@@ -110,7 +160,7 @@ export class ProductsPage implements OnInit {
     });
   }
 
-  onDelete(p: Product) {
+  onDelete(p: Product): void {
     const productId = p._id || p.id;
     if (!this.shopId || !productId || this.isBusy(productId)) return;
     if (!confirm(`Supprimer "${p.name}" ?`)) return;
@@ -133,17 +183,23 @@ export class ProductsPage implements OnInit {
     return this.isBusy(p._id || p.id);
   }
 
-  private loadProducts(shopId: string): void {
+  private initPage(shopId: string): void {
     this.loading = true;
+    this.dialogLoading = true;
     this.errorMessage = null;
 
-    this.facade.loadProducts(shopId).subscribe({
+    forkJoin({
+      categories: this.facade.loadProductCategories(),
+      products: this.facade.loadProducts(shopId),
+    }).subscribe({
       error: (err) => {
         this.loading = false;
+        this.dialogLoading = false;
         this.errorMessage = this.readError(err);
       },
       complete: () => {
         this.loading = false;
+        this.dialogLoading = false;
       },
     });
   }
@@ -159,7 +215,6 @@ export class ProductsPage implements OnInit {
       }
       return;
     }
-
     this.busyProductIds = this.busyProductIds.filter((id) => id !== productId);
   }
 

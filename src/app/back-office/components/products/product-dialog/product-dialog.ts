@@ -1,15 +1,26 @@
-import { Component, EventEmitter, Input, OnChanges, Output, inject } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnDestroy,
+  Output,
+  SimpleChanges,
+  inject,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
-import { Category, Product, ProductDraft, ProductStatus } from '../../../services/product-back';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  Category,
+  Product,
+  ProductDialogSubmit,
+  ProductStatus,
+  ProductUpsertPayload,
+} from '../../../services/product-back';
 
-export type ProductDialogMode = 'create' | 'edit';
+export type ProductDialogMode = 'create' | 'edit' | 'details';
 
-export type ProductDialogSave = {
-  mode: ProductDialogMode;
-  id?: string;
-  value: ProductDraft; // on garde imageUrl final ici
-};
+export type ProductDialogSave = ProductDialogSubmit;
 
 @Component({
   selector: 'app-product-dialog',
@@ -18,119 +29,169 @@ export type ProductDialogSave = {
   templateUrl: './product-dialog.html',
   styleUrls: ['./product-dialog.css'],
 })
-export class ProductDialogComponent implements OnChanges {
+export class ProductDialogComponent implements OnChanges, OnDestroy {
   @Input({ required: true }) mode!: ProductDialogMode;
   @Input() product?: Product;
   @Input() categories: Category[] = [];
+  @Input() submitting = false;
+  @Input() loading = false;
+  @Input() errorMessage: string | null = null;
 
   @Output() cancel = new EventEmitter<void>();
   @Output() save = new EventEmitter<ProductDialogSave>();
+  @Output() editFromDetails = new EventEmitter<Product>();
 
-  private fb = inject(FormBuilder);
+  private readonly fb = inject(FormBuilder);
 
-  /** fichier choisi (optionnel) */
-  private selectedFile: File | null = null;
-
-  /** preview affichée (URL ou base64) */
-  previewUrl = '';
-
-  form = this.fb.nonNullable.group({
-    imageUrl: ['', [Validators.required]], // sera rempli par URL OU par base64 si upload
+  readonly form = this.fb.nonNullable.group({
     name: ['', [Validators.required, Validators.minLength(2)]],
-    price: [0, [Validators.required, Validators.min(0)]],
-    stock: [0, [Validators.required, Validators.min(0)]],
     categoryId: ['', [Validators.required]],
     status: ['ACTIVE' as ProductStatus, [Validators.required]],
+    price: [0, [Validators.required, Validators.min(0)]],
+    stock: [0, [Validators.required, Validators.min(0)]],
+    description: [''],
   });
 
-  ngOnChanges(): void {
-    if (this.mode === 'edit' && this.product) {
-      this.form.setValue({
-        imageUrl: this.product.imageUrl,
-        name: this.product.name,
-        price: this.product.price,
-        stock: this.product.stock,
-        categoryId: this.product.categoryId,
-        status: this.product.status,
-      });
+  retainedImages: string[] = [];
+  newImages: NewImageItem[] = [];
+  detailsActiveImage = '';
 
-      this.previewUrl = this.product.imageUrl;
-      this.selectedFile = null;
-      return;
+  get isDetailsMode(): boolean {
+    return this.mode === 'details';
+  }
+
+  get title(): string {
+    if (this.mode === 'create') return 'Créer un produit';
+    if (this.mode === 'edit') return 'Modifier le produit';
+    return 'Détails du produit';
+  }
+
+  get combinedImages(): string[] {
+    return [...this.retainedImages, ...this.newImages.map((i) => i.previewUrl)];
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['mode'] || changes['product']) {
+      this.syncFromInputs();
     }
 
-    if (this.mode === 'create') {
+    if (changes['categories'] && this.mode === 'create' && !this.form.controls.categoryId.value) {
       const firstCat = this.categories[0]?.id ?? '';
-      const defaultUrl = 'https://picsum.photos/seed/new/600/380';
-
-      this.form.reset({
-        imageUrl: defaultUrl,
-        name: '',
-        price: 0,
-        stock: 0,
-        categoryId: firstCat,
-        status: 'ACTIVE',
-      });
-
-      this.previewUrl = defaultUrl;
-      this.selectedFile = null;
+      if (firstCat) this.form.controls.categoryId.setValue(firstCat);
     }
   }
 
-  onBackdropClick() {
+  ngOnDestroy(): void {
+    this.clearNewImages();
+  }
+
+  onBackdropClick(): void {
+    if (this.submitting) return;
     this.cancel.emit();
   }
 
-  onPickFile(ev: Event) {
-    const input = ev.target as HTMLInputElement;
-    const file = input.files?.[0] ?? null;
-    if (!file) return;
-
-    // basic validation
-    if (!file.type.startsWith('image/')) {
-      alert('Veuillez choisir une image.');
-      input.value = '';
-      return;
+  onPickFiles(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const files = Array.from(input.files ?? []);
+    for (const file of files) {
+      if (!file.type.startsWith('image/')) continue;
+      const previewUrl = URL.createObjectURL(file);
+      this.newImages.push({ file, previewUrl, name: file.name });
     }
-    if (file.size > 2 * 1024 * 1024) {
-      alert('Image trop grande (max 2MB).');
-      input.value = '';
-      return;
-    }
-
-    this.selectedFile = file;
-
-    // simulation: convert to base64 and store in imageUrl
-    const reader = new FileReader();
-    reader.onload = () => {
-      const dataUrl = String(reader.result);
-      this.previewUrl = dataUrl;
-
-      // important: on remplit imageUrl avec le base64 (pour que create/update garde l’image)
-      this.form.controls.imageUrl.setValue(dataUrl);
-      this.form.controls.imageUrl.markAsDirty();
-    };
-    reader.readAsDataURL(file);
+    input.value = '';
   }
 
-  clearFile() {
-    this.selectedFile = null;
-    // optionnel: remettre l'url actuelle du champ
-    this.previewUrl = this.form.controls.imageUrl.value;
+  removeExistingImage(index: number): void {
+    this.retainedImages = this.retainedImages.filter((_, i) => i !== index);
+    if (this.detailsActiveImage && !this.combinedImages.includes(this.detailsActiveImage)) {
+      this.detailsActiveImage = this.combinedImages[0] ?? '';
+    }
   }
 
-  onSubmit() {
+  removeNewImage(index: number): void {
+    const item = this.newImages[index];
+    if (!item) return;
+    URL.revokeObjectURL(item.previewUrl);
+    this.newImages = this.newImages.filter((_, i) => i !== index);
+    if (this.detailsActiveImage && !this.combinedImages.includes(this.detailsActiveImage)) {
+      this.detailsActiveImage = this.combinedImages[0] ?? '';
+    }
+  }
+
+  selectDetailsImage(url: string): void {
+    this.detailsActiveImage = url;
+  }
+
+  openEditFromDetails(): void {
+    if (!this.product) return;
+    this.editFromDetails.emit(this.product);
+  }
+
+  onSubmit(): void {
+    if (this.isDetailsMode || this.submitting) return;
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
     }
 
-    const value = this.form.getRawValue();
+    const raw = this.form.getRawValue();
+    const payload: ProductUpsertPayload = {
+      name: raw.name.trim(),
+      categoryId: raw.categoryId,
+      status: raw.status,
+      price: Number(raw.price),
+      stock: Number(raw.stock),
+      description: String(raw.description ?? '').trim(),
+    };
 
     this.save.emit({
-      mode: this.mode,
-      id: this.product?.id,
-      value,
+      mode: this.mode as 'create' | 'edit',
+      id: this.product?._id || this.product?.id,
+      payload,
+      files: this.newImages.map((x) => x.file),
+      retainedImages: [...this.retainedImages],
     });
   }
+
+  private syncFromInputs(): void {
+    this.clearNewImages();
+
+    if (this.mode === 'create') {
+      this.retainedImages = [];
+      this.detailsActiveImage = '';
+      this.form.reset({
+        name: '',
+        categoryId: this.categories[0]?.id ?? '',
+        status: 'ACTIVE',
+        price: 0,
+        stock: 0,
+        description: '',
+      });
+      return;
+    }
+
+    if (!this.product) return;
+
+    this.retainedImages = [...(this.product.images ?? [])];
+    this.detailsActiveImage = this.retainedImages[0] ?? this.product.imageUrl ?? '';
+    this.form.reset({
+      name: this.product.name ?? '',
+      categoryId: this.product.categoryId ?? '',
+      status: this.product.status ?? 'ACTIVE',
+      price: Number(this.product.price ?? 0),
+      stock: Number(this.product.stock ?? 0),
+      description: this.product.description ?? '',
+    });
+  }
+
+  private clearNewImages(): void {
+    for (const img of this.newImages) URL.revokeObjectURL(img.previewUrl);
+    this.newImages = [];
+  }
+}
+
+interface NewImageItem {
+  file: File;
+  previewUrl: string;
+  name: string;
 }

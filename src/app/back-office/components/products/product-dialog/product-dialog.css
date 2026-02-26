@@ -9,12 +9,14 @@
 }
 
 .modal {
-  width: 560px;
+  width: 760px;
   max-width: 100%;
+  max-height: calc(100vh - 36px);
+  overflow: auto;
   background: #fff;
   border-radius: 16px;
   padding: 16px;
-  box-shadow: 0 18px 60px rgba(0,0,0,0.25);
+  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.25);
 }
 
 .head {
@@ -40,34 +42,30 @@
   cursor: pointer;
 }
 
-/* --- Image block --- */
-.img-block {
-  display: grid;
-  grid-template-columns: 160px 1fr;
-  gap: 12px;
+.alert {
+  border: 1px solid #fecaca;
+  background: #fef2f2;
+  color: #991b1b;
+  border-radius: 12px;
+  padding: 10px 12px;
+  font-size: 13px;
   margin-bottom: 12px;
-  align-items: start;
 }
 
-.preview {
-  width: 160px;
-  height: 120px;
-  border-radius: 14px;
-  overflow: hidden;
-  background: #f1f5f9;
-  border: 1px solid #eef2f7;
+.alert.info {
+  border-color: #dbeafe;
+  background: #eff6ff;
+  color: #1d4ed8;
 }
 
-.preview img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+.img-section {
+  margin-bottom: 14px;
 }
 
-.img-actions {
+.img-toolbar {
   display: flex;
-  flex-direction: column;
-  gap: 10px;
+  justify-content: flex-start;
+  margin-bottom: 10px;
 }
 
 .file-btn {
@@ -88,13 +86,53 @@
   background: #f8fafc;
 }
 
-.or {
-  color: #64748b;
-  font-size: 12px;
-  font-weight: 700;
+.file-btn.disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
-/* --- Grid fields --- */
+.thumbs-edit {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  gap: 10px;
+}
+
+.thumb-card {
+  position: relative;
+  border: 1px solid #eef2f7;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #f8fafc;
+  height: 88px;
+}
+
+.thumb-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.remove-thumb {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  border: 0;
+  background: rgba(15, 23, 42, 0.8);
+  color: #fff;
+  cursor: pointer;
+}
+
+.empty-thumb {
+  border: 1px dashed #cbd5e1;
+  border-radius: 12px;
+  padding: 14px;
+  color: #64748b;
+  font-size: 13px;
+}
+
 .grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -107,6 +145,10 @@
   gap: 6px;
 }
 
+.field--full {
+  grid-column: 1 / -1;
+}
+
 .field span {
   font-size: 12px;
   font-weight: 700;
@@ -114,14 +156,20 @@
 }
 
 .field input,
-.field select {
+.field select,
+.field textarea {
   border: 1px solid #eef2f7;
   border-radius: 14px;
   padding: 10px 12px;
   outline: none;
+  font: inherit;
 }
 
-/* --- Actions --- */
+.field textarea {
+  resize: vertical;
+  min-height: 92px;
+}
+
 .actions {
   display: flex;
   justify-content: flex-end;
@@ -146,4 +194,112 @@
 
 .btn.ghost {
   background: #fff;
+}
+
+.btn:disabled,
+.x:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.details {
+  display: grid;
+  gap: 14px;
+}
+
+.details-gallery {
+  display: grid;
+  gap: 8px;
+}
+
+.details-main {
+  border: 1px solid #eef2f7;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #f8fafc;
+  min-height: 240px;
+}
+
+.details-main img {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  display: block;
+}
+
+.thumbs {
+  display: flex;
+  gap: 8px;
+  overflow: auto;
+}
+
+.thumb-btn {
+  padding: 0;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  overflow: hidden;
+  width: 72px;
+  height: 54px;
+  background: #fff;
+  cursor: pointer;
+  flex: 0 0 auto;
+}
+
+.thumb-btn.active {
+  border-color: #0f172a;
+}
+
+.thumb-btn img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.details-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px 12px;
+}
+
+.details-grid div {
+  border: 1px solid #eef2f7;
+  border-radius: 12px;
+  padding: 10px 12px;
+  display: grid;
+  gap: 4px;
+}
+
+.details-grid span {
+  font-size: 12px;
+  color: #64748b;
+  font-weight: 700;
+}
+
+.details-grid strong {
+  font-size: 14px;
+  color: #0f172a;
+}
+
+.details-desc {
+  border: 1px solid #eef2f7;
+  border-radius: 12px;
+  padding: 10px 12px;
+  min-height: 72px;
+  color: #0f172a;
+  white-space: pre-wrap;
+}
+
+@media (max-width: 640px) {
+  .grid,
+  .details-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .modal {
+    padding: 12px;
+  }
+
+  .details-main img {
+    height: 220px;
+  }
 }

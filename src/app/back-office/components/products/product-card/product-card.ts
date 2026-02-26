@@ -13,6 +13,7 @@ export class ProductCardComponent {
   @Input({ required: true }) product!: Product;
   @Input() actionsDisabled = false;
 
+  @Output() view = new EventEmitter<Product>();
   @Output() edit = new EventEmitter<Product>();
   @Output() remove = new EventEmitter<Product>();
   @Output() toggle = new EventEmitter<Product>();

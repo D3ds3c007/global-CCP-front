@@ -13,6 +13,7 @@ export class ProductsTableComponent {
   @Input() products: Product[] = [];
   @Input() disabledIds: string[] = [];
 
+  @Output() view = new EventEmitter<Product>();
   @Output() edit = new EventEmitter<Product>();
   @Output() remove = new EventEmitter<Product>();
   @Output() toggle = new EventEmitter<Product>();

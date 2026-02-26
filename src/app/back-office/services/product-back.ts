@@ -1,6 +1,17 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { BehaviorSubject, Observable, combineLatest, forkJoin, map, of, switchMap, tap, throwError, catchError } from 'rxjs';
+import {
+  BehaviorSubject,
+  Observable,
+  catchError,
+  combineLatest,
+  forkJoin,
+  map,
+  of,
+  switchMap,
+  tap,
+  throwError,
+} from 'rxjs';
 import { environment } from '../../../environments/environment';
 
 export type ProductStatus = 'ACTIVE' | 'INACTIVE';
@@ -22,16 +33,24 @@ export interface Product {
   categoryName?: string;
   status: ProductStatus;
   backendStatus: string;
-  description?: string;
+  description: string;
 }
 
-export interface ProductDraft {
-  imageUrl: string;
+export interface ProductUpsertPayload {
   name: string;
-  price: number;
-  stock: number;
   categoryId: string;
   status: ProductStatus;
+  price: number;
+  stock: number;
+  description: string;
+}
+
+export interface ProductDialogSubmit {
+  mode: 'create' | 'edit';
+  id?: string;
+  payload: ProductUpsertPayload;
+  files: File[];
+  retainedImages: string[];
 }
 
 export interface ProductsQuery {
@@ -49,21 +68,15 @@ export interface ProductsKpis {
 export class ProductsBackService {
   private readonly http = inject(HttpClient);
   private readonly apiUrl = environment.apiUrl;
+  private readonly apiOrigin = this.readApiOrigin(this.apiUrl);
 
-  private readonly categoriesSubject = new BehaviorSubject<Category[]>([
-    { id: 'cat-it', name: 'IT' },
-    { id: 'cat-construction', name: 'Construction' },
-    { id: 'cat-logistics', name: 'Logistics' },
-  ]);
-
+  private readonly categoriesSubject = new BehaviorSubject<Category[]>([]);
   private readonly productsSubject = new BehaviorSubject<Product[]>([]);
-
   private readonly querySubject = new BehaviorSubject<ProductsQuery>({
     search: '',
     categoryId: 'all',
     status: 'all',
   });
-
   private readonly kpisSubject = new BehaviorSubject<ProductsKpis>({
     processedOrdersPercent: 15,
     PENDINGOrdersPercent: 4,
@@ -76,12 +89,10 @@ export class ProductsBackService {
   readonly productsFiltered$ = combineLatest([this.productsSubject, this.querySubject]).pipe(
     map(([products, q]) => {
       const s = q.search.trim().toLowerCase();
-
       return products.filter((p) => {
         const matchSearch = !s || p.name.toLowerCase().includes(s);
         const matchCategory = q.categoryId === 'all' || p.categoryId === q.categoryId;
         const matchStatus = q.status === 'all' || p.status === q.status;
-
         return matchSearch && matchCategory && matchStatus;
       });
     })
@@ -98,6 +109,22 @@ export class ProductsBackService {
     this.querySubject.next({ ...this.querySubject.value, ...patch });
   }
 
+  loadProductCategories(): Observable<Category[]> {
+    const params = new HttpParams().set('type', 'PRODUCT');
+    return this.http
+      .get<ApiCategory[]>(`${this.apiUrl}categories`, { params, withCredentials: true })
+      .pipe(
+        map((rows) =>
+          (rows ?? []).map((c) => ({
+            id: String(c._id ?? ''),
+            name: String(c.name ?? ''),
+          }))
+        ),
+        tap((categories) => this.categoriesSubject.next(categories)),
+        catchError((err) => throwError(() => new Error(this.readErrorMessage(err))))
+      );
+  }
+
   loadProducts(shopId: string): Observable<Product[]> {
     const statuses = ['ACTIVE', 'DISABLED', 'OUT_OF_STOCK'] as const;
 
@@ -106,15 +133,58 @@ export class ProductsBackService {
       map((products) => this.dedupeProducts(products)),
       tap((products) => {
         this.productsSubject.next(products);
-        this.categoriesSubject.next(this.buildCategories(products));
+        if (!this.categoriesSubject.value.length) {
+          this.categoriesSubject.next(this.buildCategories(products));
+        }
       }),
       catchError((err) => throwError(() => new Error(this.readErrorMessage(err))))
     );
   }
 
+  getProduct(productId: string): Observable<Product> {
+    return this.http
+      .get<ApiProduct>(`${this.apiUrl}products/${productId}`, { withCredentials: true })
+      .pipe(
+        map((res) => this.mapApiProduct(res)),
+        tap((p) => this.upsertLocal(p)),
+        catchError((err) => throwError(() => new Error(this.readErrorMessage(err))))
+      );
+  }
+
+  createProduct(shopId: string, payload: ProductUpsertPayload, files: File[]): Observable<Product> {
+    const body = this.buildProductFormData(shopId, payload, files, []);
+    return this.http
+      .post<{ message?: string; product?: ApiProduct }>(`${this.apiUrl}products`, body, { withCredentials: true })
+      .pipe(
+        map((res) => this.mapApiProduct(res.product ?? {})),
+        tap((product) => this.prependProduct(product)),
+        catchError((err) => throwError(() => new Error(this.readErrorMessage(err))))
+      );
+  }
+
+  updateProduct(
+    productId: string,
+    shopId: string,
+    payload: ProductUpsertPayload,
+    files: File[],
+    retainedImages: string[]
+  ): Observable<Product> {
+    const body = this.buildProductFormData(shopId, payload, files, retainedImages);
+    return this.http
+      .put<{ message?: string; product?: ApiProduct } | ApiProduct>(
+        `${this.apiUrl}products/${productId}`,
+        body,
+        { withCredentials: true }
+      )
+      .pipe(
+        map((res) => this.mapApiProduct((res as { product?: ApiProduct }).product ?? (res as ApiProduct))),
+        tap((updated) => this.replaceProduct(updated)),
+        catchError((err) => throwError(() => new Error(this.readErrorMessage(err))))
+      );
+  }
+
   toggleStatus(productId: string, nextStatus: ProductStatus, _shopId?: string): Observable<Product> {
     const statusForApi = nextStatus === 'ACTIVE' ? 'ACTIVE' : 'DISABLED';
-
     return this.http
       .put<{ message?: string; product?: ApiProduct } | ApiProduct>(
         `${this.apiUrl}products/${productId}`,
@@ -122,7 +192,7 @@ export class ProductsBackService {
         { withCredentials: true }
       )
       .pipe(
-        map((res) => this.mapApiProduct((res as { product?: ApiProduct })?.product ?? (res as ApiProduct))),
+        map((res) => this.mapApiProduct((res as { product?: ApiProduct }).product ?? (res as ApiProduct))),
         tap((updated) => this.replaceProduct(updated)),
         catchError((err) => throwError(() => new Error(this.readErrorMessage(err))))
       );
@@ -138,46 +208,35 @@ export class ProductsBackService {
       );
   }
 
-  toggleACTIVE(productId: string) {
-    const next: Product[] = this.productsSubject.value.map((p) =>
-      p.id === productId
-        ? { ...p, status: (p.status === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE') as ProductStatus, backendStatus: p.status === 'ACTIVE' ? 'DISABLED' : 'ACTIVE' }
-        : p
-    );
-
-    this.productsSubject.next(next);
+  create(product: ProductUpsertPayload & { imageUrl?: string }) {
+    const id =
+      typeof crypto !== 'undefined' && 'randomUUID' in crypto ? crypto.randomUUID() : `p-${Date.now()}`;
+    const image = product.imageUrl ?? '';
+    this.prependProduct({
+      _id: id,
+      id,
+      imageUrl: image,
+      images: image ? [image] : [],
+      name: product.name,
+      price: product.price,
+      stock: product.stock,
+      categoryId: product.categoryId,
+      categoryName: product.categoryId,
+      status: product.status,
+      backendStatus: product.status === 'ACTIVE' ? 'ACTIVE' : 'DISABLED',
+      description: '',
+    });
   }
 
-  create(product: ProductDraft) {
-    const id =
-      typeof crypto !== 'undefined' && 'randomUUID' in crypto
-        ? crypto.randomUUID()
-        : 'p-' + Date.now();
-
-    const next: Product[] = [
-      {
-        ...product,
-        _id: id,
-        id,
-        images: product.imageUrl ? [product.imageUrl] : [],
-        categoryName: product.categoryId,
-        backendStatus: product.status === 'ACTIVE' ? 'ACTIVE' : 'DISABLED',
-        description: '',
-      },
-      ...this.productsSubject.value,
-    ];
+  update(productId: string, patch: Partial<Product>) {
+    const next = this.productsSubject.value.map((p) =>
+      p.id === productId || p._id === productId ? ({ ...p, ...patch } as Product) : p
+    );
     this.productsSubject.next(next);
   }
 
   delete(productId: string) {
     this.deleteLocal(productId);
-  }
-
-  update(productId: string, patch: Partial<Product>) {
-    const next: Product[] = this.productsSubject.value.map((p) =>
-      p.id === productId ? ({ ...p, ...patch } as Product) : p
-    );
-    this.productsSubject.next(next);
   }
 
   private fetchProductsByStatus(
@@ -187,15 +246,11 @@ export class ProductsBackService {
     return this.fetchProductsPage(shopId, status, 1).pipe(
       switchMap((firstPage) => {
         const totalPages = Math.max(Number(firstPage.totalPages ?? 1), 1);
-        if (totalPages <= 1) {
-          return of([firstPage]);
-        }
-
-        const otherPages = Array.from({ length: totalPages - 1 }, (_, i) =>
+        if (totalPages <= 1) return of([firstPage]);
+        const rest = Array.from({ length: totalPages - 1 }, (_, i) =>
           this.fetchProductsPage(shopId, status, i + 2)
         );
-
-        return forkJoin([of(firstPage), ...otherPages]);
+        return forkJoin([of(firstPage), ...rest]);
       }),
       map((pages) => pages.flatMap((page) => (page.products ?? []).map((p) => this.mapApiProduct(p))))
     );
@@ -206,21 +261,36 @@ export class ProductsBackService {
     status: 'ACTIVE' | 'DISABLED' | 'OUT_OF_STOCK',
     page: number
   ): Observable<ApiProductsResponse> {
-    const params = new HttpParams()
-      .set('shopId', shopId)
-      .set('status', status)
-      .set('page', String(page));
+    const params = new HttpParams().set('shopId', shopId).set('status', status).set('page', String(page));
+    return this.http.get<ApiProductsResponse>(`${this.apiUrl}products`, { params, withCredentials: true });
+  }
 
-    return this.http.get<ApiProductsResponse>(`${this.apiUrl}products`, {
-      params,
-      withCredentials: true,
-    });
+  private buildProductFormData(
+    shopId: string,
+    payload: ProductUpsertPayload,
+    files: File[],
+    retainedImages: string[]
+  ): FormData {
+    const fd = new FormData();
+    fd.append('shopId', shopId);
+    fd.append('name', payload.name.trim());
+    fd.append('categoryId', payload.categoryId);
+    fd.append('status', payload.status === 'ACTIVE' ? 'ACTIVE' : 'DISABLED');
+    fd.append('price', String(payload.price));
+    fd.append('stock', String(payload.stock));
+    fd.append('description', payload.description ?? '');
+    fd.append('retainedImagesJson', JSON.stringify(retainedImages ?? []));
+    for (const file of files) fd.append('images', file);
+    return fd;
   }
 
   private mapApiProduct(api: ApiProduct): Product {
     const id = String(api?._id ?? '');
     const rawStatus = String(api?.status ?? '').toUpperCase();
-    const images = Array.isArray(api?.images) ? api.images.filter((img): img is string => typeof img === 'string') : [];
+    const rawImages = Array.isArray(api?.images) ? api.images : [];
+    const images = rawImages
+      .filter((img): img is string => typeof img === 'string' && img.length > 0)
+      .map((img) => this.normalizeImageUrl(img));
     const categoryIdValue =
       typeof api?.categoryId === 'object' && api.categoryId !== null ? api.categoryId._id : api?.categoryId;
     const categoryName =
@@ -238,47 +308,72 @@ export class ProductsBackService {
       categoryName: categoryName ? String(categoryName) : undefined,
       status: rawStatus === 'ACTIVE' ? 'ACTIVE' : 'INACTIVE',
       backendStatus: rawStatus || 'DISABLED',
-      description: typeof api?.description === 'string' ? api.description : '',
+      description: String(api?.description ?? ''),
     };
+  }
+
+  private normalizeImageUrl(url: string): string {
+    if (!url) return url;
+    if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('data:')) return url;
+    if (url.startsWith('/')) return `${this.apiOrigin}${url}`;
+    return `${this.apiOrigin}/${url}`;
+  }
+
+  private readApiOrigin(apiUrl: string): string {
+    try {
+      return new URL(apiUrl).origin;
+    } catch {
+      return '';
+    }
+  }
+
+  private prependProduct(product: Product): void {
+    this.productsSubject.next([product, ...this.productsSubject.value.filter((p) => p._id !== product._id)]);
+    this.categoriesSubject.next(this.mergeCategoriesWithProduct(product));
   }
 
   private replaceProduct(updated: Product): void {
     const next = this.productsSubject.value.map((p) => (p._id === updated._id ? updated : p));
     this.productsSubject.next(next);
-    this.categoriesSubject.next(this.buildCategories(next));
+    this.categoriesSubject.next(this.mergeCategoriesWithProduct(updated));
+  }
+
+  private upsertLocal(product: Product): void {
+    const existing = this.productsSubject.value.some((p) => p._id === product._id);
+    if (existing) this.replaceProduct(product);
+    else this.prependProduct(product);
   }
 
   private deleteLocal(productId: string): void {
-    const next: Product[] = this.productsSubject.value.filter(
-      (p) => p.id !== productId && p._id !== productId
+    this.productsSubject.next(
+      this.productsSubject.value.filter((p) => p._id !== productId && p.id !== productId)
     );
-    this.productsSubject.next(next);
-    this.categoriesSubject.next(this.buildCategories(next));
   }
 
   private dedupeProducts(products: Product[]): Product[] {
-    const byId = new Map<string, Product>();
-    for (const product of products) {
-      byId.set(product._id, product);
-    }
-
-    return [...byId.values()].sort((a, b) => a.name.localeCompare(b.name));
+    const mapById = new Map<string, Product>();
+    for (const p of products) mapById.set(p._id, p);
+    return [...mapById.values()].sort((a, b) => a.name.localeCompare(b.name));
   }
 
   private buildCategories(products: Product[]): Category[] {
-    const byId = new Map<string, Category>();
-
+    const mapById = new Map<string, Category>();
     for (const p of products) {
       if (!p.categoryId) continue;
-      if (!byId.has(p.categoryId)) {
-        byId.set(p.categoryId, {
-          id: p.categoryId,
-          name: p.categoryName || p.categoryId,
-        });
+      if (!mapById.has(p.categoryId)) {
+        mapById.set(p.categoryId, { id: p.categoryId, name: p.categoryName || p.categoryId });
       }
     }
+    return [...mapById.values()].sort((a, b) => a.name.localeCompare(b.name));
+  }
 
-    return [...byId.values()].sort((a, b) => a.name.localeCompare(b.name));
+  private mergeCategoriesWithProduct(product: Product): Category[] {
+    const current = this.categoriesSubject.value;
+    if (!product.categoryId) return current;
+    if (current.some((c) => c.id === product.categoryId)) return current;
+    return [...current, { id: product.categoryId, name: product.categoryName || product.categoryId }].sort((a, b) =>
+      a.name.localeCompare(b.name)
+    );
   }
 
   private readErrorMessage(err: unknown): string {
@@ -287,20 +382,6 @@ export class ProductsBackService {
       return e.error?.message || e.error?.error || e.message || 'Products request failed';
     }
     return 'Products request failed';
-  }
-
-  private seedProducts(): Product[] {
-    const img = (seed: string) => `https://picsum.photos/seed/${seed}/600/380`;
-
-    const data: Product[] = [
-      { _id: 'p1', id: 'p1', imageUrl: img('pc'), images: [img('pc')], name: 'Gaming Computer', price: 0, stock: 12, categoryId: 'cat-it', categoryName: 'IT', status: 'ACTIVE', backendStatus: 'ACTIVE' },
-      { _id: 'p2', id: 'p2', imageUrl: img('scaffold'), images: [img('scaffold')], name: 'Scaffold Service', price: 0, stock: 3, categoryId: 'cat-construction', categoryName: 'Construction', status: 'ACTIVE', backendStatus: 'ACTIVE' },
-      { _id: 'p3', id: 'p3', imageUrl: img('container'), images: [img('container')], name: 'Container Transport', price: 0, stock: 0, categoryId: 'cat-logistics', categoryName: 'Logistics', status: 'INACTIVE', backendStatus: 'DISABLED' },
-      { _id: 'p4', id: 'p4', imageUrl: img('keyboard'), images: [img('keyboard')], name: 'Keyboard', price: 49, stock: 5, categoryId: 'cat-it', categoryName: 'IT', status: 'ACTIVE', backendStatus: 'ACTIVE' },
-      { _id: 'p5', id: 'p5', imageUrl: img('mouse'), images: [img('mouse')], name: 'Mouse', price: 19, stock: 2, categoryId: 'cat-it', categoryName: 'IT', status: 'ACTIVE', backendStatus: 'ACTIVE' },
-    ];
-
-    return data;
   }
 }
 
@@ -316,7 +397,6 @@ interface ApiProductCategoryRef {
 
 interface ApiProduct {
   _id?: string;
-  shopId?: string | { _id?: string; name?: string; status?: string };
   categoryId?: string | ApiProductCategoryRef;
   name?: string;
   price?: number;
@@ -324,4 +404,9 @@ interface ApiProduct {
   description?: string;
   images?: string[];
   status?: string;
+}
+
+interface ApiCategory {
+  _id?: string;
+  name?: string;
 }
