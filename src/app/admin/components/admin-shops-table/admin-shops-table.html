@@ -13,7 +13,7 @@
     <tbody>
       <tr *ngFor="let s of shops">
         <td>
-          <img class="logo" [src]="s.logoUrl" alt="logo" />
+          <img class="logo" [src]="pictureUrl + s.logoUrl" alt="logo" />
         </td>
 
         <td class="name">{{ s.name }}</td>

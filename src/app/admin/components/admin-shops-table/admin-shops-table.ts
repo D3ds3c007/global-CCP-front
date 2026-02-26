@@ -2,6 +2,8 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AdminShopRowVM, ShopStatus } from '../../services/admin-shops-back';
+import { env } from 'process';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-admin-shops-table',
@@ -13,4 +15,5 @@ import { AdminShopRowVM, ShopStatus } from '../../services/admin-shops-back';
 export class AdminShopsTableComponent {
   @Input() shops: AdminShopRowVM[] = [];
   @Output() statusChange = new EventEmitter<{ id: string; status: ShopStatus }>();
+  readonly pictureUrl = environment.pictureUrl;
 }
