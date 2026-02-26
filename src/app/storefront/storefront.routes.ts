@@ -46,11 +46,14 @@ export const STOREFRONT_ROUTES: Routes = [
     data:{ roles: ['BUYER'] }
   },
   {
+    path: 'manufacturers/:shopId',
+    component: ManufacturePage,
+    title: 'Manufacturer Profile'
+  },
+  {
     path: 'manufacturers',
     component: ManufacturePage,
-    title: 'Manufacturers',
-    canMatch: [authGuard, roleGuard],
-    data:{ roles: ['BUYER'] }
+    title: 'Manufacturers'
   },
   {
     path: '',

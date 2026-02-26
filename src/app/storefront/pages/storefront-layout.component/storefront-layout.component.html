@@ -1,9 +1,9 @@
 <app-navbar class="app__nav" [user]="currentUser$ | async" (logout)="onLogout()"></app-navbar>
 
 <main class="storefront">
-    <div class="center__bar">
+    <!-- <div class="center__bar">
         <app-center-bar></app-center-bar>
-    </div>
+    </div> -->
     <div class="storefront__container">
         <aside class="storefront__filters">
             @if (categories$ | async; as categories) {

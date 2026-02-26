@@ -4,7 +4,7 @@
         <article class="profile-card">
           <div
             class="profile-banner"
-            [style.background-image]="'linear-gradient(180deg, rgba(11,15,25,0.18), rgba(11,15,25,0.6)), url(' + boutique.logoUrl + ')'"
+            [style.background-image]="'linear-gradient(180deg, rgba(11,15,25,0.18), rgba(11,15,25,0.6)), url(' + (boutique.coverUrl || boutique.logoUrl) + ')'"
           >
             <img
               class="profile-avatar"
@@ -23,21 +23,30 @@
                   <span class="meta-chip">Location: {{ boutique.contact.adresse }}</span>
                 }
 
-                @if (totalItems$ | async; as totalItems) {
-                  <span class="meta-chip">Products: {{ totalItems }}</span>
+                @if (boutique.categoryName) {
+                  <span class="meta-chip">Category: {{ boutique.categoryName }}</span>
                 }
               </div>
             </div>
 
             <p class="profile-description">{{ boutique.description }}</p>
 
-            @if (boutique.contact.email || boutique.contact.telephone) {
+            @if (boutique.contact.email || boutique.contact.telephone || boutique.socials?.website || boutique.socials?.facebook || boutique.socials?.instagram) {
               <div class="profile-contact" aria-label="Contact information">
                 @if (boutique.contact.email) {
                   <span class="contact-item">Email: {{ boutique.contact.email }}</span>
                 }
                 @if (boutique.contact.telephone) {
                   <span class="contact-item">Phone: {{ boutique.contact.telephone }}</span>
+                }
+                @if (boutique.socials?.website) {
+                  <span class="contact-item">Website: {{ boutique.socials?.website }}</span>
+                }
+                @if (boutique.socials?.facebook) {
+                  <span class="contact-item">Facebook: {{ boutique.socials?.facebook }}</span>
+                }
+                @if (boutique.socials?.instagram) {
+                  <span class="contact-item">Instagram: {{ boutique.socials?.instagram }}</span>
                 }
               </div>
             }
@@ -49,7 +58,7 @@
         <article class="profile-card profile-card--loading">
           <div class="profile-banner"></div>
           <div class="profile-body">
-            <p class="results__status">Loading store profile...</p>
+            <p class="results__status">{{ shopLoading() ? 'Loading store profile...' : (shopError() || 'Store profile unavailable.') }}</p>
           </div>
         </article>
       </section>
