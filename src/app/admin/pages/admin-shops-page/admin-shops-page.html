@@ -8,9 +8,145 @@
       (queryChange)="setQuery($event)"
     ></app-admin-shops-filters>
 
-    <app-admin-shops-table
-      [shops]="vm.shops"
-      (statusChange)="onStatusChange($event)"
-    ></app-admin-shops-table>
+    <div class="shops-wrap">
+      <table *ngIf="vm.shops.length; else emptyShops" class="shops-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Owner</th>
+            <th>Category</th>
+            <th>Created</th>
+            <th>Status</th>
+            <th class="right">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="let s of vm.shops; trackBy: trackByShopId"
+            (click)="openShopDetails(s)"
+            class="shop-row"
+          >
+            <td>
+              <div class="name-cell">
+                <img *ngIf="s.logoUrl" [src]="pictureUrl +'logo/'+s.logoUrl" alt="" class="logo" />
+                <div>
+                  <div class="name">{{ valueOrDash(s.name) }}</div>
+                  <div class="mono muted">{{ s._id }}</div>
+                </div>
+              </div>
+            </td>
+            <td class="mono">{{ valueOrDash(s.ownerUserId) }}</td>
+            <td>{{ valueOrDash(s.categoryName) }}</td>
+            <td>{{ formatDate(s.createdAt) }}</td>
+            <td>
+              <span class="badge" [ngClass]="badgeClass(s.status)">{{ s.status }}</span>
+            </td>
+            <td class="right">
+              <div class="actions">
+                <button
+                  type="button"
+                  class="action-btn"
+                  [disabled]="isStatusActionDisabled(s, 'ACTIVE')"
+                  (click)="onSetStatus($event, s, 'ACTIVE')"
+                >
+                  Active
+                </button>
+                <button
+                  type="button"
+                  class="action-btn warn"
+                  [disabled]="isStatusActionDisabled(s, 'SUSPENDED')"
+                  (click)="onSetStatus($event, s, 'SUSPENDED')"
+                >
+                  Suspend
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <ng-template #emptyShops>
+        <div class="empty">No shops found.</div>
+      </ng-template>
+    </div>
   </app-dashboard-card>
+
+  <div class="overlay" *ngIf="detailsOpen" (click)="closeShopDetails()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <div class="modal-head">
+        <div>
+          <h2>Shop Details</h2>
+          <p class="muted mono">Shop ID: {{ selectedShop?._id }}</p>
+        </div>
+        <button type="button" class="close-btn" (click)="closeShopDetails()">Close</button>
+      </div>
+
+      <div *ngIf="loadingDetails" class="empty">Loading details...</div>
+
+      <div *ngIf="selectedShop as shop" class="details-grid">
+        <section class="hero wide">
+          <div class="logo-card">
+            <div class="logo-card-inner" *ngIf="shop.logoUrl; else noLogo">
+              <img [src]="pictureUrl + 'logo/' + shop.logoUrl" alt="" class="logo-large" />
+            </div>
+            <ng-template #noLogo>
+              <div class="logo-placeholder">No logo</div>
+            </ng-template>
+          </div>
+
+          <div class="hero-info">
+            <div class="hero-top">
+              <div>
+                <p class="eyebrow">Shop Profile</p>
+                <h3>{{ valueOrDash(shop.name) }}</h3>
+              </div>
+              <span class="badge status-pill" [ngClass]="badgeClass(shop.status)">{{ shop.status }}</span>
+            </div>
+            <p class="hero-desc">{{ valueOrDash(shop.description) }}</p>
+            <div class="hero-meta">
+              <div class="meta-chip"><span>Owner</span><strong>{{ displayOwner(shop) }}</strong></div>
+              <div class="meta-chip"><span>Category</span><strong>{{ displayCategory(shop) }}</strong></div>
+              <div class="meta-chip"><span>Created On</span><strong>{{ formatDialogDate(shop.createdAt) }}</strong></div>
+              <div class="meta-chip"><span>Last Updated</span><strong>{{ formatDialogDate(shop.updatedAt) }}</strong></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel">
+          <h4>Storefront Details</h4>
+          <div class="panel-grid">
+            <div class="field wide"><span>Opening Hours</span><strong>{{ valueOrDash(shop.openingHours) }}</strong></div>
+          </div>
+        </section>
+
+        <section class="panel">
+          <h4>Contact Information</h4>
+          <div class="panel-grid">
+            <div class="field"><span>Phone Number</span><strong>{{ valueOrDash(shop.contact?.phone) }}</strong></div>
+            <div class="field"><span>Email Address</span><strong>{{ valueOrDash(shop.contact?.email) }}</strong></div>
+            <div class="field wide"><span>Store Address</span><strong>{{ valueOrDash(shop.contact?.address) }}</strong></div>
+          </div>
+        </section>
+
+        <section class="panel">
+          <h4>Social Links</h4>
+          <div class="panel-grid">
+            <div class="field"><span>Facebook</span><strong>{{ valueOrDash(shop.socials?.facebook) }}</strong></div>
+            <div class="field"><span>Instagram</span><strong>{{ valueOrDash(shop.socials?.instagram) }}</strong></div>
+            <div class="field"><span>Website</span><strong>{{ valueOrDash(shop.socials?.website) }}</strong></div>
+          </div>
+        </section>
+
+        <section class="panel">
+          <h4>System Information</h4>
+          <div class="panel-grid">
+            <div class="field"><span>Shop ID</span><strong class="mono">{{ valueOrDash(shop._id) }}</strong></div>
+            <div class="field"><span>Current Status</span><strong><span class="badge" [ngClass]="badgeClass(shop.status)">{{ shop.status }}</span></strong></div>
+            <div class="field"><span>Owner</span><strong>{{ displayOwner(shop) }}</strong></div>
+            <div class="field"><span>Category</span><strong>{{ displayCategory(shop) }}</strong></div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
 </section>
