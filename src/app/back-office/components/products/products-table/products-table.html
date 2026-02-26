@@ -13,7 +13,7 @@
 
     <tbody>
       <tr *ngFor="let p of products; trackBy: trackByProductId" (click)="view.emit(p)">
-        <td><img class="thumb" [src]="p.imageUrl" [alt]="p.name" /></td>
+        <td><img class="thumb" [src]="pictureUrl + p.imageUrl" [alt]="p.name" /></td>
         <td class="name">{{ p.name }}</td>
         <td class="right">{{ p.price === 0 ? 'FREE' : (p.price | currency:'EUR') }}</td>
         <td class="right">{{ p.stock }}</td>
@@ -26,7 +26,7 @@
           </button>
           <button type="button" [disabled]="isDisabled(p)" (click)="$event.stopPropagation(); edit.emit(p)">edit</button>
           <button type="button" class="danger" [disabled]="isDisabled(p)" (click)="$event.stopPropagation(); remove.emit(p)">delete</button>
-        </td>
+        </td> 
       </tr>
     </tbody>
   </table>

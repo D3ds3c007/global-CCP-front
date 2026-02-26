@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { Product } from '../../../services/product-back';
+import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-products-table',
@@ -17,7 +18,7 @@ export class ProductsTableComponent {
   @Output() edit = new EventEmitter<Product>();
   @Output() remove = new EventEmitter<Product>();
   @Output() toggle = new EventEmitter<Product>();
-
+  readonly pictureUrl = environment.pictureUrl;
   trackByProductId = (_index: number, p: Product): string => p._id || p.id;
 
   isDisabled(p: Product): boolean {
