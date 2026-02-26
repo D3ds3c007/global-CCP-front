@@ -12,7 +12,7 @@
       <div class="carousel">
         <div class="scroller" #scroller (scroll)="onScrollerScroll()">
           <figure class="slide" *ngFor="let img of images; index as i; trackBy: trackByIndex">
-            <img class="hero" [src]="img" [alt]="product.name + ' - image ' + (i + 1)" />
+            <img class="hero" [src]="pictureUrl + img" [alt]="product.name + ' - image ' + (i + 1)" />
           </figure>
         </div>
 

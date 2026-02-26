@@ -10,6 +10,7 @@ import {
 import { FormsModule } from '@angular/forms';
 import { Product } from '../../services/product.service';
 import { RouterLink } from '@angular/router';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-product-details',
@@ -23,6 +24,7 @@ import { RouterLink } from '@angular/router';
   styleUrls: ['./product-detail-component.css'],
 })
 export class ProductDetailsComponent {
+  readonly pictureUrl = environment.pictureUrl;
   @Input({ required: true }) product!: Product;
 
   @Output() addToCart = new EventEmitter<{ productId: string; quantity: number }>();

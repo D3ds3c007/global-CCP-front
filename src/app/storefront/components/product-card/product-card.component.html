@@ -7,7 +7,7 @@
         [attr.aria-label]="'Voir le produit ' + item.name"
       >
         <img
-          [ngSrc]="item.imageUrl"
+          [ngSrc]="apiUrl + item.imageUrl"
           width="320"
           height="220"
           [alt]="item.name"
