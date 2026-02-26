@@ -109,6 +109,34 @@ interface TotalRevenueResponse {
   totalRevenue: number;
 }
 
+interface ApiLatestOrderBuyer {
+  _id?: string;
+  fullName?: string;
+  email?: string;
+}
+
+interface ApiLatestOrder {
+  _id?: string;
+  orderId?: string;
+  buyerId?: string | ApiLatestOrderBuyer;
+  total?: number;
+  status?: string;
+  createdAt?: string;
+}
+
+interface LatestOrdersResponse {
+  orders: ApiLatestOrder[];
+}
+
+interface ApiMonthlyRevenuePoint {
+  month: number;
+  totalRevenue: number;
+}
+
+interface MonthlyRevenueResponse {
+  monthlyRevenue: ApiMonthlyRevenuePoint[];
+}
+
 @Injectable({ providedIn: 'root' })
 export class DashboardService {
   private readonly http = inject(HttpClient);
@@ -120,6 +148,26 @@ export class DashboardService {
 
   private readonly errorSubject = new BehaviorSubject<string | null>(null);
   readonly error$ = this.errorSubject.asObservable();
+
+  getLatestOrders(shopId: string): Observable<Order[]> {
+    return this.http
+      .get<LatestOrdersResponse>(`${this.apiUrl}orders/shop/${shopId}/latest`, { withCredentials: true })
+      .pipe(map((res) => (res.orders ?? []).map((o) => this.mapLatestOrder(o))));
+  }
+
+  getMonthlyRevenue(shopId: string, year: number): Observable<RevenuePoint[]> {
+    const params = new HttpParams().set('year', String(year));
+    return this.http
+      .get<MonthlyRevenueResponse>(`${this.apiUrl}shops/${shopId}/monthly-revenue`, { params, withCredentials: true })
+      .pipe(
+        map((res) =>
+          (res.monthlyRevenue ?? []).map((p) => ({
+            year: Number(p.month ?? 0),
+            valueK: this.toK(p.totalRevenue ?? 0),
+          }))
+        )
+      );
+  }
 
   getOwnerDashboard(revenueFilter: RevenueFilter = 'month'): Observable<OwnerDashboardVM> {
     return defer(() => {
@@ -336,6 +384,29 @@ export class DashboardService {
       return maybeError.error?.message || maybeError.message || 'Dashboard load failed';
     }
     return 'Dashboard load failed';
+  }
+
+  private mapLatestOrder(order: ApiLatestOrder): Order {
+    const buyer = order.buyerId;
+    const customer =
+      typeof buyer === 'string'
+        ? buyer
+        : String(buyer?.fullName ?? buyer?.email ?? 'Unknown buyer');
+
+    return {
+      id: String(order.orderId ?? order._id ?? ''),
+      customer,
+      total: Number(order.total ?? 0),
+      status: this.normalizeLatestOrderStatus(order.status),
+      createdAt: String(order.createdAt ?? new Date().toISOString()),
+    };
+  }
+
+  private normalizeLatestOrderStatus(status: string | undefined): OrderStatus {
+    const normalized = String(status ?? '').toUpperCase();
+    if (normalized === 'PENDING') return 'PENDING';
+    if (normalized === 'DELIVERED') return 'delivered';
+    return 'confirmed';
   }
 
   private hash(s: string): number {
