@@ -179,7 +179,35 @@ export class ProductService {
     );
   }
 
-  private fetchProductPage(query: SearchQuery, pageIndex: number): Observable<BackendProductListResponse> {
+  getProductsByShopId(
+    shopId: string,
+    pageIndex: number,
+    pageSize: number
+  ): Observable<{ items: Product[]; total: number }> {
+    const safePage = Math.max(1, pageIndex);
+
+    return this.fetchProductPage(createDefaultSearchQuery(), safePage, shopId).pipe(
+      map(response => {
+        const items = (response.products ?? []).map(product => this.mapBackendProduct(product));
+        const totalPages = Math.max(0, Number(response.totalPages) || 0);
+        const total = totalPages * BACKEND_PRODUCT_PAGE_SIZE;
+
+        if (pageSize !== BACKEND_PRODUCT_PAGE_SIZE) {
+          console.warn(
+            `Backend products endpoint uses fixed page size ${BACKEND_PRODUCT_PAGE_SIZE}; received pageSize=${pageSize}`
+          );
+        }
+
+        return { items, total };
+      })
+    );
+  }
+
+  private fetchProductPage(
+    query: SearchQuery,
+    pageIndex: number,
+    shopId?: string
+  ): Observable<BackendProductListResponse> {
     let params = new HttpParams().set('page', String(Math.max(1, pageIndex)));
 
     const keyword = query.keyword.trim();
@@ -197,6 +225,10 @@ export class ProductService {
 
     if (query.categoryIds.length > 0) {
       params = params.set('categoryId', query.categoryIds[0]);
+    }
+
+    if (shopId?.trim()) {
+      params = params.set('shopId', shopId.trim());
     }
 
     params = params.set('sort', this.mapSort(query.sort));

@@ -5,7 +5,6 @@ import { AuthStateService } from '../../../core/services/auth-state.service';
 import { SearchQuery } from '../../services/product.service';
 import { NavbarComponent } from '../../components/navbar/navbar.component';
 import { AdvancedSearchPanelComponent } from '../../components/advanced-search/advanced-search-panel.component';
-import { CenterBar } from '../../components/center-bar/center-bar';
 import { StorefrontStateService  } from '../../services/store-front-state';
 
 @Component({
@@ -13,8 +12,7 @@ import { StorefrontStateService  } from '../../services/store-front-state';
   imports: [
     AsyncPipe,
     NavbarComponent,
-    AdvancedSearchPanelComponent,
-    CenterBar
+    AdvancedSearchPanelComponent
 ],
   templateUrl: './storefront-layout.component.html',
   styleUrl: './storefront-layout.component.css',

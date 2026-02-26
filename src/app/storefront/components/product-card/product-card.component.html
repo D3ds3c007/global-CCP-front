@@ -16,7 +16,15 @@
       </a>
     </ng-template>
 
-    <nz-card-meta [nzTitle]="item.name" [nzDescription]="item.storeName"></nz-card-meta>
+    <nz-card-meta [nzTitle]="item.name" [nzDescription]="storeNameTpl"></nz-card-meta>
+
+    <ng-template #storeNameTpl>
+      @if (item.shopId) {
+        <a [routerLink]="['/manufacturers', item.shopId]">{{ item.storeName }}</a>
+      } @else {
+        <span>{{ item.storeName }}</span>
+      }
+    </ng-template>
 
     <div class="product-card__meta">
       <span class="product-card__price">{{ item.price | currency }}</span>

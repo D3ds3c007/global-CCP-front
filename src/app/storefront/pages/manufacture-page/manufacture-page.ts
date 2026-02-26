@@ -1,72 +1,112 @@
 import { Component, inject, signal } from '@angular/core';
-import { AuthStateService } from '../../../core/services/auth-state.service';
-import { createDefaultSearchQuery, ProductService, SearchQuery } from '../../services/product.service';
-import { CartService } from '../../services/cart.service';
-import { catchError, combineLatest, finalize, map, of, shareReplay, startWith, switchMap, take, tap } from 'rxjs';
+import { AsyncPipe } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
 import { toObservable } from '@angular/core/rxjs-interop';
-import { StorefrontLayoutComponent } from "../storefront-layout.component/storefront-layout.component";
-import { StorefrontStateService  } from '../../services/store-front-state';
+import {
+  catchError,
+  combineLatest,
+  distinctUntilChanged,
+  finalize,
+  map,
+  of,
+  shareReplay,
+  switchMap,
+  take,
+  tap
+} from 'rxjs';
+
+import { AuthStateService } from '../../../core/services/auth-state.service';
+import { CartService } from '../../services/cart.service';
+import { ProductService } from '../../services/product.service';
+import { ManufactureService } from '../../services/manufacture-service';
+import { StorefrontLayoutComponent } from '../storefront-layout.component/storefront-layout.component';
+import { StorefrontStateService } from '../../services/store-front-state';
 import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
 import { ProductGridComponent } from '../../components/product-grid/product-grid.component';
-import { AsyncPipe } from '@angular/common';
-import { ManufactureService } from '../../services/manufacture-service';
-
-
-
 
 @Component({
   selector: 'app-manufacture-page',
-  providers: [StorefrontStateService ],
+  providers: [StorefrontStateService],
   imports: [
     StorefrontLayoutComponent,
     AsyncPipe,
     ProductGridComponent,
     PaginationComponent,
-],
+  ],
   templateUrl: './manufacture-page.html',
   styleUrl: './manufacture-page.css',
 })
 export class ManufacturePage {
   private readonly authState = inject(AuthStateService);
+  private readonly route = inject(ActivatedRoute);
   private readonly productService = inject(ProductService);
   private readonly cartService = inject(CartService);
   private readonly manufactureService = inject(ManufactureService);
-  readonly state = inject(StorefrontStateService );
+  readonly state = inject(StorefrontStateService);
 
   readonly currentUser$ = this.authState.currentUser$;
-
-  readonly query = signal<SearchQuery>(createDefaultSearchQuery());
   readonly pageIndex = signal(1);
   readonly pageSize = signal(12);
   readonly loading = signal(false);
   readonly error = signal<string | null>(null);
+  readonly shopLoading = signal(false);
+  readonly shopError = signal<string | null>(null);
   readonly addingProductId = signal<string | null>(null);
   readonly addedProductId = signal<string | null>(null);
 
-  readonly categories$ = this.productService.getCategories().pipe(shareReplay(1));
-  readonly topProducts$ = this.productService.getTopProducts().pipe(shareReplay(1));
-  readonly boutique$ = this.manufactureService.getBoutiqueMock().pipe(shareReplay(1));
+  private readonly shopId$ = this.route.paramMap.pipe(
+    map(params => (params.get('shopId') ?? '').trim()),
+    distinctUntilChanged(),
+    shareReplay(1)
+  );
+
+  readonly boutique$ = this.shopId$.pipe(
+    switchMap(shopId => {
+      if (!shopId) {
+        this.shopLoading.set(false);
+        this.shopError.set('Select a store from a product card.');
+        return of(null);
+      }
+
+      this.shopLoading.set(true);
+      this.shopError.set(null);
+
+      return this.manufactureService.getBoutiqueById(shopId).pipe(
+        tap(boutique => {
+          if (!boutique) {
+            this.shopError.set('Unable to load store profile right now.');
+          }
+        }),
+        finalize(() => this.shopLoading.set(false))
+      );
+    }),
+    shareReplay(1)
+  );
 
   private readonly searchResult$ = combineLatest([
-    toObservable(this.query),
+    this.shopId$,
     toObservable(this.pageIndex),
     toObservable(this.pageSize)
   ]).pipe(
-    tap(() => {
+    switchMap(([shopId, pageIndex, pageSize]) => {
+      if (!shopId) {
+        this.loading.set(false);
+        this.error.set('Select a store from a product card.');
+        return of({ items: [], total: 0 });
+      }
+
       this.loading.set(true);
       this.error.set(null);
-    }),
-    switchMap(([query, pageIndex, pageSize]) =>
-      this.productService.searchProducts(query, pageIndex, pageSize).pipe(
+
+      return this.productService.getProductsByShopId(shopId, pageIndex, pageSize).pipe(
         catchError(error => {
-          console.error('Search error', error);
+          console.error('Shop products load error', error);
           this.error.set('Unable to load products right now.');
           return of({ items: [], total: 0 });
-        })
-      )
-    ),
-    tap(() => this.loading.set(false)),
-    startWith({ items: [], total: 0 }),
+        }),
+        finalize(() => this.loading.set(false))
+      );
+    }),
     shareReplay(1)
   );
 
@@ -75,16 +115,6 @@ export class ManufacturePage {
 
   onLogout(): void {
     this.authState.logout();
-  }
-
-  onQueryChange(query: SearchQuery): void {
-    this.query.set({ ...query, categoryIds: [...query.categoryIds] });
-    this.pageIndex.set(1);
-  }
-
-  onClearFilters(): void {
-    this.query.set(createDefaultSearchQuery());
-    this.pageIndex.set(1);
   }
 
   onPageChange(page: number): void {
