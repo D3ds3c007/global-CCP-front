@@ -12,7 +12,7 @@
       <div class="details" *ngIf="product as p">
         <div class="details-gallery">
           <div class="details-main">
-            <img [src]="detailsActiveImage || p.imageUrl" [alt]="p.name" />
+            <img [src]="pictureUrl + (detailsActiveImage || p.imageUrl)" [alt]="p.name" />
           </div>
           <div class="thumbs" *ngIf="(p.images?.length || 0) > 1">
             <button
@@ -22,7 +22,7 @@
               (click)="selectDetailsImage(img)"
               [class.active]="(detailsActiveImage || p.imageUrl) === img"
             >
-              <img [src]="img" [alt]="p.name" />
+              <img [src]="pictureUrl + img" [alt]="p.name" />
             </button>
           </div>
         </div>

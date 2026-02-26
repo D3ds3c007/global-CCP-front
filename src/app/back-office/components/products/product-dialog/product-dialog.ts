@@ -17,6 +17,8 @@ import {
   ProductStatus,
   ProductUpsertPayload,
 } from '../../../services/product-back';
+import { env } from 'process';
+import { environment } from '../../../../../environments/environment';
 
 export type ProductDialogMode = 'create' | 'edit' | 'details';
 
@@ -42,6 +44,7 @@ export class ProductDialogComponent implements OnChanges, OnDestroy {
   @Output() editFromDetails = new EventEmitter<Product>();
 
   private readonly fb = inject(FormBuilder);
+  readonly pictureUrl = environment.pictureUrl;
 
   readonly form = this.fb.nonNullable.group({
     name: ['', [Validators.required, Validators.minLength(2)]],

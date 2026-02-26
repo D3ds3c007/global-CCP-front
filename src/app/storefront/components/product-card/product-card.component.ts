@@ -27,7 +27,7 @@ export class ProductCardComponent {
   readonly isAdding = input<boolean>(false);
   readonly justAdded = input<boolean>(false);
   readonly addToCart = output<string>();
-  readonly apiUrl = environment.pictureUrl;
+  readonly pictureUrl = environment.pictureUrl;
 
   onAddToCart(): void {
     const product = this.product();

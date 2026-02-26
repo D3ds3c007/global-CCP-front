@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { Shop, ShopsBackService } from '../../../services/shop.service';
 import { SelectedShopStateService } from '../../../services/selected-shop-state.service';
+import { env } from 'process';
+import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-shop-row',
@@ -14,6 +16,7 @@ import { SelectedShopStateService } from '../../../services/selected-shop-state.
 export class ShopRowComponent implements OnChanges {
   @Input({ required: true }) shop!: Shop;
   readonly apiUrl = inject(ShopsBackService)['apiUrl'];
+  readonly pictureUrl = environment.pictureUrl;
   private readonly router = inject(Router);
   private readonly selectedShopState = inject(SelectedShopStateService);
   imageLoadFailed = false;
@@ -38,7 +41,7 @@ export class ShopRowComponent implements OnChanges {
     const raw = String(this.shop?.logoUrl ?? '').trim();
     if (!raw || this.imageLoadFailed) return null;
     if (/^(https?:|data:|blob:)/i.test(raw)) return raw;
-    return `${this.apiUrl}pictures/${raw}`;
+    return `${this.pictureUrl}logo/${raw}`;
   }
 
   get initials(): string {

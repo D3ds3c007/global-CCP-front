@@ -290,7 +290,7 @@ export class ProductsBackService {
     const rawImages = Array.isArray(api?.images) ? api.images : [];
     const images = rawImages
       .filter((img): img is string => typeof img === 'string' && img.length > 0)
-      .map((img) => this.normalizeImageUrl(img));
+      .map((img) => img.trim());
     const categoryIdValue =
       typeof api?.categoryId === 'object' && api.categoryId !== null ? api.categoryId._id : api?.categoryId;
     const categoryName =
