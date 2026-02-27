@@ -19,31 +19,23 @@ type Product = {
   price: number;
   imageUrl?: string;
   info?: string;
+  shopId?: string;
 };
 
 type CheckoutLine = {
   productId: string;
   quantity: number;
   product: Product;
+  shopId: string;
 };
 
 export type CheckoutPayload = {
-  delivery: {
-    fullName: string;
+  buyer: {
     phone: string;
     address: string;
-    note?: string;
+    paymentMethod: string;
   };
-  payment: {
-    method: PaymentMethod;
-    // mock mobile money
-    provider?: string;
-    mmNumber?: string;
-  };
-  deliveryOption: DeliveryOption;
-  items: Array<{ productId: string; quantity: number; unitPrice: number }>;
-  subtotal: number;
-  total: number;
+  items: Array<{ productId: string; shopId: string; qty: number }>;
 };
 
 @Component({
@@ -75,17 +67,10 @@ export class CheckoutComponent {
   ];
 
   form = this.fb.group({
-    fullName: ['', [Validators.required, Validators.minLength(2)]],
     phone: ['', [Validators.required]],
     address: ['', [Validators.required, Validators.minLength(5)]],
-    note: [''],
-
     deliveryId: [this.deliveryOptions[0].id, [Validators.required]],
-
-    paymentMethod: ['COD' as PaymentMethod, [Validators.required]],
-    // mobile money mock (optionnel)
-    provider: ['MTN'],
-    mmNumber: [''],
+    provider: ['', [Validators.required]],
   });
 
   cartState$ = this.cartService.cartItems$;
@@ -101,13 +86,14 @@ export class CheckoutComponent {
         entries.map(({ productId, quantity }) =>
           this.loadProduct$(productId).pipe(
             take(1),
-            map((product) => ({ productId, quantity, product })),
+            map((product) => ({ productId, quantity, product, shopId: product.shopId ?? '' })),
             catchError((err) => {
               console.error('Unable to load product', productId, err);
               return of({
                 productId,
                 quantity,
-                product: { id: productId, name: 'Produit indisponible', price: 0, imageUrl: '' },
+                product: { id: productId, name: 'Produit indisponible', price: 0, imageUrl: '', shopId: '' },
+                shopId: ''
               } as CheckoutLine);
             })
           )
@@ -134,11 +120,12 @@ export class CheckoutComponent {
   }
 
   total(lines: CheckoutLine[]): number {
-    return this.subtotal(lines) + this.deliveryFee();
+    return this.subtotal(lines);
   }
 
   // ----- Confirm -----
   confirm(lines: CheckoutLine[]) {
+    console.log('Confirming order with lines:', lines);
     if (lines.length === 0) return;
 
     if (this.form.invalid) {
@@ -146,40 +133,51 @@ export class CheckoutComponent {
       return;
     }
 
+    // Ensure every line has a shopId (required by backend/payload)
+    const missing = lines.filter(l => !l.shopId);
+    if (missing.length) {
+      console.error('Cannot create order: missing shopId for some items', missing);
+      this.form.setErrors?.({ missingShopId: true });
+      return;
+    }
+
     const v = this.form.getRawValue();
     const payload: CheckoutPayload = {
-      delivery: {
-        fullName: v.fullName!,
+      buyer: {
         phone: v.phone!,
         address: v.address!,
-        note: v.note ?? '',
+        paymentMethod: v.provider!
       },
-      payment: {
-        method: v.paymentMethod!,
-        provider: v.paymentMethod === 'MOBILE_MONEY' ? (v.provider ?? '') : undefined,
-        mmNumber: v.paymentMethod === 'MOBILE_MONEY' ? (v.mmNumber ?? '') : undefined,
-      },
-      deliveryOption: this.selectedDelivery(),
       items: lines.map(l => ({
         productId: l.productId,
-        quantity: l.quantity,
-        unitPrice: l.product.price,
+        qty: l.quantity,
+        shopId: l.shopId,
       })),
-      subtotal: this.subtotal(lines),
-      total: this.total(lines),
     };
 
+    console.log('Prepared payload:', payload);
+
+    this.orderService.submitOrder(payload).subscribe({
+      next: (res) => {
+        console.log('Order submitted successfully', res);
+        this.submitting = false;
+        this.confirmed.emit(payload);
+        // Optionnel: vider le panier si tu as clear()
+        // (this.cartService as any).clear?.().subscribe?.();
+      },
+      error: (err) => {
+        console.error('Error submitting order', err);
+        this.submitting = false;
+        // Optionnel: afficher une notification d'erreur à l'utilisateur
+      }
+    });
+
     this.submitting = true;
+    //redirect to orders page
+    window.location.href = '/orders';
 
     // Mock submit (tu peux remplacer par un OrderService + HTTP)
-    setTimeout(() => {
-      this.submitting = false;
-      this.confirmed.emit(payload);
-
-      // Optionnel: vider le panier si tu as clear()
-      // (this.cartService as any).clear?.().subscribe?.();
-      console.log('ORDER CONFIRMED', payload);
-    }, 700);
+    
   }
 
   // ----- Produit (adapter si ton ProductService a un autre nom) -----
@@ -200,6 +198,7 @@ export class CheckoutComponent {
         price: Number(p.price ?? 0),
         imageUrl: p.imageUrl ?? p.image ?? p.thumbnailUrl ?? '',
         info: p.info ?? p.shortDescription ?? p.brand ?? '',
+        shopId: p.shopId ?? p.shop?._id ?? p.storeId ?? '',
       }))
     );
   }

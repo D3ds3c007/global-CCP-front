@@ -3,6 +3,8 @@ import { BehaviorSubject, map, Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Product } from './product.service';
+import { submit } from '@angular/forms/signals';
+import { CheckoutPayload } from '../components/checkout-component/checkout-component';
 export type OrderStatus = 'PAID' | 'PENDING' | 'CANCELLED';
 
 export interface OrderFromServer{
@@ -90,6 +92,10 @@ export class OrderService {
     return this.subject.value;
   }
 
+  submitOrder(order: CheckoutPayload): Observable<CheckoutPayload> {
+    return this.http.post<CheckoutPayload>(this.apiUrl + '/checkout ', order, { withCredentials: true });
+  }
+
   add(order: Omit<Order, 'id' | 'orderNumber' | 'createdAt'>) {
     const now = new Date();
     const next: Order = {
@@ -137,5 +143,7 @@ export class OrderService {
   return this.http.get<{ orders: OrderFromServer[] }>(this.apiUrl, { withCredentials: true }).pipe(
     map(res => res.orders)
   );
-}
+
+ 
+  }
 }
