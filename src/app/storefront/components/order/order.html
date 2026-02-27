@@ -4,7 +4,7 @@
   <article class="order-card" *ngFor="let o of (orders$ | async) ?? []; trackBy: trackById">
     <div class="order-head">
       <div class="left">
-        <div class="order-number">{{ o._id }}</div>
+        <div class="order-number">{{ o.orderId }}</div>
         <div class="order-meta">
           <span>{{ o.createdAt | date:'medium' }}</span>
           <span class="dot">•</span>
