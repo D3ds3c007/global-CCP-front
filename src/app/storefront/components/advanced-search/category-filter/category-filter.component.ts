@@ -7,7 +7,7 @@ import { Category } from '../../../services/product.service';
 @Component({
   selector: 'app-category-filter',
   templateUrl: './category-filter.component.html',
-  styleUrl: './category-filter.component.css',
+  styleUrls: ['./category-filter.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [FormsModule, NzCheckboxModule]
 })

@@ -60,3 +60,22 @@ textarea {
 	border-radius: 16px;
 	box-shadow: var(--shadow);
 }
+
+.ant-btn-primary {
+	border-color: #43d95f !important;
+	background: linear-gradient(135deg, #8ffb3c 0%, #22e6bf 55%, #00cfdb 100%) !important;
+	color: #05221a !important;
+	box-shadow: 0 10px 22px rgba(20, 219, 150, 0.32) !important;
+}
+
+.ant-btn-primary:hover,
+.ant-btn-primary:focus {
+	border-color: #74f583 !important;
+	background: linear-gradient(135deg, #a2ff56 0%, #35edc7 55%, #16d8e5 100%) !important;
+	color: #042018 !important;
+}
+
+.ant-btn-primary:active {
+	border-color: #29c583 !important;
+	background: linear-gradient(135deg, #72df38 0%, #16c5a7 55%, #00b4bf 100%) !important;
+}

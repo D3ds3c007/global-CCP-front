@@ -1,15 +1,22 @@
 .product-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 18px;
 }
 
 .product-grid__empty {
-  padding: 24px;
-  border: 1px dashed var(--border-strong);
-  border-radius: 12px;
+  padding: 26px;
+  border: 1px dashed rgba(95, 120, 190, 0.4);
+  border-radius: 14px;
   text-align: center;
-  color: var(--text-muted);
+  color: #9eb0da;
   font-size: 14px;
-  background: rgba(255, 255, 255, 0.6);
+  background: rgba(13, 18, 38, 0.7);
+}
+
+@media (max-width: 600px) {
+  .product-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
 }

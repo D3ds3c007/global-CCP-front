@@ -1,4 +1,15 @@
 <app-storefront-layout class="store__content">
+      <section class="storefront-hero" aria-label="Storefront hero banner">
+        <div class="storefront-hero__image">
+          <div class="storefront-hero__overlay">
+            <p class="storefront-hero__eyebrow">Fresh Finds</p>
+            <h1 class="storefront-hero__title">Shop Modern Living Essentials</h1>
+            <p class="storefront-hero__subtitle">Curated picks for fashion, home, and everyday tech.</p>
+            <a class="storefront-hero__cta" routerLink="/">Shop now</a>
+          </div>
+        </div>
+      </section>
+
       <section class="storefront__results">
         @if (state.topProducts$ | async; as topProducts) {
           <app-top-products-section

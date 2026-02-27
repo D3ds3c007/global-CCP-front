@@ -1,37 +1,45 @@
-<nz-card class="search-panel" nzTitle="Advanced search" [nzExtra]="extraTpl">
-  <div class="search-panel__body">
-    <app-search-keyword-input
-      label="Keyword"
-      placeholder="Try wireless charger"
-      [value]="draft().keyword"
-      (valueChange)="updateKeyword($event)"
-    ></app-search-keyword-input>
-
-    <app-price-range-filter
-      [minPrice]="draft().minPrice"
-      [maxPrice]="draft().maxPrice"
-      (rangeChange)="updatePriceRange($event)"
-    ></app-price-range-filter>
-
-    <app-category-filter
-      [categories]="categories()"
-      [selectedIds]="draft().categoryIds"
-      (selectionChange)="updateCategories($event)"
-    ></app-category-filter>
-
-    <app-sort-select
-      [sort]="draft().sort"
-      (sortChange)="updateSort($event)"
-    ></app-sort-select>
+<nz-card class="search-panel">
+  <div class="search-panel__top">
+    <h3 class="search-panel__title">Advanced Search</h3>
+    <p class="search-panel__subtitle">Refine products by keyword, price, category, and sorting.</p>
   </div>
 
-  <button nz-button nzType="primary" nzBlock type="button" (click)="applyFilters()">
-    Apply filters
-  </button>
-</nz-card>
+  <div class="search-panel__layout">
+    <section class="search-panel__block search-panel__block--main">
+      <app-search-keyword-input
+        label="Keyword"
+        placeholder="Try wireless charger"
+        [value]="draft().keyword"
+        (valueChange)="updateKeyword($event)"
+      ></app-search-keyword-input>
 
-<ng-template #extraTpl>
-  <button nz-button nzType="link" type="button" (click)="clearAll()">
-    Clear filters
-  </button>
-</ng-template>
+      <app-sort-select
+        [sort]="draft().sort"
+        (sortChange)="updateSort($event)"
+      ></app-sort-select>
+    </section>
+
+    <section class="search-panel__block search-panel__block--meta">
+      <app-price-range-filter
+        [minPrice]="draft().minPrice"
+        [maxPrice]="draft().maxPrice"
+        (rangeChange)="updatePriceRange($event)"
+      ></app-price-range-filter>
+
+      <app-category-filter
+        [categories]="categories()"
+        [selectedIds]="draft().categoryIds"
+        (selectionChange)="updateCategories($event)"
+      ></app-category-filter>
+    </section>
+  </div>
+
+  <div class="search-panel__actions">
+    <button nz-button nzType="link" type="button" (click)="clearAll()">
+      Clear filters
+    </button>
+    <button nz-button nzType="primary" type="button" (click)="applyFilters()">
+      Apply filters
+    </button>
+  </div>
+</nz-card>

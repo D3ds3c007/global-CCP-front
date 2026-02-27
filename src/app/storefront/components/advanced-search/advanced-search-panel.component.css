@@ -1,15 +1,119 @@
 .search-panel {
-  border-radius: 16px;
+  border-radius: 18px;
+  border: 1px solid rgba(95, 120, 190, 0.26);
+  background: linear-gradient(165deg, rgba(16, 22, 46, 0.94), rgba(10, 15, 34, 0.92));
+  box-shadow:
+    0 18px 34px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(16px);
 }
 
-.search-panel__body {
+:host ::ng-deep .search-panel.ant-card .ant-card-body {
+  color: #e6eeff;
+  padding: 18px;
+}
+
+.search-panel__top {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.search-panel__title {
+  margin: 0;
+  color: #eaf0ff;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.search-panel__subtitle {
+  margin: 0;
+  color: #9fb0da;
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.search-panel__layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+.search-panel__block {
+  border: 1px solid rgba(95, 120, 190, 0.2);
+  border-radius: 14px;
+  background: rgba(12, 19, 40, 0.52);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.search-panel__block--main {
+  padding-bottom: 8px;
+}
+
+.search-panel__block--meta {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.search-panel app-sort-select {
+  display: none;
+}
+
+.search-panel__actions {
+  margin-top: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+:host ::ng-deep .search-panel :is(button[nz-button], a[nz-button]) {
+  border-radius: 12px;
+  min-height: 38px;
+  font-weight: 600;
+}
+
+:host ::ng-deep .search-panel .ant-btn-primary {
+  border-color: rgba(116, 201, 255, 0.8);
+  background: linear-gradient(120deg, #0ea5e9, #2563eb);
+  box-shadow: 0 12px 22px rgba(6, 20, 54, 0.46);
+  min-width: 140px;
+}
+
+:host ::ng-deep .search-panel .ant-btn-primary:hover {
+  border-color: #87d5ff;
+  background: linear-gradient(120deg, #22b8ff, #3a75ff);
+}
+
+:host ::ng-deep .search-panel .ant-btn-link {
+  color: #adc0e8;
+  padding: 0;
+  height: auto;
+  min-height: auto;
+}
+
+:host ::ng-deep .search-panel .ant-btn-link:hover {
+  color: #def0ff;
+}
+
+@media (min-width: 820px) {
+  .search-panel__layout {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+    gap: 14px;
+  }
 }
 
 @media (max-width: 900px) {
   .search-panel {
-    border-radius: 14px;
+    border-radius: 16px;
+  }
+
+  :host ::ng-deep .search-panel.ant-card .ant-card-body {
+    padding: 14px;
   }
 }

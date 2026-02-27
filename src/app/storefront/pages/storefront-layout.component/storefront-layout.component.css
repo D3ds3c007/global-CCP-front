@@ -1,9 +1,11 @@
 .storefront {
-  /* background: transparent; */
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-  background-attachment: fixed;
   min-height: 100vh;
-  padding: 104px 0 48px;
+  padding: 104px 0 52px;
+  background:
+    radial-gradient(1400px 560px at 4% -12%, rgba(0, 191, 255, 0.2), transparent 62%),
+    radial-gradient(1100px 460px at 98% -8%, rgba(194, 48, 255, 0.18), transparent 58%),
+    linear-gradient(180deg, #050816 0%, #070b1a 55%, #0b1024 100%);
+  color: #eaf0ff;
 }
 
 .app__nav {
@@ -13,6 +15,7 @@
   right: 0;
   z-index: 100;
 }
+
 .center__bar {
   margin-bottom: 24px;
   display: flex;
@@ -21,16 +24,16 @@
 
 .storefront__filters {
   position: sticky;
-  top: 120px;
+  top: 116px;
 }
 
 .storefront__container {
-  max-width: 1200px;
+  max-width: 1280px;
   margin: 0 auto;
   padding: 0 24px;
   display: grid;
-  grid-template-columns: minmax(240px, 280px) 1fr;
-  gap: 24px;
+  grid-template-columns: minmax(250px, 300px) 1fr;
+  gap: 26px;
   align-items: start;
 }
 
@@ -40,48 +43,14 @@
   gap: 24px;
 }
 
-.storefront__results {
-  background: var(--surface-glass);
-  border-radius: 16px;
-  border: 1px solid var(--border);
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  box-shadow: var(--shadow);
-  backdrop-filter: blur(16px);
-}
-
-.results__header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.results__header h2 {
-  margin: 0;
-  font-size: 20px;
-  color: var(--text-strong);
-}
-
-.results__status {
-  font-size: 13px;
-  color: var(--text-muted);
-}
-
-.results__error {
-  border: 1px solid rgba(239, 68, 68, 0.3);
-  background: var(--danger-bg);
-  color: var(--danger);
-  padding: 12px 14px;
-  border-radius: 10px;
-  font-size: 14px;
-}
-
 @media (max-width: 960px) {
+  .storefront {
+    padding-top: 92px;
+  }
+
   .storefront__container {
     grid-template-columns: 1fr;
+    gap: 20px;
   }
 
   .storefront__filters {
@@ -91,10 +60,6 @@
 
 @media (max-width: 600px) {
   .storefront__container {
-    padding: 0 16px;
-  }
-
-  .storefront__results {
-    padding: 16px;
+    padding: 0 14px;
   }
 }

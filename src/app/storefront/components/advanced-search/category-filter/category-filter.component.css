@@ -1,30 +1,118 @@
 .field {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 14px;
 }
 
 .field__label {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--text-muted);
+  font-size: 24px;
+  line-height: 1;
+  font-weight: 700;
+  color: #f6f8ff;
+  letter-spacing: -0.03em;
+  text-transform: none;
 }
 
 .field__options {
   display: grid;
-  gap: 8px;
+  gap: 10px;
+  max-height: 360px;
+  overflow: auto;
+  padding-right: 4px;
 }
 
 .field__option {
+  position: relative;
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 14px;
-  color: var(--text-strong);
+  gap: 12px;
+  min-height: 48px;
+  padding: 0 14px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.06);
+  color: #edf2ff;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 8px 18px rgba(2, 8, 24, 0.18);
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
-.field__option input {
-  width: 16px;
-  height: 16px;
-  accent-color: var(--brand);
+.field__option:hover {
+  transform: translateY(-1px);
+  border-color: rgba(137, 197, 255, 0.35);
+  background: rgba(255, 255, 255, 0.09);
+  box-shadow: 0 12px 22px rgba(2, 8, 24, 0.24);
+}
+
+:host ::ng-deep .field__option.ant-checkbox-wrapper {
+  margin: 0;
+}
+
+:host ::ng-deep .field__option .ant-checkbox {
+  top: 0;
+}
+
+:host ::ng-deep .field__option .ant-checkbox + span {
+  padding-inline: 0;
+  color: inherit;
+  font: inherit;
+}
+
+:host ::ng-deep .field__option .ant-checkbox-inner {
+  width: 20px;
+  height: 20px;
+  border-radius: 999px;
+  border-color: rgba(255, 255, 255, 0.24);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+:host ::ng-deep .field__option:hover .ant-checkbox-inner {
+  border-color: rgba(151, 225, 255, 0.56);
+}
+
+:host ::ng-deep .field__option.ant-checkbox-wrapper-checked {
+  border-color: rgba(120, 229, 190, 0.5);
+  background: linear-gradient(135deg, rgba(148, 251, 60, 0.22), rgba(34, 230, 191, 0.16), rgba(0, 207, 219, 0.16));
+  color: #ffffff;
+  box-shadow:
+    0 14px 24px rgba(4, 18, 36, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+
+:host ::ng-deep .field__option.ant-checkbox-wrapper-checked .ant-checkbox-inner {
+  border-color: transparent;
+  background: linear-gradient(135deg, #8ffb3c 0%, #22e6bf 55%, #00cfdb 100%);
+}
+
+:host ::ng-deep .field__option .ant-checkbox-checked::after {
+  border-color: rgba(124, 232, 255, 0.5);
+  border-radius: 999px;
+}
+
+:host ::ng-deep .field__option.ant-checkbox-wrapper:focus-within {
+  outline: 2px solid rgba(123, 188, 255, 0.78);
+  outline-offset: 3px;
+}
+
+@media (max-width: 600px) {
+  .field {
+    gap: 12px;
+  }
+
+  .field__label {
+    font-size: 21px;
+  }
+
+  .field__option {
+    min-height: 44px;
+    padding: 0 12px;
+    border-radius: 14px;
+    font-size: 14px;
+  }
 }

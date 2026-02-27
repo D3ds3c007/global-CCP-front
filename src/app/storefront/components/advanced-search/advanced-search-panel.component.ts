@@ -11,7 +11,7 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 @Component({
   selector: 'app-advanced-search-panel',
   templateUrl: './advanced-search-panel.component.html',
-  styleUrl: './advanced-search-panel.component.css',
+  styleUrls: ['./advanced-search-panel.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     SearchKeywordInputComponent,
