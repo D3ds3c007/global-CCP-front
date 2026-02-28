@@ -1,8 +1,5 @@
 <section class="page" *ngIf="vm$ | async as vm">
   <h1 class="title">Orders</h1>
-  <div class="card" *ngIf="noShopMessage">{{ noShopMessage }}</div>
-  <div class="card" *ngIf="loading">Loading orders...</div>
-  <div class="card" *ngIf="errorMessage">{{ errorMessage }}</div>
 
   <app-orders-filters [query]="vm.query" (queryChange)="setQuery($event)"></app-orders-filters>
 
