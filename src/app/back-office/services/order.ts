@@ -103,7 +103,7 @@ interface OrderUpdateResponse {
   order?: OrderFromServer;
 }
 
-const STATUS_FLOW: OrderStatus[] = ['PENDING', 'confirmed', 'preparing', 'ready', 'delivered'];
+const STATUS_FLOW: OrderStatus[] = ['pending', 'confirmed', 'preparing', 'ready', 'delivered'];
 
 function nowIso() {
   return new Date().toISOString();
@@ -190,7 +190,7 @@ export class OrdersBackService {
   }
 
   canCancel(order: Order) {
-    return order.status === 'PENDING';
+    return order.status === 'pending';
   }
 
   nextStatus(order: Order): OrderStatus | null {
@@ -304,13 +304,13 @@ export class OrdersBackService {
 
   private mapStatus(status: string | undefined): OrderStatus {
     const normalized = String(status ?? '').toUpperCase();
-    if (normalized === 'PENDING') return 'PENDING';
+    if (normalized === 'PENDING') return 'pending';
     if (normalized === 'CONFIRMED') return 'confirmed';
     if (normalized === 'PREPARING') return 'preparing';
     if (normalized === 'READY') return 'ready';
     if (normalized === 'DELIVERED') return 'delivered';
     if (normalized === 'CANCELLED') return 'cancelled';
-    return 'PENDING';
+    return 'pending';
   }
 
   private resolveServerId(orderId: string): string {
