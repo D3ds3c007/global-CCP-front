@@ -1,5 +1,5 @@
 <div *ngIf="points.length; else empty" class="chart">
-  <svg [attr.viewBox]="'0 0 ' + w + ' ' + h" preserveAspectRatio="none">
+  <svg [attr.viewBox]="'0 0 ' + w + ' ' + h" preserveAspectRatio="none" (mouseleave)="hideTooltip()">
     <defs>
       <linearGradient id="g" x1="0" x2="0" y1="0" y2="1">
         <stop offset="0%" stop-color="#7ee787" stop-opacity="0.45"></stop>
@@ -18,6 +18,47 @@
 
     <!-- line -->
     <polyline [attr.points]="polyline" fill="none" stroke="#22c55e" stroke-width="2"></polyline>
+
+    <g class="points">
+      <g *ngFor="let p of points; let i=index" class="point" (mouseenter)="showTooltip(i)">
+        <circle
+          [attr.cx]="x(i)"
+          [attr.cy]="y(p.valueK)"
+          [attr.r]="hoveredIndex === i ? 5 : 4"
+          [class.is-active]="hoveredIndex === i"
+        ></circle>
+        <circle
+          class="hit"
+          [attr.cx]="x(i)"
+          [attr.cy]="y(p.valueK)"
+          r="12"
+          fill="transparent"
+        ></circle>
+      </g>
+    </g>
+
+    <g *ngIf="hoveredIndex !== null" class="tooltip">
+      <line
+        class="guide"
+        [attr.x1]="x(hoveredIndex)"
+        [attr.x2]="x(hoveredIndex)"
+        [attr.y1]="pad"
+        [attr.y2]="h - pad"
+      ></line>
+      <rect
+        [attr.x]="tooltipX(hoveredIndex) - 54"
+        [attr.y]="tooltipY(hoveredIndex) - 20"
+        width="108"
+        height="34"
+        rx="10"
+      ></rect>
+      <text class="tooltip-label" [attr.x]="tooltipX(hoveredIndex)" [attr.y]="tooltipY(hoveredIndex) - 7" text-anchor="middle">
+        {{ tooltipLabel(points[hoveredIndex]) }}
+      </text>
+      <text class="tooltip-value" [attr.x]="tooltipX(hoveredIndex)" [attr.y]="tooltipY(hoveredIndex) + 8" text-anchor="middle">
+        {{ tooltipValue(points[hoveredIndex]) }}
+      </text>
+    </g>
 
     <!-- x labels -->
     <g class="labels">
