@@ -1,5 +1,8 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, combineLatest, map } from 'rxjs';
+import { Injectable, inject } from '@angular/core';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { BehaviorSubject, Observable, combineLatest, map, of, tap, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { environment } from '../../../environments/environment';
 
 export type OrderStatus =
   | 'pending'
@@ -38,6 +41,8 @@ export interface OrderStatusEvent {
 
 export interface Order {
   id: string;
+  rawId: string;
+  shopId: string;
   createdAt: string; // ISO
   status: OrderStatus;
 
@@ -66,7 +71,10 @@ function nowIso() {
 
 @Injectable({ providedIn: 'root' })
 export class OrdersBackService {
-  private readonly ordersSubject = new BehaviorSubject<Order[]>(this.seedOrders());
+  private readonly http = inject(HttpClient);
+  private readonly apiUrl = environment.apiUrl;
+
+  private readonly ordersSubject = new BehaviorSubject<Order[]>([]);
   private readonly querySubject = new BehaviorSubject<OrdersQuery>({ search: '', status: 'all' });
   private readonly selectedIdSubject = new BehaviorSubject<string | null>(null);
 
@@ -114,6 +122,32 @@ export class OrdersBackService {
     }
   }
 
+  loadOrders(shopId?: string): Observable<OrderFromServer[]> {
+    return this.http.get<OrdersListResponse>(`${this.apiUrl}orders`, { withCredentials: true }).pipe(
+      map((response) => this.normalizeOrdersList(response)),
+      map((orders) => (shopId ? orders.filter((order) => String(order.shopId ?? '') === shopId) : orders)),
+      catchError((error: unknown) => {
+        if (error instanceof HttpErrorResponse && error.status === 404) {
+          return of([]);
+        }
+        return throwError(() => error);
+      }),
+      tap((orders) => this.replaceOrdersFromServer(orders))
+    );
+  }
+
+  updateOrderStatus(orderId: string, nextStatus: string): Observable<OrderFromServer> {
+    const serverId = this.resolveServerId(orderId);
+
+    return this.http
+      .patch<OrderUpdateResponse>(
+        `${this.apiUrl}orders/${serverId}`,
+        { status: nextStatus.toUpperCase() },
+        { withCredentials: true }
+      )
+      .pipe(map((response) => this.normalizeOrderUpdate(response)));
+  }
+
   canCancel(order: Order) {
     return order.status !== 'delivered' && order.status !== 'cancelled';
   }
@@ -124,60 +158,108 @@ export class OrdersBackService {
     return idx >= 0 && idx < STATUS_FLOW.length - 1 ? STATUS_FLOW[idx + 1] : null;
   }
 
-  advance(orderId: string) {
+  advance(orderId: string): Observable<Order> {
     const orders = this.ordersSubject.value;
     const order = orders.find(o => o.id === orderId);
-    if (!order) return;
+    if (!order) return throwError(() => new Error('Order not found'));
 
     const next = this.nextStatus(order);
-    if (!next) return;
+    if (!next) return throwError(() => new Error('No next status available'));
 
-    this.updateStatus(orderId, next);
+    return this.updateOrderStatus(orderId, next).pipe(map((serverOrder) => this.patchOrderFromServer(serverOrder)));
   }
 
-  cancel(orderId: string, note = 'Cancelled by owner') {
+  cancel(orderId: string): Observable<Order> {
     const orders = this.ordersSubject.value;
     const order = orders.find(o => o.id === orderId);
-    if (!order || !this.canCancel(order)) return;
+    if (!order || !this.canCancel(order)) {
+      return throwError(() => new Error('Order cannot be cancelled'));
+    }
 
-    this.updateStatus(orderId, 'cancelled', note);
+    return this.updateOrderStatus(orderId, 'CANCELLED').pipe(map((serverOrder) => this.patchOrderFromServer(serverOrder)));
   }
 
-  private updateStatus(orderId: string, status: OrderStatus, note?: string) {
-    const nextOrders: Order[] = this.ordersSubject.value.map(o => {
-      if (o.id !== orderId) return o;
+  private replaceOrdersFromServer(orders: OrderFromServer[]): void {
+    const mappedOrders = orders.map((order) => this.mapOrderFromServer(order));
+    this.ordersSubject.next(mappedOrders);
 
-      const event = { status, at: nowIso(), note };
+    const selectedId = this.selectedIdSubject.value;
+    if (selectedId && !mappedOrders.some((order) => order.id === selectedId)) {
+      this.selectedIdSubject.next(null);
+    }
+  }
+
+  private patchOrderFromServer(serverOrder: OrderFromServer): Order {
+    const mapped = this.mapOrderFromServer(serverOrder);
+    const nextOrders = this.ordersSubject.value.map((order) => {
+      if (order.rawId !== mapped.rawId && order.id !== mapped.id) {
+        return order;
+      }
+
+      const previousStatus = order.status;
+      const shouldAppendHistory = previousStatus !== mapped.status;
       return {
-        ...o,
-        status,
-        history: [...o.history, event],
+        ...order,
+        ...mapped,
+        history: shouldAppendHistory
+          ? [...order.history, { status: mapped.status, at: nowIso() }]
+          : order.history,
       };
     });
 
     this.ordersSubject.next(nextOrders);
+    return nextOrders.find((order) => order.rawId === mapped.rawId) ?? mapped;
   }
 
-  private seedOrders(): Order[] {
-    const img = (seed: string) => `https://picsum.photos/seed/${seed}/120/90`;
+  private normalizeOrdersList(response: OrdersListResponse): OrderFromServer[] {
+    if (Array.isArray(response)) {
+      return response;
+    }
+    return Array.isArray(response.orders) ? response.orders : [];
+  }
 
-    const mkTotals = (items: any[]) => {
-      const subtotal = items.reduce((s, it) => s + it.unitPrice * it.qty, 0);
-      const shipping = subtotal > 200 ? 0 : 12;
-      const total = subtotal + shipping;
-      return { subtotal, shipping, total };
+  private normalizeOrderUpdate(response: OrderUpdateResponse): OrderFromServer {
+    if (response?.order && response.order._id) {
+      return response.order;
+    }
+    throw new Error('Invalid order update response');
+  }
+
+  private mapOrderFromServer(order: OrderFromServer): Order {
+    const buyer = typeof order.buyerId === 'string' ? null : order.buyerId;
+    const status = this.mapStatus(order.status);
+    const total = Number(order.total ?? 0);
+
+    return {
+      id: String(order.orderId ?? order._id),
+      rawId: String(order._id),
+      shopId: String(order.shopId ?? ''),
+      createdAt: String(order.createdAt ?? nowIso()),
+      status,
+      buyer: {
+        fullName: String(buyer?.fullName ?? 'Unknown buyer'),
+        email: String(buyer?.email ?? ''),
+        phone: String(order.phone ?? ''),
+      },
+      address: {
+        line1: String(order.address ?? ''),
+        city: '',
+        zip: '',
+        country: '',
+      },
+      items: (order.items ?? []).map((item) => ({
+        productId: String(item.productId ?? ''),
+        name: String(item.name ?? 'Item'),
+        unitPrice: Number(item.priceSnapshot ?? 0),
+        qty: Number(item.qty ?? 0),
+        imageUrl: item.path ?? undefined,
+      })),
+      subtotal: total,
+      shipping: 0,
+      total,
+      history: [{ status, at: String(order.createdAt ?? nowIso()) }],
     };
-
-    const o1Items = [
-      { productId: 'p1', name: 'Keyboard', unitPrice: 49, qty: 2, imageUrl: img('keyboard') },
-      { productId: 'p2', name: 'Mouse', unitPrice: 19, qty: 1, imageUrl: img('mouse') },
-    ];
-    const o2Items = [
-      { productId: 'p3', name: 'Screen', unitPrice: 180, qty: 1, imageUrl: img('screen') },
-    ];
-
-    const o1Totals = mkTotals(o1Items);
-    const o2Totals = mkTotals(o2Items);
+  }
 
     const base = (id: string, status: OrderStatus, items: any[], totals: any): Order => ({
       id,
@@ -190,10 +272,8 @@ export class OrdersBackService {
       history: [{ status, at: nowIso() }],
     });
 
-    return [
-      base('ORD-1001', 'pending', o1Items, o1Totals),
-      base('ORD-1002', 'confirmed', o2Items, o2Totals),
-      base('ORD-1003', 'preparing', o1Items, o1Totals),
-    ];
+  private resolveServerId(orderId: string): string {
+    const order = this.ordersSubject.value.find((item) => item.id === orderId || item.rawId === orderId);
+    return order?.rawId ?? orderId;
   }
 }
