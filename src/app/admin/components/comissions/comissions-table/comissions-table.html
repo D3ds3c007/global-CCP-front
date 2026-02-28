@@ -10,7 +10,7 @@
     </thead>
 
     <tbody>
-      <tr *ngFor="let c of commissions">
+      <tr *ngFor="let c of commissions; trackBy: trackByCommissionId">
         <td class="name">{{ c.name }}</td>
 
         <td class="mono">
