@@ -5,7 +5,7 @@ import { catchError } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 
 export type OrderStatus =
-  | 'PENDING'
+  | 'pending'
   | 'confirmed'
   | 'preparing'
   | 'ready'
