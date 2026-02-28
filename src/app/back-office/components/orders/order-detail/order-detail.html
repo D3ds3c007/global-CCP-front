@@ -32,7 +32,7 @@
   <div class="block">
     <h4>Items</h4>
     <div class="item" *ngFor="let it of order.items">
-      <img *ngIf="it.imageUrl" class="thumb" [src]="pictureBaseUrl + it.imageUrl" />
+      <img *ngIf="it.imageUrl" class="thumb" [src]="it.imageUrl" />
       <div class="iname">{{ it.name }} <span class="muted">x{{ it.qty }}</span></div>
       <div class="iprice">{{ (it.unitPrice * it.qty) | currency:'EUR' }}</div>
     </div>
