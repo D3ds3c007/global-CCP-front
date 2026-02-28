@@ -62,6 +62,47 @@ export interface OrdersQuery {
   status: OrderStatus | 'all';
 }
 
+type BackendOrderStatus =
+  | 'PENDING'
+  | 'CONFIRMED'
+  | 'PREPARING'
+  | 'READY'
+  | 'DELIVERED'
+  | 'CANCELLED';
+
+interface ApiOrderBuyer {
+  _id?: string;
+  fullName?: string;
+  email?: string;
+}
+
+interface ApiOrderItem {
+  productId: string;
+  name?: string;
+  qty?: number;
+  priceSnapshot?: number;
+  path?: string | null;
+}
+
+export interface OrderFromServer {
+  _id: string;
+  orderId?: string;
+  buyerId?: string | ApiOrderBuyer;
+  shopId?: string;
+  address?: string;
+  phone?: string;
+  items?: ApiOrderItem[];
+  total?: number;
+  status?: BackendOrderStatus | string;
+  createdAt?: string;
+}
+
+type OrdersListResponse = { orders?: OrderFromServer[] } | OrderFromServer[];
+interface OrderUpdateResponse {
+  message?: string;
+  order?: OrderFromServer;
+}
+
 const STATUS_FLOW: OrderStatus[] = ['pending', 'confirmed', 'preparing', 'ready', 'delivered'];
 
 function nowIso() {
@@ -149,7 +190,7 @@ export class OrdersBackService {
   }
 
   canCancel(order: Order) {
-    return order.status !== 'delivered' && order.status !== 'cancelled';
+    return order.status === 'pending';
   }
 
   nextStatus(order: Order): OrderStatus | null {
@@ -261,16 +302,16 @@ export class OrdersBackService {
     };
   }
 
-    const base = (id: string, status: OrderStatus, items: any[], totals: any): Order => ({
-      id,
-      createdAt: nowIso(),
-      status,
-      buyer: { fullName: 'Amine Ben', email: 'amine@mail.com', phone: '+212 6 00 00 00 00' },
-      address: { line1: '12 Rue Hassan II', city: 'Casablanca', zip: '20000', country: 'MA' },
-      items,
-      ...totals,
-      history: [{ status, at: nowIso() }],
-    });
+  private mapStatus(status: string | undefined): OrderStatus {
+    const normalized = String(status ?? '').toUpperCase();
+    if (normalized === 'PENDING') return 'pending';
+    if (normalized === 'CONFIRMED') return 'confirmed';
+    if (normalized === 'PREPARING') return 'preparing';
+    if (normalized === 'READY') return 'ready';
+    if (normalized === 'DELIVERED') return 'delivered';
+    if (normalized === 'CANCELLED') return 'cancelled';
+    return 'pending';
+  }
 
   private resolveServerId(orderId: string): string {
     const order = this.ordersSubject.value.find((item) => item.id === orderId || item.rawId === orderId);
