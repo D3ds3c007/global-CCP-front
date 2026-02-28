@@ -1,0 +1,51 @@
+<div class="wrap">
+  <table *ngIf="commissions.length; else empty">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Rule</th>
+        <th>Status</th>
+        <th class="right">Action</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let c of commissions">
+        <td class="name">{{ c.name }}</td>
+
+        <td class="mono">
+          &lt; {{ c.rule.thresholdEur }}€ → ${{ c.rule.fixedUnderUsd }}
+          | ≥ {{ c.rule.thresholdEur }}€ → {{ c.rule.percentAbove }}%
+        </td>
+
+        <td>
+          <span class="badge" [class.active]="c.active" [class.inactive]="!c.active">
+            {{ c.active ? 'ACTIVE' : 'INACTIVE' }}
+          </span>
+        </td>
+
+        <td class="right">
+          <button
+            class="btn"
+            type="button"
+            [disabled]="c.active"
+            (click)="activate.emit(c.id)"
+          >
+            Activate
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="toolbar">
+    <button class="btn ghost" type="button" (click)="deactivateAll.emit()">
+      Deactivate all
+    </button>
+    <div class="note">Delete is not allowed.</div>
+  </div>
+
+  <ng-template #empty>
+    <div class="empty">No commissions.</div>
+  </ng-template>
+</div>

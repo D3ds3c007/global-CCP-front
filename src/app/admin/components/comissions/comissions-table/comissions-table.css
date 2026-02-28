@@ -1,0 +1,46 @@
+.wrap{
+  background:#fff;
+  border-radius:16px;
+  padding:14px;
+  box-shadow:0 8px 24px rgba(15,23,42,0.06);
+}
+
+table{width:100%; border-collapse:collapse;}
+th,td{padding:10px 8px; border-bottom:1px solid #f1f5f9; font-size:13px;}
+th{color:#64748b; font-weight:900; text-align:left;}
+.right{text-align:right;}
+
+.name{font-weight:900;color:#0f172a;}
+.mono{font-family: ui-monospace, Menlo, Consolas, monospace; color:#334155;}
+
+.badge{
+  display:inline-block;
+  padding:8px 14px;
+  border-radius:6px;
+  font-weight:900;
+  font-size:12px;
+  border:1px solid transparent;
+}
+.badge.active{background:#c7f3c7;border-color:#b7e7b7;color:#0f172a;}
+.badge.inactive{background:#0b0f19;border-color:#0b0f19;color:#fff;}
+
+.toolbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding-top:12px;
+}
+.note{color:#64748b;font-size:12px;font-weight:700;}
+
+.btn{
+  border-radius:14px;
+  padding:10px 14px;
+  font-weight:900;
+  cursor:pointer;
+  border:1px solid #eef2f7;
+  background:#fff;
+}
+.btn:disabled{opacity:.6;cursor:not-allowed;}
+.btn.ghost{background:#fff;}
+.empty{color:#64748b;font-size:13px;}
