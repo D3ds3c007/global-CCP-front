@@ -1,6 +1,7 @@
 .chart {
   width: 100%;
   height: 220px;
+  position: relative;
 }
 
 svg { width: 100%; height: 100%; }
@@ -13,4 +14,45 @@ svg { width: 100%; height: 100%; }
 .labels text {
   fill: #94a3b8;
   font-size: 11px;
+}
+
+.points .point {
+  cursor: pointer;
+}
+
+.points circle {
+  fill: #ffffff;
+  stroke: #16a34a;
+  stroke-width: 2;
+  transition: r 120ms ease, fill 120ms ease, stroke 120ms ease;
+}
+
+.points circle.is-active {
+  fill: #16a34a;
+  stroke: #dcfce7;
+}
+
+.tooltip .guide {
+  stroke: #86efac;
+  stroke-width: 1.5;
+  stroke-dasharray: 4 4;
+}
+
+.tooltip rect {
+  fill: rgba(15, 23, 42, 0.94);
+}
+
+.tooltip-label,
+.tooltip-value {
+  font-size: 10px;
+  pointer-events: none;
+}
+
+.tooltip-label {
+  fill: #cbd5e1;
+}
+
+.tooltip-value {
+  fill: #ffffff;
+  font-weight: 700;
 }
