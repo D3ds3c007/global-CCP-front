@@ -5,14 +5,15 @@ import { ShoppingCartOutline, UserOutline } from '@ant-design/icons-angular/icon
 import { routes } from './app.routes';
 import { provideClientHydration, withEventReplay, withNoHttpTransferCache } from '@angular/platform-browser';
 import { provideNzIcons } from 'ng-zorro-antd/icon';
-import { provideHttpClient, withFetch } from '@angular/common/http';
+import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
+import { loadingInterceptor } from './core/interceptors/loading.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
     provideClientHydration(withEventReplay(), withNoHttpTransferCache()),
-    provideHttpClient(withFetch()),
+    provideHttpClient(withFetch(), withInterceptors([loadingInterceptor])),
     provideNzIcons([
       ShoppingCartOutline,
       UserOutline
