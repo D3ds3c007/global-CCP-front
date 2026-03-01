@@ -1,13 +1,17 @@
 <app-details-layout>
-  <ng-container *ngIf="product$ | async as product; else notFound">
-    <app-product-details
-      *ngIf="product; else notFound"
-      [product]="product"
-      (addToCart)="onAddToCart($event)"
-    ></app-product-details>
-  </ng-container>
+  <section class="storefront__results storefront__results--detail">
+    <ng-container *ngIf="product$ | async as product; else notFound">
+      <app-product-details
+        *ngIf="product; else notFound"
+        [product]="product"
+        (addToCart)="onAddToCart($event)"
+      ></app-product-details>
+    </ng-container>
+  </section>
 
   <ng-template #notFound>
-    <p>Produit introuvable.</p>
+    <section class="storefront__results storefront__results--detail">
+      <div class="results__error" role="alert">Produit introuvable.</div>
+    </section>
   </ng-template>
 </app-details-layout>
