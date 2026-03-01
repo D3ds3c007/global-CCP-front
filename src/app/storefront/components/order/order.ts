@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { Item, OrderFromServer, OrderService } from '../../services/order.service';
 import { Observable, Subject, takeUntil } from 'rxjs';
+import { environment } from '../../../../environments/environment';
 
 type OrderStatus = 'PAID' | 'PENDING' | 'CANCELLED';
 
@@ -40,6 +41,7 @@ export type Order = {
 export class OrderComponent implements OnInit, OnDestroy {
   currencyCode = 'EUR';
   expandedId: string | null = null;
+  readonly pictureUrl = environment.pictureUrl; // URL de base pour les images de produits
 
   orders: Order[] = [
     {

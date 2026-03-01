@@ -42,7 +42,7 @@
 
       <div class="items">
         <div class="item" *ngFor="let it of o.items; trackBy: trackByItemId">
-          <img *ngIf="it.path" class="thumb" [src]="it.path" [alt]="it.name" />
+          <img *ngIf="it.path" class="thumb" [src]="pictureUrl + it.path" [alt]="it.name" />
 
           <div class="item-info">
             <div class="item-name">{{ it.name }}</div>
