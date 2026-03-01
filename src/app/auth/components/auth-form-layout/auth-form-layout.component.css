@@ -10,13 +10,19 @@
   align-items: center;
   justify-content: center;
   padding: 32px 16px;
-  background: transparent;
+  background: linear-gradient(
+    135deg,
+    #8ffb3c 0%,
+    #22e6bf 55%,
+    #00cfdb 100%
+  );
 }
 
 .auth-card {
   width: 100%;
   max-width: 420px;
   padding: 32px 28px;
+  border-radius: 30px;
 }
 
 .auth-header {
