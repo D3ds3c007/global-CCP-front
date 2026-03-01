@@ -1,7 +1,7 @@
 <section class="page">
   <header class="top">
     <h1 class="product-name">{{ product.name }}</h1>
-    <a class="store-link" routerLink="/manufacturers">
+    <a class="store-link" [routerLink]="['/manufacturers', product.shopId]">
         <div class="store-name">{{ product.storeName }}</div>
     </a>
   </header>
