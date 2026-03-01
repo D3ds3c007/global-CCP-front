@@ -9,14 +9,14 @@
     </app-dashboard-card>
   </div>
 
-  <app-dashboard-card title="Customers">
+  <app-dashboard-card title="Users">
     <div class="controls">
       <input
         class="search"
         [ngModel]="vm.query.search"
         (ngModelChange)="setSearch($event)"
         [ngModelOptions]="{ standalone: true }"
-        placeholder="Search customer..."
+        placeholder="Search user..."
       />
 
       <div class="sort">
@@ -32,12 +32,10 @@
       [customers]="vm.customers"
       [selectedId]="vm.selectedId"
       (select)="select($event)"
-      (toggleStatus)="toggleStatus($event)"
-      (remove)="remove($event)"
     ></app-admin-customers-list>
   </app-dashboard-card>
 </section>
 
 <ng-template #loading>
-  <div style="padding: 18px;">Loading...</div>
+  <div style="padding: 18px;">{{ errorMessage || (loading ? 'Loading...' : 'Loading...') }}</div>
 </ng-template>

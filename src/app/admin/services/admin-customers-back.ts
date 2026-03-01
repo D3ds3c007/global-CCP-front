@@ -1,25 +1,40 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, combineLatest, map, Observable } from 'rxjs';
+import { Injectable, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject, Observable, combineLatest, forkJoin, map, of, switchMap, tap } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
-export type CustomerType = 'SHOP_OWNER' | 'BUYER';
-export type CustomerStatus = 'active' | 'inactive' | 'banned';
+export type UserRole = 'SHOP' | 'BUYER' | 'ADMIN';
+export type UserStatus = 'active' | 'banned';
 export type SortDir = 'newest' | 'oldest';
 
-export interface AdminCustomer {
+export interface UserRow {
   id: string;
   fullName: string;
-  company: string;
-  avatarUrl: string;
-  type: CustomerType;
-  status: CustomerStatus;
+  email: string;
+  phone: string;
+  role: UserRole;
+  status?: UserStatus;
   createdAt: string;
+}
+
+interface ApiUserRow {
+  id?: string;
+  fullName?: string;
+  email?: string;
+  phone?: string;
+  role?: string;
+  status?: string;
+  createdAt?: string;
+}
+
+interface UsersResponse {
+  users?: ApiUserRow[];
+  totalPages?: number;
 }
 
 export interface AdminCustomersQuery {
   search: string;
   sort: SortDir;
-  type: CustomerType | 'all';
-  status: CustomerStatus | 'all';
 }
 
 export interface KpiCardVM {
@@ -34,18 +49,19 @@ export interface AdminCustomersVM {
   kpi1: KpiCardVM;
   kpi2: KpiCardVM;
   query: AdminCustomersQuery;
-  customers: AdminCustomer[];
+  customers: UserRow[];
   selectedId: string | null;
 }
 
 @Injectable({ providedIn: 'root' })
 export class AdminCustomersBackService {
-  private readonly customersSubject = new BehaviorSubject<AdminCustomer[]>(this.seed());
+  private readonly http = inject(HttpClient);
+  private readonly apiUrl = environment.apiUrl;
+
+  private readonly customersSubject = new BehaviorSubject<UserRow[]>([]);
   private readonly querySubject = new BehaviorSubject<AdminCustomersQuery>({
     search: '',
     sort: 'newest',
-    type: 'all',
-    status: 'all',
   });
   private readonly selectedIdSubject = new BehaviorSubject<string | null>(null);
 
@@ -57,15 +73,13 @@ export class AdminCustomersBackService {
     map(([customers, q]) => {
       const s = q.search.trim().toLowerCase();
 
-      const filtered = customers.filter(c => {
-        const matchSearch =
-          !s || c.fullName.toLowerCase().includes(s) || c.company.toLowerCase().includes(s);
-
-        const matchType = q.type === 'all' || c.type === q.type;
-        const matchStatus = q.status === 'all' || c.status === q.status;
-
-        return matchSearch && matchType && matchStatus;
-      });
+      const filtered = customers.filter((customer) =>
+        !s ||
+        customer.fullName.toLowerCase().includes(s) ||
+        customer.email.toLowerCase().includes(s) ||
+        customer.phone.toLowerCase().includes(s) ||
+        customer.role.toLowerCase().includes(s)
+      );
 
       return [...filtered].sort((a, b) => {
         const da = new Date(a.createdAt).getTime();
@@ -78,25 +92,54 @@ export class AdminCustomersBackService {
   readonly vm$: Observable<AdminCustomersVM> = combineLatest({
     query: this.query$,
     customers: this.customersFiltered$,
+    allCustomers: this.customers$,
     selectedId: this.selectedId$,
   }).pipe(
-    map(vm => ({
+    map(({ allCustomers, ...vm }) => ({
       ...vm,
       kpi1: {
-        title: 'Total processed orders',
-        percent: 15,
-        trend: 'up',
-        subtitle: 'Increase compared to last week',
-        linkText: 'Revenue report ->',
+        title: 'Users',
+        percent: allCustomers.length,
+        subtitle: 'All registered users',
+        linkText: 'Users list',
       },
       kpi2: {
-        title: 'Pending orders',
-        percent: 4,
-        subtitle: 'You closed 96 out of 100 deals',
-        linkText: 'All deals ->',
+        title: 'Shop owners',
+        percent: allCustomers.filter((customer) => customer.role === 'SHOP').length,
+        subtitle: 'Accounts with SHOP role',
+        linkText: 'Role breakdown',
       },
     }))
   );
+
+  loadUsers(): Observable<UserRow[]> {
+    const limit = 100;
+    return this.fetchUsersPage(1, limit).pipe(
+      switchMap((firstPage) => {
+        const firstUsers = firstPage.users ?? [];
+        const totalPages = Math.max(Number(firstPage.totalPages ?? 1), 1);
+
+        if (totalPages <= 1) {
+          return of(firstUsers);
+        }
+
+        const remainingRequests = Array.from({ length: totalPages - 1 }, (_, index) =>
+          this.fetchUsersPage(index + 2, limit).pipe(map((response) => response.users ?? []))
+        );
+
+        return forkJoin(remainingRequests).pipe(
+          map((pages) => firstUsers.concat(...pages))
+        );
+      }),
+      map((users) => users.map((user) => this.mapUser(user))),
+      tap((users) => {
+        this.customersSubject.next(users);
+        if (this.selectedIdSubject.value && !users.some((user) => user.id === this.selectedIdSubject.value)) {
+          this.selectedIdSubject.next(users[0]?.id ?? null);
+        }
+      })
+    );
+  }
 
   setQuery(patch: Partial<AdminCustomersQuery>) {
     this.querySubject.next({ ...this.querySubject.value, ...patch });
@@ -106,77 +149,33 @@ export class AdminCustomersBackService {
     this.selectedIdSubject.next(id);
   }
 
-  ensureSelectedFirst(list: AdminCustomer[]) {
+  ensureSelectedFirst(list: UserRow[]) {
     if (!this.selectedIdSubject.value && list.length) {
       this.selectedIdSubject.next(list[0].id);
     }
   }
 
-  toggleStatus(id: string) {
-    const next: AdminCustomer[] = this.customersSubject.value.map((c): AdminCustomer => {
-      if (c.id !== id) return c;
-
-      const status: CustomerStatus =
-        c.status === 'active' ? 'inactive' : 'active';
-
-      return { ...c, status };
+  private fetchUsersPage(page: number, limit: number): Observable<UsersResponse> {
+    return this.http.get<UsersResponse>(`${this.apiUrl}users`, {
+      params: { page, limit },
+      withCredentials: true,
     });
-
-    this.customersSubject.next(next);
   }
 
-  delete(id: string) {
-    const next: AdminCustomer[] = this.customersSubject.value.filter(c => c.id !== id);
-    this.customersSubject.next(next);
+  private mapUser(user: ApiUserRow): UserRow {
+    const role = String(user.role ?? 'BUYER').toUpperCase() as UserRole;
+    const status = String(user.status ?? '').toLowerCase();
 
-    if (this.selectedIdSubject.value === id) {
-      this.selectedIdSubject.next(next[0]?.id ?? null);
-    }
-  }
-
-  private seed(): AdminCustomer[] {
-    const a = (img: number) => `https://i.pravatar.cc/80?img=${img}`;
-    const now = Date.now();
-
-    const data: AdminCustomer[] = [
-      {
-        id: 'c1',
-        fullName: 'Chris Friedly',
-        company: 'Supermarket Villanova',
-        avatarUrl: a(11),
-        type: 'BUYER',
-        status: 'active',
-        createdAt: new Date(now - 1 * 86400000).toISOString(),
-      },
-      {
-        id: 'c2',
-        fullName: 'Maggie Johnson',
-        company: 'Oasis Organic Inc.',
-        avatarUrl: a(12),
-        type: 'SHOP_OWNER',
-        status: 'active',
-        createdAt: new Date(now - 2 * 86400000).toISOString(),
-      },
-      {
-        id: 'c3',
-        fullName: 'Gael Harry',
-        company: 'New York Finest Fruits',
-        avatarUrl: a(13),
-        type: 'BUYER',
-        status: 'active',
-        createdAt: new Date(now - 3 * 86400000).toISOString(),
-      },
-      {
-        id: 'c4',
-        fullName: 'Jenna Sullivan',
-        company: 'Walmart',
-        avatarUrl: a(14),
-        type: 'BUYER',
-        status: 'banned',
-        createdAt: new Date(now - 4 * 86400000).toISOString(),
-      },
-    ];
-
-    return data;
+    return {
+      id: String(user.id ?? ''),
+      fullName: String(user.fullName ?? ''),
+      email: String(user.email ?? ''),
+      phone: String(user.phone ?? ''),
+      role,
+      status: status === 'active' || status === 'banned' ? status : undefined,
+      createdAt: String(user.createdAt ?? ''),
+    };
   }
 }
+
+export { AdminCustomersBackService as AdminCustomersBack };

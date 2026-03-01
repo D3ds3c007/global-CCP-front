@@ -1,4 +1,4 @@
-<section class="page" *ngIf="vm$ | async as vm">
+<section class="page" *ngIf="vm$ | async as vm; else loadingState">
   <div class="kpis">
     <app-dashboard-card [title]="vm.kpi1.title">
       <app-kpi-card [data]="vm.kpi1"></app-kpi-card>
@@ -32,9 +32,10 @@
       [customers]="vm.customers"
       [selectedId]="vm.selectedId"
       (select)="select($event)"
-      (edit)="onEdit($event)"
-      (call)="onCall($event)"
-      (remove)="onDelete($event)"
     ></app-customers-list>
   </app-dashboard-card>
 </section>
+
+<ng-template #loadingState>
+  <div style="padding: 18px;">{{ errorMessage || (loading ? 'Loading...' : 'Loading...') }}</div>
+</ng-template>

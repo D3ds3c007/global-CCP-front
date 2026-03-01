@@ -1,37 +1,32 @@
 <div class="list" *ngIf="customers.length; else empty">
   <div
     class="row"
-    *ngFor="let c of customers"
+    *ngFor="let c of customers; trackBy: trackById"
     [class.ACTIVE]="c.id === selectedId"
     (click)="select.emit(c.id)"
   >
-    <div class="left">
-      <img class="avatar" [src]="c.avatarUrl" [alt]="c.fullName" />
+    <div class="content">
       <div class="meta">
         <div class="name">{{ c.fullName }}</div>
-        <div class="company">{{ c.company }}</div>
+        <div class="contact">{{ c.email || 'No email provided' }}</div>
+        <div class="contact" *ngIf="c.phone">{{ c.phone }}</div>
+        <div class="contact" *ngIf="c.address">{{ c.address }}</div>
+      </div>
+
+      <div class="stats">
+        <div class="stat">
+          <span class="label">Orders</span>
+          <span class="value">{{ c.totalOrders }}</span>
+        </div>
+        <div class="stat" *ngIf="c.lastOrderDate">
+          <span class="label">Last order</span>
+          <span class="value">{{ c.lastOrderDate | date: 'mediumDate' }}</span>
+        </div>
       </div>
     </div>
-
-    <div class="actions" (click)="$event.stopPropagation()">
-      <button type="button" class="icon-btn" title="Call" (click)="call.emit(c)">
-        <span class="mi">call</span>
-      </button>
-      <button type="button" class="icon-btn" title="Edit" (click)="edit.emit(c)">
-        <span class="mi">edit</span>
-      </button>
-      <button type="button" class="icon-btn danger" title="Delete" (click)="remove.emit(c)">
-        <span class="mi">delete</span>
-      </button>
-      <button type="button" class="icon-btn" title="More">
-        <span class="mi">more_horiz</span>
-      </button>
-    </div>
   </div>
-
-  <a class="all" href="javascript:void(0)">All customers →</a>
 </div>
 
 <ng-template #empty>
-  <div class="empty">No customers.</div>
+  <div class="empty">No customers yet.</div>
 </ng-template>
