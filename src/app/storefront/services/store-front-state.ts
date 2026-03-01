@@ -1,4 +1,5 @@
-import { Injectable, inject, signal } from '@angular/core';
+import { Injectable, inject, PLATFORM_ID, signal } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { toObservable } from '@angular/core/rxjs-interop';
 import {
   catchError,
@@ -23,6 +24,8 @@ import { CartService } from '../services/cart.service';
 
 @Injectable() // <-- IMPORTANT: pas providedIn:'root' (on scope par route)
 export class StorefrontStateService {
+  private readonly platformId = inject(PLATFORM_ID);
+  private readonly isBrowser = isPlatformBrowser(this.platformId);
   private readonly productService = inject(ProductService);
   private readonly cartService = inject(CartService);
 
@@ -36,30 +39,37 @@ export class StorefrontStateService {
   readonly addingProductId = signal<string | null>(null);
   readonly addedProductId = signal<string | null>(null);
 
-  readonly categories$ = this.productService.getCategories().pipe(shareReplay(1));
-  readonly topProducts$ = this.productService.getTopProducts().pipe(shareReplay(1));
+  readonly categories$ = (
+    this.isBrowser ? this.productService.getCategories() : of([])
+  ).pipe(shareReplay(1));
 
-  private readonly searchResult$ = combineLatest([
-    toObservable(this.query),
-    toObservable(this.pageIndex),
-    toObservable(this.pageSize),
-  ]).pipe(
-    tap(() => {
-      this.loading.set(true);
-      this.error.set(null);
-    }),
-    switchMap(([query, pageIndex, pageSize]) =>
-      this.productService.searchProducts(query, pageIndex, pageSize).pipe(
-        catchError((err) => {
-          console.error('Search error', err);
-          this.error.set('Unable to load products right now.');
-          return of({ items: [], total: 0 });
-        })
+  readonly topProducts$ = (
+    this.isBrowser ? this.productService.getTopProducts() : of([])
+  ).pipe(shareReplay(1));
+
+  private readonly searchResult$ = this.isBrowser
+    ? combineLatest([
+        toObservable(this.query),
+        toObservable(this.pageIndex),
+        toObservable(this.pageSize),
+      ]).pipe(
+        tap(() => {
+          this.loading.set(true);
+          this.error.set(null);
+        }),
+        switchMap(([query, pageIndex, pageSize]) =>
+          this.productService.searchProducts(query, pageIndex, pageSize).pipe(
+            catchError((err) => {
+              console.error('Search error', err);
+              this.error.set('Unable to load products right now.');
+              return of({ items: [], total: 0 });
+            })
+          )
+        ),
+        tap(() => this.loading.set(false)),
+        startWith({ items: [], total: 0 })
       )
-    ),
-    tap(() => this.loading.set(false)),
-    startWith({ items: [], total: 0 })
-  );
+    : of({ items: [], total: 0 });
 
   readonly products$ = this.searchResult$.pipe(map((r) => r.items));
   readonly totalItems$ = this.searchResult$.pipe(map((r) => r.total));
