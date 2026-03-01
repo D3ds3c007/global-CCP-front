@@ -38,7 +38,7 @@ export class Sidebar {
   private readonly selectedShopState = inject(SelectedShopStateService);
 
   @Output() logout = new EventEmitter<void>();
-  @Input() brand = 'Golden Market';
+  @Input() brand = 'Hello Mercado';
   @Input() nav: NavItem[] = [];
 
   readonly user$ = this.authState.currentUser$;
