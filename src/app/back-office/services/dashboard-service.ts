@@ -16,6 +16,7 @@ export interface KpiCard {
 }
 
 export interface TopProduct {
+  productId?: string;
   name: string;
   valueK: number;
 }
@@ -263,7 +264,8 @@ export class DashboardService {
       .get<TopProductsResponse>(`${this.apiUrl}shops/${shopId}/top-products-by-revenue`, { withCredentials: true })
       .pipe(
         map((res) =>
-          (res.topProducts ?? []).slice(0, 1).map((p) => ({
+          (res.topProducts ?? []).map((p) => ({
+            productId: p.productId ? String(p.productId) : undefined,
             name: String(p.name ?? 'N/A').toUpperCase(),
             valueK: this.toK(p.totalRevenue ?? 0),
           }))

@@ -1,5 +1,5 @@
 <div *ngIf="products.length; else empty" class="list">
-  <div class="row" *ngFor="let p of products">
+  <div class="row" *ngFor="let p of products; trackBy: trackByProduct">
     <div class="bar">
       <div class="fill" [style.width]="width(p)"></div>
       <div class="label">{{ p.name }}</div>

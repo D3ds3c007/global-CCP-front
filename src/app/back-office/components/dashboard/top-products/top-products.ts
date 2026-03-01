@@ -12,11 +12,15 @@ import { TopProduct } from '../../../services/dashboard-service';
 export class TopProductsComponent {
   @Input() products: TopProduct[] = [];
 
-get max(): number {
-  return this.products?.length ? Math.max(...this.products.map(p => p.valueK)) : 1;
-}
+  get max(): number {
+    return this.products?.length ? Math.max(...this.products.map((p) => p.valueK)) : 1;
+  }
 
   width(p: TopProduct): string {
     return `${(p.valueK / this.max) * 100}%`;
+  }
+
+  trackByProduct(index: number, product: TopProduct & { _id?: string; id?: string }): string | number {
+    return product.productId ?? product._id ?? product.id ?? product.name ?? index;
   }
 }
