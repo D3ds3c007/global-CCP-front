@@ -5,11 +5,11 @@
 }
 
 .stat {
-  background: #f8fafc;
-  border: 1px solid #eef2f7;
+  background: rgba(16, 25, 52, 0.56);
+  border: 1px solid rgba(95, 120, 190, 0.18);
   border-radius: 14px;
   padding: 12px;
-
-  .k { color: #64748b; font-size: 12px; }
-  .v { margin-top: 6px; font-size: 22px; font-weight: 800; color: #0f172a; }
 }
+
+.stat .k { color: #ffffff; font-size: 12px; }
+.stat .v { margin-top: 6px; font-size: 22px; font-weight: 800; color: #ffffff; }

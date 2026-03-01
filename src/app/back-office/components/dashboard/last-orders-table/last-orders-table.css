@@ -1,9 +1,9 @@
 .head { display:flex; align-items:center; justify-content:space-between; }
-h3 { margin: 0; font-size: 14px; }
+h3 { margin: 0; font-size: 14px; color: #edf3ff; }
 
 table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-th, td { padding: 10px 8px; border-bottom: 1px solid #f1f5f9; font-size: 13px; }
-th { text-align: left; color:#64748b; font-weight: 700; }
+th, td { padding: 10px 8px; border-bottom: 1px solid rgba(95, 120, 190, 0.18); font-size: 13px; color: #d9e4ff; }
+th { text-align: left; color:#9fb0da; font-weight: 700; }
 .right { text-align: right; }
 .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
 
@@ -18,4 +18,4 @@ th { text-align: left; color:#64748b; font-weight: 700; }
 .conf { background:#eff6ff; color:#1d4ed8; border-color:#bfdbfe; }
 .del  { background:#ecfdf5; color:#065f46; border-color:#a7f3d0; }
 
-.empty { margin-top: 10px; color:#64748b; font-size: 13px; }
+.empty { margin-top: 10px; color:#9fb0da; font-size: 13px; }

@@ -1,6 +1,6 @@
 .page {
   padding: 18px;
-  background: #f5f6fa;
+  background: transparent;
   min-height: 100vh;
 }
 
@@ -11,8 +11,8 @@
   gap: 12px;
   margin-bottom: 14px;
 
-  h1 { margin: 0; font-size: 22px; color: #0f172a; }
-  p { margin: 6px 0 0; font-size: 13px; color: #64748b; }
+  h1 { margin: 0; font-size: 22px; color: #edf3ff; }
+  p { margin: 6px 0 0; font-size: 13px; color: #9fb0da; }
 }
 
 /* GRID screenshot (12 colonnes) */
@@ -36,12 +36,12 @@
 .t2 { grid-column: 8 / span 2; }
 .t3 { grid-column: 10 / span 3; }
 
-.select { color: #64748b; font-size: 12px; font-weight: 600; }
+.select { color: #b8c6ea; font-size: 12px; font-weight: 600; }
 .caret { margin-left: 4px; }
 
-.big { font-size: 22px; font-weight: 800; color: #0f172a; }
+.big { font-size: 22px; font-weight: 800; color: #edf3ff; }
 .accent { color: #f59e0b; font-weight: 800; margin-top: 2px; }
-.muted { color: #64748b; font-size: 12px; margin-top: 6px; }
+.muted { color: #9fb0da; font-size: 12px; margin-top: 6px; }
 
 /* En plus */
 .extras {

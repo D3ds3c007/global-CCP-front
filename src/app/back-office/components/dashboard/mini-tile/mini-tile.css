@@ -1,13 +1,18 @@
 .tile {
-  background: #fff;
-  border-radius: 16px;
+  background:
+    radial-gradient(120% 140% at 0% 0%, rgba(56, 189, 248, 0.12), transparent 40%),
+    linear-gradient(160deg, rgba(16, 22, 46, 0.96), rgba(10, 15, 34, 0.94));
+  border: 1px solid rgba(95, 120, 190, 0.22);
+  border-radius: 18px;
   padding: 16px;
-  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+  box-shadow:
+    0 20px 32px rgba(0, 0, 0, 0.24),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
   min-height: 96px;
 }
 
 .title {
-  color: #6b7280;
+  color: #9fb0da;
   font-size: 13px;
   font-weight: 600;
 }

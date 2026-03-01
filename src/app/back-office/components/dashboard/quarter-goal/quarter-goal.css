@@ -3,7 +3,7 @@
 .gauge { width: 100%; max-width: 220px; position: relative; }
 svg { width: 100%; height: auto; }
 
-.track { fill:none; stroke:#f3f4f6; stroke-width:16; stroke-linecap:round; }
+.track { fill:none; stroke:rgba(191, 219, 254, 0.18); stroke-width:16; stroke-linecap:round; }
 .progress { fill:none; stroke:#f6c25f; stroke-width:16; stroke-linecap:round; transition: stroke-dashoffset 250ms ease; }
 
 .center {
@@ -14,5 +14,5 @@ svg { width: 100%; height: auto; }
   padding-top: 18px;
 }
 
-.pct { font-size: 34px; font-weight: 800; color: #0f172a; }
-.link { color:#b45309; font-size:13px; text-decoration:none; font-weight:600; }
+.pct { font-size: 34px; font-weight: 800; color: #ffffff; }
+.link { color:#ffffff; font-size:13px; text-decoration:none; font-weight:600; }
