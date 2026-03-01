@@ -5,9 +5,14 @@
 }
 input, select {
   width: 100%;
-  border: 1px solid #eef2f7;
-  background: #fff;
+  border: 1px solid rgba(95, 120, 190, 0.18);
+  background: rgba(16, 25, 52, 0.62);
   border-radius: 14px;
   padding: 10px 12px;
   outline: none;
+  color: #edf3ff;
+}
+
+input::placeholder {
+  color: #8da1d1;
 }

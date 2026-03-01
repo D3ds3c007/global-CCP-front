@@ -1,16 +1,16 @@
 .t { width: 100%; border-collapse: collapse; }
-th, td { padding: 10px 8px; border-bottom: 1px solid #f1f5f9; font-size: 13px; }
-th { text-align: left; color:#64748b; font-weight: 800; }
+th, td { padding: 10px 8px; border-bottom: 1px solid rgba(95, 120, 190, 0.18); font-size: 13px; color: #d9e4ff; }
+th { text-align: left; color:#9fb0da; font-weight: 800; }
 .right { text-align: right; }
 .mono { font-family: ui-monospace, Menlo, Consolas, monospace; }
 
 tbody tr { cursor: pointer; }
-tbody tr.ACTIVE { background: #fff7ed; }
+tbody tr.ACTIVE { background: rgba(29, 78, 216, 0.18); }
 
 .pill {
   padding: 4px 10px; border-radius: 999px;
   font-size: 12px; font-weight: 800;
-  border: 1px solid #e2e8f0; background: #f8fafc; color: #334155;
+  border: 1px solid rgba(95, 120, 190, 0.18); background: rgba(16, 25, 52, 0.56); color: #d9e4ff;
 }
 .pill.PENDING { background:#fff7ed; border-color:#fed7aa; color:#9a3412; }
 .pill.confirmed { background:#eff6ff; border-color:#bfdbfe; color:#1d4ed8; }
@@ -19,4 +19,4 @@ tbody tr.ACTIVE { background: #fff7ed; }
 .pill.delivered { background:#ecfdf5; border-color:#a7f3d0; color:#065f46; }
 .pill.cancelled { background:#fff1f2; border-color:#fecdd3; color:#9f1239; }
 
-.empty { color:#64748b; font-size: 13px; }
+.empty { color:#9fb0da; font-size: 13px; }

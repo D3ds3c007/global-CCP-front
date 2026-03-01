@@ -15,13 +15,13 @@
 .id {
   font-size: 16px;
   font-weight: 900;
-  color: #0f172a;
+  color: #edf3ff;
 }
 
 .meta {
   margin-top: 4px;
   font-size: 12px;
-  color: #64748b;
+  color: #9fb0da;
 }
 
 .actions {
@@ -32,9 +32,9 @@
 
 /* Buttons */
 .btn {
-  border: 1px solid #eef2f7;
-  background: #fff;
-  color: #0f172a;
+  border: 1px solid rgba(95, 120, 190, 0.18);
+  background: rgba(16, 25, 52, 0.62);
+  color: #edf3ff;
   padding: 10px 12px;
   border-radius: 14px;
   cursor: pointer;
@@ -44,7 +44,7 @@
 }
 
 .btn:hover {
-  background: #f8fafc;
+  background: rgba(28, 42, 79, 0.72);
 }
 
 .btn:disabled {
@@ -64,18 +64,18 @@
 /* Sections */
 .block {
   padding-top: 10px;
-  border-top: 1px solid #f1f5f9;
+  border-top: 1px solid rgba(95, 120, 190, 0.18);
 }
 
 .block h4 {
   margin: 0 0 8px;
   font-size: 13px;
   font-weight: 900;
-  color: #0f172a;
+  color: #edf3ff;
 }
 
 .muted {
-  color: #64748b;
+  color: #9fb0da;
   font-size: 12px;
   margin-top: 2px;
 }
@@ -87,7 +87,7 @@
   align-items: center;
   gap: 10px;
   padding: 10px 0;
-  border-bottom: 1px solid #f1f5f9;
+  border-bottom: 1px solid rgba(95, 120, 190, 0.18);
 }
 
 .item:last-child {
@@ -99,19 +99,19 @@
   height: 40px;
   border-radius: 10px;
   object-fit: cover;
-  background: #f1f5f9;
+  background: rgba(16, 25, 52, 0.62);
 }
 
 .iname {
   font-size: 13px;
   font-weight: 800;
-  color: #0f172a;
+  color: #edf3ff;
 }
 
 .iprice {
   font-size: 13px;
   font-weight: 900;
-  color: #0f172a;
+  color: #edf3ff;
   text-align: right;
   white-space: nowrap;
 }
@@ -120,7 +120,7 @@
 .total {
   margin-top: 6px;
   padding-top: 12px;
-  border-top: 1px solid #f1f5f9;
+  border-top: 1px solid rgba(95, 120, 190, 0.18);
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -131,24 +131,24 @@
   align-items: center;
   justify-content: space-between;
   font-size: 13px;
-  color: #334155;
+  color: #d9e4ff;
 }
 
 .total .grand {
   margin-top: 4px;
   padding-top: 10px;
-  border-top: 1px dashed #e2e8f0;
+  border-top: 1px dashed rgba(95, 120, 190, 0.28);
   font-size: 14px;
   font-weight: 900;
-  color: #0f172a;
+  color: #edf3ff;
 }
 
 /* Empty state */
 .empty {
-  color: #64748b;
+  color: #9fb0da;
   font-size: 13px;
   padding: 12px;
-  border: 1px dashed #e2e8f0;
+  border: 1px dashed rgba(95, 120, 190, 0.28);
   border-radius: 14px;
-  background: #f8fafc;
+  background: rgba(16, 25, 52, 0.56);
 }
