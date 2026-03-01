@@ -4,21 +4,25 @@
   max-width: 980px;
   margin: 0 auto;
   padding: 16px;
+  color: #eaf0ff;
 }
 
 .title {
   margin: 0 0 14px;
   font-size: 22px;
   font-weight: 800;
-  color: #0b0f19;
+  color: #edf3ff;
 }
 
 .order-card {
-  background: #f3f4f6;
-  border: 1px solid rgba(0,0,0,0.06);
+  background: linear-gradient(165deg, rgba(24, 31, 62, 0.9), rgba(11, 16, 36, 0.92));
+  border: 1px solid rgba(95, 120, 190, 0.26);
   border-radius: 16px;
   padding: 14px;
   margin-bottom: 12px;
+  box-shadow:
+    0 24px 46px rgba(0, 0, 0, 0.38),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 
 .order-head {
@@ -31,12 +35,12 @@
 .left { min-width: 0; }
 .order-number {
   font-weight: 850;
-  color: #0b0f19;
+  color: #edf3ff;
   letter-spacing: -0.01em;
 }
 .order-meta {
   margin-top: 6px;
-  color: #6b7280;
+  color: #95a8d3;
   font-size: 13px;
   display: flex;
   gap: 8px;
@@ -54,16 +58,24 @@
 
 .order-total {
   font-weight: 850;
-  color: #0b0f19;
+  color: #edf3ff;
 }
 
 .details-btn {
-  border: 1px solid rgba(0,0,0,0.10);
-  background: #fff;
+  border: 1px solid rgba(95, 120, 190, 0.28);
+  background: rgba(16, 25, 52, 0.74);
   border-radius: 12px;
   height: 36px;
   padding: 0 12px;
   cursor: pointer;
+  color: #eaf0ff;
+  transition: background 0.22s ease, border-color 0.22s ease, transform 0.22s ease;
+}
+
+.details-btn:hover {
+  transform: translateY(-1px);
+  background: rgba(20, 33, 66, 0.88);
+  border-color: rgba(124, 182, 255, 0.58);
 }
 
 .badge {
@@ -74,26 +86,26 @@
   border: 1px solid transparent;
 }
 .badge.paid {
-  background: rgba(34, 197, 94, 0.12);
-  color: #166534;
-  border-color: rgba(34, 197, 94, 0.25);
+  background: rgba(34, 197, 94, 0.16);
+  color: #baf7cc;
+  border-color: rgba(34, 197, 94, 0.35);
 }
 .badge.PENDING {
-  background: rgba(59, 130, 246, 0.12);
-  color: #1e3a8a;
-  border-color: rgba(59, 130, 246, 0.25);
+  background: rgba(59, 130, 246, 0.16);
+  color: #c5d8ff;
+  border-color: rgba(59, 130, 246, 0.35);
 }
 .badge.cancelled {
-  background: rgba(239, 68, 68, 0.12);
-  color: #7f1d1d;
-  border-color: rgba(239, 68, 68, 0.25);
+  background: rgba(239, 68, 68, 0.18);
+  color: #ffced8;
+  border-color: rgba(239, 68, 68, 0.35);
 }
 
 /* Details */
 .details {
   margin-top: 12px;
   padding-top: 12px;
-  border-top: 1px solid rgba(0,0,0,0.08);
+  border-top: 1px solid rgba(95, 120, 190, 0.24);
 }
 
 .grid {
@@ -103,15 +115,15 @@
 }
 
 .block {
-  background: #fff;
-  border: 1px solid rgba(0,0,0,0.06);
+  background: linear-gradient(165deg, rgba(16, 22, 46, 0.92), rgba(10, 15, 34, 0.95));
+  border: 1px solid rgba(95, 120, 190, 0.26);
   border-radius: 14px;
   padding: 12px;
 }
 
 .block-title {
   font-weight: 850;
-  color: #0b0f19;
+  color: #edf3ff;
   margin-bottom: 10px;
 }
 
@@ -122,8 +134,8 @@
   font-size: 13px;
   margin: 6px 0;
 }
-.k { color: #6b7280; }
-.v { color: #111827; font-weight: 650; text-align: right; }
+.k { color: #95a8d3; }
+.v { color: #edf3ff; font-weight: 650; text-align: right; }
 
 .items-title { margin-top: 12px; }
 
@@ -139,8 +151,8 @@
   gap: 12px;
   align-items: center;
 
-  background: #fff;
-  border: 1px solid rgba(0,0,0,0.06);
+  background: linear-gradient(165deg, rgba(16, 22, 46, 0.92), rgba(10, 15, 34, 0.95));
+  border: 1px solid rgba(95, 120, 190, 0.26);
   border-radius: 14px;
   padding: 10px;
 }
@@ -150,29 +162,32 @@
   height: 44px;
   object-fit: cover;
   border-radius: 10px;
-  border: 1px solid rgba(0,0,0,0.08);
+  border: 1px solid rgba(95, 120, 190, 0.2);
+  background:
+    radial-gradient(90% 100% at 50% 0%, rgba(60, 144, 255, 0.12), transparent 65%),
+    rgba(10, 16, 36, 0.8);
 }
 
 .item-name {
   font-weight: 800;
-  color: #0b0f19;
+  color: #edf3ff;
 }
 .item-meta {
   margin-top: 4px;
   font-size: 12px;
-  color: #6b7280;
+  color: #95a8d3;
 }
 
 .item-total {
   font-weight: 850;
-  color: #111827;
+  color: #edf3ff;
   white-space: nowrap;
 }
 
 .summary {
   margin-top: 12px;
-  background: #fff;
-  border: 1px solid rgba(0,0,0,0.06);
+  background: linear-gradient(165deg, rgba(16, 22, 46, 0.92), rgba(10, 15, 34, 0.95));
+  border: 1px solid rgba(95, 120, 190, 0.26);
   border-radius: 14px;
   padding: 12px;
 }
@@ -182,12 +197,13 @@
   justify-content: space-between;
   gap: 10px;
   margin: 6px 0;
-  color: #111827;
+  color: #b8c6ea;
   font-size: 13px;
 }
 .sum-row.strong {
   font-weight: 900;
   font-size: 14px;
+  color: #edf3ff;
 }
 
 @media (max-width: 820px) {
