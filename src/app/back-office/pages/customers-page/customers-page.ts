@@ -30,6 +30,6 @@ export class CustomersPage {
   onEdit(c: any) { alert('Edit customer: ' + c.fullName); }
   onCall(c: any) { alert('Call customer: ' + c.fullName); }
   onDelete(c: any) {
-    if (confirm(`Supprimer ${c.fullName} ?`)) this.service.delete(c.id);
+    if (confirm(`Delete ${c.fullName}?`)) this.service.delete(c.id);
   }
 }

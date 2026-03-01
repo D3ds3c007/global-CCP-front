@@ -17,7 +17,7 @@
       (click)="$event.stopPropagation(); edit.emit(product)"
       title="Edit"
     >
-      ✎
+      Edit
     </button>
   </div>
 
@@ -29,7 +29,7 @@
     <div class="name">{{ product.name }}</div>
     <div class="price">
       <ng-container *ngIf="product.price === 0; else money">FREE</ng-container>
-      <ng-template #money>{{ product.price | currency:'EUR' }}</ng-template>
+      <ng-template #money>{{ product.price | currency:'USD' }}</ng-template>
     </div>
   </div>
 

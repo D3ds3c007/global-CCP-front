@@ -1,13 +1,13 @@
 <div class="head">
-  <h3>Dernières commandes</h3>
+  <h3>Latest orders</h3>
 </div>
 
 <table *ngIf="orders.length; else empty">
   <thead>
     <tr>
       <th>ID</th>
-      <th>Client</th>
-      <th>Statut</th>
+      <th>Customer</th>
+      <th>Status</th>
       <th>Date</th>
       <th class="right">Total</th>
     </tr>
@@ -25,11 +25,11 @@
         </span>
       </td>
       <td>{{ o.createdAt | date:'short' }}</td>
-      <td class="right">{{ o.total | currency:'EUR' }}</td>
+      <td class="right">{{ o.total | currency:'USD' }}</td>
     </tr>
   </tbody>
 </table>
 
 <ng-template #empty>
-  <div class="empty">Aucune commande récente.</div>
+  <div class="empty">No recent orders.</div>
 </ng-template>

@@ -36,11 +36,11 @@
         <div class="chart-body">
           <div class="chart-summary" *ngIf="vm.graphState.data as graph">
             <div>
-              <div class="eyebrow">Filtre</div>
+              <div class="eyebrow">Filter</div>
               <div class="summary-value">{{ graph.filter }}</div>
             </div>
             <div>
-              <div class="eyebrow">Periode</div>
+              <div class="eyebrow">Period</div>
               <div class="summary-value">
                 {{ graph.year }}<span *ngIf="graph.month"> / {{ graph.month }}</span>
               </div>
@@ -51,7 +51,7 @@
             </div>
           </div>
 
-          <div *ngIf="vm.graphState.loading" class="muted chart-feedback">Chargement du graphe...</div>
+          <div *ngIf="vm.graphState.loading" class="muted chart-feedback">Loading chart...</div>
           <div *ngIf="vm.graphState.error" class="muted chart-feedback">{{ vm.graphState.error }}</div>
           <app-revenue-chart
             *ngIf="vm.graphState.data as graph"
@@ -60,15 +60,15 @@
         </div>
       </app-dashboard-card>
 
-      <app-dashboard-card class="c5 rank-card" title="Top MAGASIN">
+      <app-dashboard-card class="c5 rank-card" title="Top shops">
         <app-top-products [products]="dashboard.topMagasins"></app-top-products>
       </app-dashboard-card>
 
       <app-mini-tile class="t1" title="Top month">
         <div class="tile-stack">
-          <div class="big">{{ dashboard.topMonth?.month ?? 'Aucun mois' }}</div>
+          <div class="big">{{ dashboard.topMonth?.month ?? 'No month' }}</div>
           <div class="accent">{{ dashboard.topMonth?.year ?? '-' }}</div>
-          <div class="muted">{{ dashboard.topMonth?.ordersCount ?? 0 }} commandes</div>
+          <div class="muted">{{ dashboard.topMonth?.ordersCount ?? 0 }} orders</div>
         </div>
       </app-mini-tile>
 
@@ -79,24 +79,24 @@
         </div>
       </app-mini-tile>
 
-      <app-mini-tile class="t3" title="Shops actifs">
+      <app-mini-tile class="t3" title="Active shops">
         <div class="tile-stack">
           <div class="big">{{ dashboard.activeShops }}</div>
-          <div class="muted">{{ dashboard.totalShops }} shops au total</div>
+          <div class="muted">{{ dashboard.totalShops }} shops total</div>
         </div>
       </app-mini-tile>
 
-      <app-dashboard-card class="q1 stat-card" title="Shops actifs">
+      <app-dashboard-card class="q1 stat-card" title="Active shops">
         <div class="stat-card-body">
           <div class="big">{{ dashboard.activeShops }}</div>
-          <div class="muted">Actifs / {{ dashboard.totalShops }} total</div>
+          <div class="muted">Active / {{ dashboard.totalShops }} total</div>
         </div>
       </app-dashboard-card>
 
-      <app-dashboard-card class="q2 stat-card" title="Shops rejetes">
+      <app-dashboard-card class="q2 stat-card" title="Rejected shops">
         <div class="stat-card-body">
           <div class="big">{{ dashboard.rejectedShops }}</div>
-          <div class="muted">En attente: {{ dashboard.pendingShops }}</div>
+          <div class="muted">Pending: {{ dashboard.pendingShops }}</div>
         </div>
       </app-dashboard-card>
 
@@ -106,7 +106,7 @@
             <div class="shop-rank">{{ shop.shopName.charAt(0) }}</div>
             <div class="shop-meta">
               <div class="shop-name">{{ shop.shopName }}</div>
-              <div class="shop-subtitle">{{ shop.ordersCount }} commandes</div>
+              <div class="shop-subtitle">{{ shop.ordersCount }} orders</div>
             </div>
             <div class="shop-value">{{ shop.valueK }}K</div>
           </div>
@@ -117,7 +117,7 @@
   <ng-template #dashboardStateBlock>
     <div class="grid">
       <app-dashboard-card class="c1" title="Dashboard">
-        <div class="muted" *ngIf="vm.dashboardState.loading">Chargement du dashboard...</div>
+        <div class="muted" *ngIf="vm.dashboardState.loading">Loading dashboard...</div>
         <div class="muted" *ngIf="vm.dashboardState.error as error">{{ error }}</div>
       </app-dashboard-card>
     </div>
@@ -125,5 +125,5 @@
 </section>
 
 <ng-template #emptyTopShops>
-  <div class="muted">Aucune boutique pour le moment.</div>
+  <div class="muted">No shops yet.</div>
 </ng-template>

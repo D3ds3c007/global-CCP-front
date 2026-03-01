@@ -8,6 +8,8 @@ import { Router, RouterModule } from '@angular/router';
 import { CartService, CartItemsState } from '../../services/cart.service';
 import { ProductService } from '../../services/product.service';
 import { environment } from '../../../../environments/environment';
+import { APP_CURRENCY } from '../../../core/constants/app-locale';
+
 type DeliveryOption = { id: string; label: string; fee: number };
 
 type Product = {
@@ -41,16 +43,16 @@ export class CartComponent {
   private productService = inject(ProductService);
   readonly pictureBaseUrl = environment.pictureUrl;
 
-  currencyCode = 'EUR';
+  currencyCode = APP_CURRENCY;
 
   goToCheckout() {
-    this.router.navigate(['/checkout']); // adapte si ton chemin est /storefront/checkout
+    this.router.navigate(['/checkout']);
   }
 
   deliveryOptions: DeliveryOption[] = [
-    { id: 'standard', label: 'Livraison standard (2–4 jours)', fee: 4.99 },
-    { id: 'express', label: 'Livraison express (24–48h)', fee: 9.99 },
-    { id: 'pickup', label: 'Retrait en magasin', fee: 0 },
+    { id: 'standard', label: 'Standard delivery (2-4 days)', fee: 4.99 },
+    { id: 'express', label: 'Express delivery (24-48h)', fee: 9.99 },
+    { id: 'pickup', label: 'Store pickup', fee: 0 },
   ];
   deliveryId = this.deliveryOptions[0].id;
 
@@ -74,7 +76,7 @@ export class CartComponent {
                 quantity,
                 product: {
                   id: productId,
-                  name: 'Produit indisponible',
+                  name: 'Unavailable product',
                   price: 0,
                   imageUrl: '',
                 } as Product,
@@ -89,7 +91,6 @@ export class CartComponent {
 
   trackByProductId = (_: number, line: CartLine) => line.productId;
 
-  // Actions (nécessitent increment/decrement/updateQuantity/removeItem dans CartService)
   increment(productId: string) { this.cartService.increment(productId).subscribe(); }
   decrement(productId: string) { this.cartService.decrement(productId).subscribe(); }
   updateQty(productId: string, q: number) { this.cartService.updateQuantity(productId, q).subscribe(); }
@@ -128,14 +129,14 @@ export class CartComponent {
       ps.getProduct?.(id);
 
     if (!obs) {
-      throw new Error(`ProductService doit exposer getProductById(id) ou getProduct(id).`);
+      throw new Error('ProductService must expose getProductById(id) or getProduct(id).');
     }
 
     return obs.pipe(
       take(1),
       map((p: any) => ({
         id: p.id ?? id,
-        name: p.name ?? p.title ?? 'Produit',
+        name: p.name ?? p.title ?? 'Product',
         price: Number(p.price ?? 0),
         imageUrl: p.imageUrl ?? p.image ?? p.thumbnailUrl ?? '',
         info: p.info ?? p.shortDescription ?? p.brand ?? '',
