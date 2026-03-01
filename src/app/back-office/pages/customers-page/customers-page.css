@@ -1,4 +1,4 @@
-.page { padding: 18px; background: #f5f6fa; min-height: 100vh; }
+.page { padding: 18px; background: transparent; min-height: 100vh; }
 
 .kpis {
   display: grid;
@@ -11,30 +11,36 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  color: #64748b;
+  color: #b8c6ea;
   font-weight: 700;
   font-size: 12px;
+}
 
-  select {
-    border: 1px solid #eef2f7;
-    border-radius: 12px;
-    padding: 6px 10px;
-    background: #fff;
-    outline: none;
-  }
+.sort select {
+  border: 1px solid rgba(95, 120, 190, 0.18);
+  border-radius: 12px;
+  padding: 6px 10px;
+  background: rgba(16, 25, 52, 0.62);
+  color: #edf3ff;
+  outline: none;
 }
 
 .search {
   margin: 6px 0 10px;
+}
 
-  input {
-    width: 100%;
-    border: 1px solid #eef2f7;
-    border-radius: 14px;
-    padding: 10px 12px;
-    background: #fff;
-    outline: none;
-  }
+.search input {
+  width: 100%;
+  border: 1px solid rgba(95, 120, 190, 0.18);
+  border-radius: 14px;
+  padding: 10px 12px;
+  background: rgba(16, 25, 52, 0.62);
+  color: #edf3ff;
+  outline: none;
+}
+
+.search input::placeholder {
+  color: #8da1d1;
 }
 
 @media (max-width: 900px) {

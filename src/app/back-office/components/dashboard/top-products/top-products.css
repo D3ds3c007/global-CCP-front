@@ -4,14 +4,14 @@
   position: relative;
   height: 34px;
   border-radius: 8px;
-  background: #fde7b5;
+	background: linear-gradient(135deg, #8ffb3c 0%, #22e6bf 55%, #00cfdb 100%) !important;
   overflow: hidden;
 }
 
 .fill {
   position: absolute;
   inset: 0 auto 0 0;
-  background: #f8d48b;
+	background: linear-gradient(135deg, #8ffb3c 0%, #22e6bf 55%, #00cfdb 100%) !important;
 }
 
 .label, .val {
