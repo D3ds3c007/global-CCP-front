@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { AdminCustomer } from '../../../services/admin-customers-back';
+import { UserRow } from '../../../services/admin-customers-back';
 
 @Component({
   selector: 'app-admin-customers-list',
@@ -10,14 +10,18 @@ import { AdminCustomer } from '../../../services/admin-customers-back';
   styleUrls: ['./admin-customers-list.css'],
 })
 export class AdminCustomersListComponent {
-  @Input() customers: AdminCustomer[] = [];
+  @Input() customers: UserRow[] = [];
   @Input() selectedId: string | null = null;
 
   @Output() select = new EventEmitter<string>();
-  @Output() toggleStatus = new EventEmitter<string>();
-  @Output() remove = new EventEmitter<string>();
 
   isActiveRow(id: string) {
     return this.selectedId === id;
   }
+
+  trackById(_index: number, customer: UserRow): string {
+    return customer.id;
+  }
 }
+
+export { AdminCustomersListComponent as AdminCustomersList };
