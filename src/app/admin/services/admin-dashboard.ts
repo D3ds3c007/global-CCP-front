@@ -132,18 +132,18 @@ export class AdminDashboardService {
   private readonly apiUrl = environment.apiUrl;
 
   private readonly monthLabels = [
-    'Janvier',
-    'Fevrier',
-    'Mars',
-    'Avril',
-    'Mai',
-    'Juin',
-    'Juillet',
-    'Aout',
-    'Septembre',
-    'Octobre',
-    'Novembre',
-    'Decembre',
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
   ];
 
   loadDashboard(limit = 3): Observable<AdminDashboardVM> {
@@ -168,23 +168,23 @@ export class AdminDashboardService {
           rejectedShops: Number(shopKpis.totalRejectedShops ?? 0),
           bannedShops: Number(shopKpis.totalSuspendedShops ?? 0),
           kpiTotalShops: {
-            title: 'Nombre total boutiques',
+            title: 'Total shops',
             percent: Number(shopKpis.totalShops ?? 0),
             trend: Number(shopKpis.totalActiveShops ?? 0) > 0 ? 'up' : undefined,
-            subtitle: `${Number(shopKpis.totalActiveShops ?? 0)} actifs / ${Number(shopKpis.totalShops ?? 0)} total`,
-            linkText: 'Repartition des shops',
+            subtitle: `${Number(shopKpis.totalActiveShops ?? 0)} active / ${Number(shopKpis.totalShops ?? 0)} total`,
+            linkText: 'Shop distribution',
           },
           kpiPendingShops: {
-            title: 'Boutiques en attente',
+            title: 'Pending shops',
             percent: Number(shopKpis.totalPendingShops ?? 0),
-            subtitle: `${Number(shopKpis.totalRejectedShops ?? 0)} rejetes`,
-            linkText: 'Demandes en attente',
+            subtitle: `${Number(shopKpis.totalRejectedShops ?? 0)} rejected`,
+            linkText: 'Pending requests',
           },
           kpiBannedShops: {
-            title: 'Boutiques bannis',
+            title: 'Banned shops',
             percent: Number(shopKpis.totalSuspendedShops ?? 0),
-            subtitle: `${Number(shopKpis.totalActiveShops ?? 0)} boutiques actives`,
-            linkText: 'Shops suspendus',
+            subtitle: `${Number(shopKpis.totalActiveShops ?? 0)} active shops`,
+            linkText: 'Suspended shops',
           },
           topMagasins: topShops.map<TopItem>((shop) => ({
             name: shop.shopName,
@@ -257,7 +257,7 @@ export class AdminDashboardService {
   }
 
   private mapTopShop(raw: DashboardSummaryResponse['topShops'][number]): TopShopVM {
-    const shopName = (raw.shopName ?? '').trim() || 'Boutique inconnue';
+    const shopName = (raw.shopName ?? '').trim() || 'Unknown shop';
 
     return {
       shopId: String(raw.shopId ?? ''),
@@ -285,7 +285,7 @@ export class AdminDashboardService {
     if (!raw) return null;
 
     const monthNumber = Number(raw.month ?? 0);
-    const fallbackLabel = this.monthLabels[Math.max(monthNumber - 1, 0)] ?? 'Aucun mois';
+    const fallbackLabel = this.monthLabels[Math.max(monthNumber - 1, 0)] ?? 'No month';
     const monthName = (raw.monthName ?? '').trim() || fallbackLabel;
 
     return {

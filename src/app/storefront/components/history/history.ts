@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { OrderFromServer, OrderService } from '../../services/order.service';
+import { APP_CURRENCY } from '../../../core/constants/app-locale';
 
 type OrderStatus = 'PAID' | 'PENDING' | 'CANCELLED';
 type PaymentMethod = 'COD' | 'MOBILE_MONEY';
@@ -9,14 +9,12 @@ type PaymentMethod = 'COD' | 'MOBILE_MONEY';
 type HistoryOrder = {
   id: string;
   orderNumber: string;
-  createdAt: string; // ISO
+  createdAt: string;
   total: number;
   status: OrderStatus;
-
   customerName: string;
   phone: string;
   address: string;
-
   paymentMethod: PaymentMethod;
   note?: string;
 };
@@ -34,14 +32,11 @@ type StatusFilter = 'ALL' | OrderStatus;
   styleUrls: ['./history.css'],
 })
 export class HistoryComponent {
-  currencyCode = 'EUR';
-
-  // UI state
+  currencyCode = APP_CURRENCY;
   expandedId: string | null = null;
   statusFilter: StatusFilter = 'ALL';
   search = '';
 
-  // Mock: historique (tous les statuts)
   orders: HistoryOrder[] = [
     {
       id: '1',
@@ -53,7 +48,7 @@ export class HistoryComponent {
       phone: '06 12 34 56 78',
       address: '12 rue Exemple, Paris',
       paymentMethod: 'COD',
-      note: 'Sonner à l’interphone',
+      note: 'Ring the intercom',
     },
     {
       id: '2',
@@ -61,7 +56,7 @@ export class HistoryComponent {
       createdAt: '2026-02-19T12:10:00.000Z',
       total: 59,
       status: 'PENDING',
-      customerName: 'Awa Traoré',
+      customerName: 'Awa Traore',
       phone: '+225 07 00 00 00',
       address: 'Abidjan, Cocody',
       paymentMethod: 'MOBILE_MONEY',
@@ -106,7 +101,7 @@ export class HistoryComponent {
           o.phone.toLowerCase().includes(q)
         );
       })
-      .sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1)); // plus récent d'abord
+      .sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
   }
 
   clearFilters() {

@@ -2,11 +2,11 @@
   <div class="modal" (click)="$event.stopPropagation()">
     <div class="head">
       <h3>{{ title }}</h3>
-      <button class="x" type="button" (click)="cancel.emit()" [disabled]="submitting">×</button>
+      <button class="x" type="button" (click)="cancel.emit()" [disabled]="submitting">&times;</button>
     </div>
 
     <div class="alert" *ngIf="errorMessage">{{ errorMessage }}</div>
-    <div class="alert info" *ngIf="loading">Chargement...</div>
+    <div class="alert info" *ngIf="loading">Loading...</div>
 
     <ng-container *ngIf="isDetailsMode; else editForm">
       <div class="details" *ngIf="product as p">
@@ -28,23 +28,23 @@
         </div>
 
         <div class="details-grid">
-          <div><span>Nom</span><strong>{{ p.name }}</strong></div>
-          <div><span>Catégorie</span><strong>{{ p.categoryName || p.categoryId }}</strong></div>
+          <div><span>Name</span><strong>{{ p.name }}</strong></div>
+          <div><span>Category</span><strong>{{ p.categoryName || p.categoryId }}</strong></div>
           <div><span>Status</span><strong>{{ p.status }}</strong></div>
-          <div><span>Prix</span><strong>{{ p.price | number:'1.0-2' }}</strong></div>
+          <div><span>Price</span><strong>{{ p.price | number:'1.0-2' }}</strong></div>
           <div><span>Stock</span><strong>{{ p.stock }}</strong></div>
         </div>
 
         <div class="field">
           <span>Description</span>
-          <div class="details-desc">{{ p.description || 'Aucune description' }}</div>
+          <div class="details-desc">{{ p.description || 'No description' }}</div>
         </div>
       </div>
 
       <div class="actions">
-        <button type="button" class="btn ghost" (click)="cancel.emit()">Fermer</button>
+        <button type="button" class="btn ghost" (click)="cancel.emit()">Close</button>
         <button type="button" class="btn primary" (click)="openEditFromDetails()" *ngIf="product">
-          Modifier
+          Edit
         </button>
       </div>
     </ng-container>
@@ -54,7 +54,7 @@
         <div class="img-section">
           <div class="img-toolbar">
             <label class="file-btn" [class.disabled]="submitting">
-              Ajouter images
+              Add images
               <input
                 type="file"
                 accept="image/*"
@@ -69,26 +69,26 @@
           <div class="thumbs-edit" *ngIf="retainedImages.length || newImages.length; else noImages">
             <div class="thumb-card" *ngFor="let img of retainedImages; index as i">
               <img [src]="pictureUrl + img" alt="existing image" />
-              <button type="button" class="remove-thumb" (click)="removeExistingImage(i)" [disabled]="submitting">×</button>
+              <button type="button" class="remove-thumb" (click)="removeExistingImage(i)" [disabled]="submitting">&times;</button>
             </div>
             <div class="thumb-card" *ngFor="let item of newImages; index as i">
               <img [src]=" item.previewUrl" [alt]="item.name" />
-              <button type="button" class="remove-thumb" (click)="removeNewImage(i)" [disabled]="submitting">×</button>
+              <button type="button" class="remove-thumb" (click)="removeNewImage(i)" [disabled]="submitting">&times;</button>
             </div>
           </div>
           <ng-template #noImages>
-            <div class="empty-thumb">Aucune image sélectionnée</div>
+            <div class="empty-thumb">No image selected</div>
           </ng-template>
         </div>
 
         <div class="grid">
           <label class="field">
-            <span>Nom</span>
+            <span>Name</span>
             <input formControlName="name" [disabled]="submitting" />
           </label>
 
           <label class="field">
-            <span>Catégorie</span>
+            <span>Category</span>
             <select formControlName="categoryId" [disabled]="submitting">
               <option *ngFor="let c of categories" [value]="c.id">{{ c.name }}</option>
             </select>
@@ -103,7 +103,7 @@
           </label>
 
           <label class="field">
-            <span>Prix</span>
+            <span>Price</span>
             <input type="number" formControlName="price" [disabled]="submitting" />
           </label>
 
@@ -119,9 +119,9 @@
         </div>
 
         <div class="actions">
-          <button type="button" class="btn ghost" (click)="cancel.emit()" [disabled]="submitting">Annuler</button>
+          <button type="button" class="btn ghost" (click)="cancel.emit()" [disabled]="submitting">Cancel</button>
           <button type="submit" class="btn primary" [disabled]="submitting || loading">
-            {{ submitting ? 'Envoi...' : (mode === 'create' ? 'Créer' : 'Enregistrer') }}
+            {{ submitting ? 'Submitting...' : (mode === 'create' ? 'Create' : 'Save') }}
           </button>
         </div>
       </form>

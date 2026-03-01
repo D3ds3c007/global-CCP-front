@@ -4,7 +4,7 @@
       [(ngModel)]="search"
       (ngModelChange)="onSearch($event)"
       [ngModelOptions]="{ standalone: true }"
-      placeholder="Rechercher..."
+      placeholder="Search..."
     />
   </div>
 
@@ -13,7 +13,7 @@
     (ngModelChange)="onCategory($event)"
     [ngModelOptions]="{ standalone: true }"
   >
-    <option value="all">Toutes les catégories</option>
+    <option value="all">All categories</option>
     <option *ngFor="let c of categories" [value]="c.id">{{ c.name }}</option>
   </select>
 
@@ -22,7 +22,7 @@
     (ngModelChange)="onStatus($event)"
     [ngModelOptions]="{ standalone: true }"
   >
-    <option value="all">Tous les statuts</option>
+    <option value="all">All statuses</option>
     <option value="ACTIVE">ACTIVE</option>
     <option value="INACTIVE">INACTIVE</option>
   </select>

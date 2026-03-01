@@ -324,22 +324,22 @@ export class DashboardService {
 
     return {
       kpiProcessed: {
-        title: 'Commandes traitees',
+        title: 'Processed orders',
         percent: input.processedCount,
         trend: input.processedCount > 0 ? 'up' : undefined,
-        subtitle: 'Statut CONFIRMED',
+        subtitle: 'Status CONFIRMED',
         linkText: '',
       },
       kpiPENDING: {
-        title: 'Commandes en attente',
+        title: 'Pending orders',
         percent: input.pendingCount,
-        subtitle: 'Statut PENDING',
+        subtitle: 'Status PENDING',
         linkText: '',
       },
       kpiDELIVERED: {
-        title: 'Commandes livrees',
+        title: 'Delivered orders',
         percent: input.deliveredCount,
-        subtitle: 'Statut DELIVERED',
+        subtitle: 'Status DELIVERED',
         linkText: '',
       },
       topProducts: input.topProducts,
@@ -351,8 +351,8 @@ export class DashboardService {
       ],
       topBuyer:
         input.topCustomers[0] ?? {
-          name: 'Aucun client',
-          company: 'Aucune commande',
+          name: 'No customer',
+          company: 'No orders',
           avatarUrl: 'https://i.pravatar.cc/80?u=empty-buyer',
         },
       shopStatus,

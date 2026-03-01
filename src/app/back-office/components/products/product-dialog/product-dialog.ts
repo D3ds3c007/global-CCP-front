@@ -17,7 +17,6 @@ import {
   ProductStatus,
   ProductUpsertPayload,
 } from '../../../services/product-back';
-import { env } from 'process';
 import { environment } from '../../../../../environments/environment';
 
 export type ProductDialogMode = 'create' | 'edit' | 'details';
@@ -64,9 +63,9 @@ export class ProductDialogComponent implements OnChanges, OnDestroy {
   }
 
   get title(): string {
-    if (this.mode === 'create') return 'Créer un produit';
-    if (this.mode === 'edit') return 'Modifier le produit';
-    return 'Détails du produit';
+    if (this.mode === 'create') return 'Create product';
+    if (this.mode === 'edit') return 'Edit product';
+    return 'Product details';
   }
 
   get combinedImages(): string[] {
