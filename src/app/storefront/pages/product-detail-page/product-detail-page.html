@@ -3,6 +3,8 @@
     <app-product-details
       *ngIf="product; else notFound"
       [product]="product"
+      [isAdding]="addingProductId() === product.id"
+      [justAdded]="addedProductId() === product.id"
       (addToCart)="onAddToCart($event)"
     ></app-product-details>
   </ng-container>

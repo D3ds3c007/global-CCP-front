@@ -81,8 +81,14 @@
         <strong>{{ total | currency:'EUR' }}</strong>
       </div>
 
-      <button class="cta" type="button" (click)="onAddToCart()" [disabled]="isOutOfStock">
-        Add to cart
+      <button class="cta" type="button" (click)="onAddToCart()" [disabled]="isOutOfStock || isAdding">
+        @if (justAdded) {
+          Added
+        } @else if (isAdding) {
+          Adding...
+        } @else {
+          Add to cart
+        }
       </button>
 
       <div class="note" *ngIf="isOutOfStock">Produit indisponible pour le moment.</div>

@@ -26,6 +26,8 @@ import { environment } from '../../../../environments/environment';
 export class ProductDetailsComponent {
   readonly pictureUrl = environment.pictureUrl;
   @Input({ required: true }) product!: Product;
+  @Input() isAdding = false;
+  @Input() justAdded = false;
 
   @Output() addToCart = new EventEmitter<{ productId: string; quantity: number }>();
 
@@ -70,7 +72,7 @@ export class ProductDetailsComponent {
 
   onAddToCart(): void {
     this.clampQty();
-    if (this.isOutOfStock) return;
+    if (this.isOutOfStock || this.isAdding) return;
 
     this.addToCart.emit({
       productId: this.product.id,
