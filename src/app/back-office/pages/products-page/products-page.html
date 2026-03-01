@@ -1,6 +1,6 @@
 <section class="page" *ngIf="vm$ | async as vm">
   <div class="empty" *ngIf="noShopMessage">{{ noShopMessage }}</div>
-  <div class="empty" *ngIf="loading">Chargement des produits...</div>
+  <div class="empty" *ngIf="loading">Loading products...</div>
   <div class="empty" *ngIf="errorMessage">{{ errorMessage }}</div>
 
   <app-products-filters
@@ -21,7 +21,7 @@
     ></app-product-card>
   </div>
 
-  <h3 class="section-title">Liste (table)</h3>
+  <h3 class="section-title">List (table)</h3>
   <app-products-table
     [products]="vm.products"
     [disabledIds]="busyProductIds"
@@ -31,7 +31,7 @@
     (toggle)="onToggle($event)"
   ></app-products-table>
 
-  <button class="fab" type="button" (click)="openCreate()" title="Ajouter">
+  <button class="fab" type="button" (click)="openCreate()" title="Add">
     +
   </button>
 

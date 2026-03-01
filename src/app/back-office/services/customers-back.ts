@@ -8,7 +8,7 @@ export interface Customer {
   fullName: string;
   company: string;
   avatarUrl: string;
-  createdAt: string; // ISO (pour "Sort by Newest")
+  createdAt: string;
 }
 
 export interface CustomersQuery {
@@ -35,18 +35,18 @@ export class CustomersBackService {
   readonly selectedId$ = this.selectedIdSubject.asObservable();
 
   readonly kpi1: KpiCard = {
-    title: 'Total des commande traitee',
+    title: 'Total processed orders',
     percent: 15,
     trend: 'up',
     subtitle: 'Increase compared to last week',
-    linkText: 'Revenues report →',
+    linkText: 'Revenue report ->',
   };
 
   readonly kpi2: KpiCard = {
-    title: 'Commande en attente',
+    title: 'Pending orders',
     percent: 4,
     subtitle: 'You closed 96 out of 100 deals',
-    linkText: 'All deals →',
+    linkText: 'All deals ->',
   };
 
   readonly customersFiltered$ = combineLatest([this.customers$, this.query$]).pipe(
@@ -101,10 +101,10 @@ export class CustomersBackService {
     const a = (img: number) => `https://i.pravatar.cc/80?img=${img}`;
     const now = Date.now();
     return [
-      { id: 'c1', fullName: 'Chris Friedly',  company: 'Supermarket Villanova', avatarUrl: a(11), createdAt: new Date(now - 1*86400000).toISOString() },
-      { id: 'c2', fullName: 'Maggie Johnson', company: 'Oasis Organic Inc.',     avatarUrl: a(12), createdAt: new Date(now - 2*86400000).toISOString() },
-      { id: 'c3', fullName: 'Gael Harry',     company: 'New York Finest Fruits', avatarUrl: a(13), createdAt: new Date(now - 3*86400000).toISOString() },
-      { id: 'c4', fullName: 'Jenna Sullivan', company: 'Walmart',                avatarUrl: a(14), createdAt: new Date(now - 4*86400000).toISOString() },
+      { id: 'c1', fullName: 'Chris Friedly', company: 'Supermarket Villanova', avatarUrl: a(11), createdAt: new Date(now - 1 * 86400000).toISOString() },
+      { id: 'c2', fullName: 'Maggie Johnson', company: 'Oasis Organic Inc.', avatarUrl: a(12), createdAt: new Date(now - 2 * 86400000).toISOString() },
+      { id: 'c3', fullName: 'Gael Harry', company: 'New York Finest Fruits', avatarUrl: a(13), createdAt: new Date(now - 3 * 86400000).toISOString() },
+      { id: 'c4', fullName: 'Jenna Sullivan', company: 'Walmart', avatarUrl: a(14), createdAt: new Date(now - 4 * 86400000).toISOString() },
     ];
   }
 }

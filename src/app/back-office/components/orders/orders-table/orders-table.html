@@ -19,11 +19,11 @@
       <td>{{ o.buyer.fullName }}</td>
       <td><span class="pill" [class]="o.status">{{ o.status }}</span></td>
       <td>{{ o.createdAt | date:'short' }}</td>
-      <td class="right">{{ o.total | currency:'EUR' }}</td>
+      <td class="right">{{ o.total | currency:'USD' }}</td>
     </tr>
   </tbody>
 </table>
 
 <ng-template #empty>
-  <div class="empty">Aucune commande.</div>
+  <div class="empty">No orders.</div>
 </ng-template>

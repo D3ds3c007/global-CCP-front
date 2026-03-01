@@ -12,7 +12,7 @@ export interface AdminCustomer {
   avatarUrl: string;
   type: CustomerType;
   status: CustomerStatus;
-  createdAt: string; // ISO
+  createdAt: string;
 }
 
 export interface AdminCustomersQuery {
@@ -83,17 +83,17 @@ export class AdminCustomersBackService {
     map(vm => ({
       ...vm,
       kpi1: {
-        title: 'Total des commmande traitee',
+        title: 'Total processed orders',
         percent: 15,
         trend: 'up',
         subtitle: 'Increase compared to last week',
-        linkText: 'Revenues report →',
+        linkText: 'Revenue report ->',
       },
       kpi2: {
-        title: 'Commande en attente',
+        title: 'Pending orders',
         percent: 4,
         subtitle: 'You closed 96 out of 100 deals',
-        linkText: 'All deals →',
+        linkText: 'All deals ->',
       },
     }))
   );
@@ -116,7 +116,6 @@ export class AdminCustomersBackService {
     const next: AdminCustomer[] = this.customersSubject.value.map((c): AdminCustomer => {
       if (c.id !== id) return c;
 
-      // IMPORTANT: on force le type union (pas string)
       const status: CustomerStatus =
         c.status === 'active' ? 'inactive' : 'active';
 
