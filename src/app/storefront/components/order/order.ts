@@ -1,13 +1,14 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { Item, OrderFromServer, OrderService } from '../../services/order.service';
 import { Observable, Subject, takeUntil } from 'rxjs';
 import { environment } from '../../../../environments/environment';
+import { APP_CURRENCY } from '../../../core/constants/app-locale';
 
 type OrderStatus = 'PAID' | 'PENDING' | 'CANCELLED';
 
 export type OrderItem = {
-  id: string;           // id de la ligne (ou productId si tu veux)
+  id: string;
   productId: string;
   name: string;
   imageUrl?: string;
@@ -18,16 +19,14 @@ export type OrderItem = {
 export type Order = {
   id: string;
   orderNumber: string;
-  createdAt: string; // ISO string
+  createdAt: string;
   total: number;
   status: OrderStatus;
-
   customerName: string;
   phone: string;
   address: string;
   paymentMethod: 'COD' | 'MOBILE_MONEY';
-
-  items: OrderItem[];  // <-- AJOUT : les articles de la commande
+  items: OrderItem[];
 };
 
 @Component({
@@ -37,11 +36,10 @@ export type Order = {
   templateUrl: './order.html',
   styleUrls: ['./order.css'],
 })
-
 export class OrderComponent implements OnInit, OnDestroy {
-  currencyCode = 'EUR';
+  currencyCode = APP_CURRENCY;
   expandedId: string | null = null;
-  readonly pictureUrl = environment.pictureUrl; // URL de base pour les images de produits
+  readonly pictureUrl = environment.pictureUrl;
 
   orders: Order[] = [
     {
@@ -78,7 +76,7 @@ export class OrderComponent implements OnInit, OnDestroy {
       orderNumber: 'ORD-20260218-0003',
       createdAt: '2026-02-18T15:10:00.000Z',
       status: 'PAID',
-      customerName: 'Awa Traoré',
+      customerName: 'Awa Traore',
       phone: '+225 07 00 00 00',
       address: 'Abidjan, Cocody',
       paymentMethod: 'MOBILE_MONEY',
@@ -103,9 +101,6 @@ export class OrderComponent implements OnInit, OnDestroy {
       total: 35 + 24,
     },
   ];
-
-  // trackById = (_: number, o: Order) => o.id;
-  // trackByItemId = (_: number, it: OrderItem) => it.id;
 
   trackById = (_: number, o: OrderFromServer) => o._id;
   trackByItemId = (_: number, it: Item) => it._id;

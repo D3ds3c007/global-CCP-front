@@ -8,7 +8,7 @@ import { ShopStatus } from '../../../services/dashboard-service';
   imports: [CommonModule],
   template: `
     <span class="badge" [class.ACTIVE]="status === 'ACTIVE'" [class.PENDING]="status === 'PENDING'">
-      {{ status === 'ACTIVE' ? 'Boutique ACTIVE' : 'Boutique en attente' }}
+      {{ status === 'ACTIVE' ? 'Shop ACTIVE' : 'Shop pending' }}
     </span>
   `,
   styles: [`
