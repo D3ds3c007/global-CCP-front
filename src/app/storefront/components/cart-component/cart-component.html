@@ -10,7 +10,7 @@
         <li class="item" *ngFor="let line of lines; trackBy: trackByProductId">
           <img
             class="thumb"
-            [src]="line.product.imageUrl || 'https://via.placeholder.com/200'"
+            [src]="pictureBaseUrl + (line.product.imageUrl || 'https://via.placeholder.com/200')"
             [alt]="line.product.name"
           />
 
@@ -64,7 +64,7 @@
           <strong>{{ subtotal(lines) | currency: currencyCode:'symbol':'1.2-2' }}</strong>
         </div>
 
-        <label class="delivery">
+        <!-- <label class="delivery">
           <span>Livraison</span>
           <select [(ngModel)]="deliveryId" [ngModelOptions]="{ standalone: true }">
             <option *ngFor="let o of deliveryOptions" [value]="o.id">
@@ -76,7 +76,7 @@
         <div class="sumRow">
           <span>Frais de livraison</span>
           <strong>{{ deliveryFee() | currency: currencyCode:'symbol':'1.2-2' }}</strong>
-        </div>
+        </div> -->
 
         <hr class="divider" />
 

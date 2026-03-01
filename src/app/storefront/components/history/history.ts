@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { OrderFromServer, OrderService } from '../../services/order.service';
 
 type OrderStatus = 'PAID' | 'PENDING' | 'CANCELLED';
 type PaymentMethod = 'COD' | 'MOBILE_MONEY';

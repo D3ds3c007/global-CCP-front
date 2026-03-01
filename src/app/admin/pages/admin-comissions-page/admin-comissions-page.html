@@ -1,0 +1,19 @@
+<section class="page" *ngIf="vm$ | async as vm">
+  <h1 class="title">Commissions</h1>
+
+  <app-dashboard-card title="All commissions">
+    <app-commissions-table
+      [commissions]="vm.commissions"
+      (activate)="activate($event)"
+      (deactivateAll)="deactivateAll()"
+    ></app-commissions-table>
+  </app-dashboard-card>
+
+  <button class="fab" type="button" (click)="openCreate()" title="Create commission">+</button>
+
+  <app-commission-dialog
+    *ngIf="dialogOpen"
+    (cancel)="closeDialog()"
+    (save)="onSave($event)"
+  ></app-commission-dialog>
+</section>

@@ -1,5 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject, Input, OnDestroy, OnInit } from '@angular/core';
+import { Item, OrderFromServer, OrderService } from '../../services/order.service';
+import { Observable, Subject, takeUntil } from 'rxjs';
 
 type OrderStatus = 'PAID' | 'PENDING' | 'CANCELLED';
 
@@ -34,7 +36,8 @@ export type Order = {
   templateUrl: './order.html',
   styleUrls: ['./order.css'],
 })
-export class OrderComponent {
+
+export class OrderComponent implements OnInit, OnDestroy {
   currencyCode = 'EUR';
   expandedId: string | null = null;
 
@@ -99,8 +102,35 @@ export class OrderComponent {
     },
   ];
 
-  trackById = (_: number, o: Order) => o.id;
-  trackByItemId = (_: number, it: OrderItem) => it.id;
+  // trackById = (_: number, o: Order) => o.id;
+  // trackByItemId = (_: number, it: OrderItem) => it.id;
+
+  trackById = (_: number, o: OrderFromServer) => o._id;
+  trackByItemId = (_: number, it: Item) => it._id;
+
+  private readonly orderService = inject(OrderService);
+  readonly orders$: Observable<OrderFromServer[]> = this.orderService.loadOrders();
+  private readonly destroy$ = new Subject<void>();
+
+  orderFromServer: OrderFromServer[] = [];
+
+  ngOnInit(): void {
+    console.log('HistoryPage initialized');
+    this.orders$.pipe(takeUntil(this.destroy$)).subscribe({
+      next: (orders) => {
+        this.orderFromServer = orders;
+        console.log('orderFromServer set to:', this.orderFromServer);
+      },
+      error: (error) => {
+        console.error('Error loading orders:', error);
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 
   toggleDetails(id: string) {
     this.expandedId = this.expandedId === id ? null : id;
@@ -114,11 +144,11 @@ export class OrderComponent {
     }[status];
   }
 
-  itemLineTotal(it: OrderItem): number {
-    return it.unitPrice * it.quantity;
+  itemLineTotal(it: Item): number {
+    return it.priceSnapshot * it.qty;
   }
 
-  orderSubtotal(o: Order): number {
+  orderSubtotal(o: OrderFromServer): number {
     return o.items.reduce((sum, it) => sum + this.itemLineTotal(it), 0);
   }
 }

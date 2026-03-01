@@ -14,4 +14,6 @@ export class OrdersTableComponent {
   @Input() selectedId: string | null = null;
 
   @Output() selectOrder = new EventEmitter<string>();
+
+  trackByOrderId = (_index: number, order: Order): string => order.id;
 }

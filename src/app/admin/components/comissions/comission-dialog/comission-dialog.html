@@ -1,0 +1,46 @@
+<div class="overlay" (click)="onBackdropClick()">
+  <div class="modal" (click)="$event.stopPropagation()">
+    <div class="head">
+      <h3>Create commission</h3>
+      <button class="x" type="button" (click)="cancel.emit()">✕</button>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="grid">
+        <label class="field full">
+          <span>Name</span>
+          <input formControlName="name" placeholder="Ex: Default Commission" />
+        </label>
+
+        <label class="field">
+          <span>Threshold (EUR)</span>
+          <input type="number" formControlName="thresholdEur" />
+        </label>
+
+        <label class="field">
+          <span>Under threshold (USD)</span>
+          <input type="number" formControlName="fixedUnderUsd" />
+        </label>
+
+        <label class="field full">
+          <span>Above threshold (%)</span>
+          <input type="number" formControlName="percentAbove" />
+        </label>
+
+        <label class="check full">
+          <input type="checkbox" formControlName="activateNow" />
+          <span>Activate this commission now (and disable others)</span>
+        </label>
+
+        <div class="hint full">
+          Rule example: if total &lt; threshold → fixed USD, else → percentage of order.
+        </div>
+      </div>
+
+      <div class="actions">
+        <button type="button" class="btn ghost" (click)="cancel.emit()">Cancel</button>
+        <button type="submit" class="btn primary">Create</button>
+      </div>
+    </form>
+  </div>
+</div>

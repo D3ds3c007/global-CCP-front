@@ -7,7 +7,7 @@ import { Router, RouterModule } from '@angular/router';
 
 import { CartService, CartItemsState } from '../../services/cart.service';
 import { ProductService } from '../../services/product.service';
-
+import { environment } from '../../../../environments/environment';
 type DeliveryOption = { id: string; label: string; fee: number };
 
 type Product = {
@@ -39,6 +39,7 @@ export class CartComponent {
   private router = inject(Router);
   private cartService = inject(CartService);
   private productService = inject(ProductService);
+  readonly pictureBaseUrl = environment.pictureUrl;
 
   currencyCode = 'EUR';
 
