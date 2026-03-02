@@ -72,6 +72,31 @@ export class ProductDialogComponent implements OnChanges, OnDestroy {
     return [...this.retainedImages, ...this.newImages.map((i) => i.previewUrl)];
   }
 
+  get primaryPreviewImage(): string {
+    if (this.isDetailsMode) {
+      return this.detailsActiveImage || this.product?.imageUrl || '';
+    }
+
+    return this.combinedImages[0] ?? '';
+  }
+
+  get primaryPreviewSrc(): string {
+    const previewImage = this.primaryPreviewImage;
+    if (!previewImage) return '';
+
+    return previewImage.startsWith('blob:') ? previewImage : this.pictureUrl + previewImage;
+  }
+
+  get selectedImagesLabel(): string {
+    const totalImages = this.retainedImages.length + this.newImages.length;
+    if (!totalImages) return '';
+    if (totalImages === 1) {
+      return this.newImages[0]?.name || '1 image selected';
+    }
+
+    return `${totalImages} images selected`;
+  }
+
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['mode'] || changes['product']) {
       this.syncFromInputs();
