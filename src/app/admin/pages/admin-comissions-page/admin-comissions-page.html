@@ -1,7 +1,62 @@
 <section class="page" *ngIf="vm$ | async as vm">
-  <h1 class="title">Commissions</h1>
+  <div class="hero">
+    <div class="hero-copy">
+      <p class="eyebrow">Revenue rules</p>
+      <h1 class="title">Commission Strategies</h1>
+      <p class="subtitle">
+        Manage active fee logic, compare threshold rules, and switch the storefront billing model from one control surface.
+      </p>
 
-  <app-dashboard-card title="All commissions">
+      <div class="hero-badges">
+        <span class="hero-badge">{{ vm.commissions.length }} total plans</span>
+        <span class="hero-badge">{{ inactiveCount(vm.commissions) }} inactive</span>
+      </div>
+    </div>
+
+    <app-dashboard-card class="hero-panel" title="Active strategy">
+      <ng-container *ngIf="activeCommission(vm.commissions) as active; else noActiveStrategy">
+        <div class="active-plan">
+          <div class="active-plan__top">
+            <span class="plan-state">Live</span>
+            <strong class="plan-name">{{ active.name }}</strong>
+          </div>
+
+          <div class="plan-metrics">
+            <div class="plan-metric">
+              <span>Below threshold</span>
+              <strong>${{ active.rule.fixedUnderUsd }}</strong>
+            </div>
+            <div class="plan-metric">
+              <span>Threshold</span>
+              <strong>{{ active.rule.thresholdEur }} USD</strong>
+            </div>
+            <div class="plan-metric">
+              <span>Above threshold</span>
+              <strong>{{ active.rule.percentAbove }}%</strong>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+      <ng-template #noActiveStrategy>
+        <div class="empty-state">No active commission configured.</div>
+      </ng-template>
+    </app-dashboard-card>
+  </div>
+
+  <app-dashboard-card title="Commission catalog">
+    <div class="card-head">
+      <div>
+        <p class="eyebrow">Catalog</p>
+        <p class="subtitle">
+          Explore all commission plans as cards instead of a plain table. Activate one plan at a time or clear the active state.
+        </p>
+      </div>
+
+      <button class="create-btn" type="button" (click)="openCreate()">
+        Create commission
+      </button>
+    </div>
+
     <app-commissions-table
       [commissions]="vm.commissions"
       (activate)="activate($event)"

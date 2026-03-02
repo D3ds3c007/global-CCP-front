@@ -15,4 +15,8 @@ export class ComissionsTableComponent {
   @Output() deactivateAll = new EventEmitter<void>();
 
   trackByCommissionId = (_: number, c: Commission) => c._id || c.id;
+
+  statusLabel(commission: Commission): string {
+    return commission.active ? 'Active strategy' : 'Inactive strategy';
+  }
 }
