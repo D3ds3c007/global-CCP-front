@@ -5,27 +5,35 @@
   </div>
 
   <div class="search-panel__layout">
-    <section class="search-panel__block search-panel__block--main">
+    <section class="search-panel__block">
+      <p class="search-panel__eyebrow">Keyword</p>
       <app-search-keyword-input
         label="Keyword"
         placeholder="Try wireless charger"
         [value]="draft().keyword"
         (valueChange)="updateKeyword($event)"
       ></app-search-keyword-input>
+    </section>
 
+    <section class="search-panel__block">
+      <p class="search-panel__eyebrow">Sort</p>
       <app-sort-select
         [sort]="draft().sort"
         (sortChange)="updateSort($event)"
       ></app-sort-select>
     </section>
 
-    <section class="search-panel__block search-panel__block--meta">
+    <section class="search-panel__block">
+      <p class="search-panel__eyebrow">Price range</p>
       <app-price-range-filter
         [minPrice]="draft().minPrice"
         [maxPrice]="draft().maxPrice"
         (rangeChange)="updatePriceRange($event)"
       ></app-price-range-filter>
+    </section>
 
+    <section class="search-panel__block">
+      <p class="search-panel__eyebrow">Categories</p>
       <app-category-filter
         [categories]="categories()"
         [selectedIds]="draft().categoryIds"

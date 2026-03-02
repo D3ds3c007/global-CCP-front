@@ -6,12 +6,12 @@
 
 .product-grid__empty {
   padding: 26px;
-  border: 1px dashed rgba(95, 120, 190, 0.4);
-  border-radius: 14px;
+  border: 1px dashed rgba(148, 163, 184, 0.36);
+  border-radius: 18px;
   text-align: center;
-  color: #9eb0da;
+  color: #475569;
   font-size: 14px;
-  background: rgba(13, 18, 38, 0.7);
+  background: rgba(248, 250, 252, 0.94);
 }
 
 @media (max-width: 600px) {
