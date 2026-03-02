@@ -11,12 +11,12 @@
         <input [(ngModel)]="search" placeholder="Search" />
       </div> -->
 
-      <div class="user" *ngIf="!collapsed && (user$ | async) as user">
+      <!-- <div class="user" *ngIf="!collapsed && (user$ | async) as user">
         <div class="meta">
           <div class="name">{{ user.fullName }}</div>
           <div class="badge">{{ user.role }}</div>
         </div>
-      </div>
+      </div> -->
 
       <ng-container *ngIf="hasCustomNav; else ownerSidebar">
         <nav class="nav">
@@ -42,12 +42,14 @@
         <div class="shop-context" *ngIf="!collapsed">
           <div class="shop-context__label">Selected Shop</div>
           <div class="shop-context__name">{{ selectedShop.name }}</div>
+          <hr>
+          <button class="item item-button back-action" type="button" (click)="backToMyShops()">
+            <span class="mi">arrow_back</span>
+            <span class="label" *ngIf="!collapsed">Back to My Shops</span>
+          </button>
         </div>
 
-        <button class="item item-button back-action" type="button" (click)="backToMyShops()">
-          <span class="mi">arrow_back</span>
-          <span class="label" *ngIf="!collapsed">Back to My Shops</span>
-        </button>
+        
 
         <nav class="nav">
           <ng-container *ngIf="shopNav$ | async as shopNav">
