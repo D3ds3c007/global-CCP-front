@@ -1,14 +1,40 @@
-.filters{
-  display:grid;
+.filters {
+  display: grid;
   grid-template-columns: 1fr 220px 180px;
-  gap:12px;
+  gap: 12px;
   margin: 10px 0 14px;
+  padding: 16px;
+  border: 1px solid rgba(95, 120, 190, 0.18);
+  border-radius: 16px;
+  background: rgba(16, 25, 52, 0.56);
 }
-.filters input, .filters select{
-  width:100%;
-  border:1px solid #eef2f7;
-  background:#fff;
-  border-radius:14px;
-  padding:10px 12px;
-  outline:none;
+
+.filters input,
+.filters select {
+  width: 100%;
+  border: 1px solid rgba(95, 120, 190, 0.18);
+  background: rgba(16, 25, 52, 0.62);
+  border-radius: 14px;
+  padding: 10px 12px;
+  outline: none;
+  color: #edf3ff;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.filters input::placeholder {
+  color: #8da1d1;
+}
+
+.filters input:focus,
+.filters select:focus {
+  border-color: rgba(56, 189, 248, 0.34);
+  box-shadow:
+    0 0 0 3px rgba(59, 130, 246, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+@media (max-width: 900px) {
+  .filters {
+    grid-template-columns: 1fr;
+  }
 }

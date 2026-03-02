@@ -1,4 +1,34 @@
-.admin-shell{min-height:100vh;background:#f5f6fa}
-.admin-content{padding:18px}
-.bo-layout{display:flex;min-height:100vh;background:#f5f6fa}
-.bo-content{flex:1;padding:18px}
+.admin-shell {
+  min-height: 100vh;
+}
+
+.admin-content {
+  padding: 18px;
+}
+
+.bo-layout {
+  display: flex;
+  min-height: 100vh;
+  background:
+    radial-gradient(1400px 560px at 4% -12%, rgba(0, 191, 255, 0.18), transparent 62%),
+    radial-gradient(1100px 460px at 98% -8%, rgba(194, 48, 255, 0.14), transparent 58%),
+    linear-gradient(180deg, #050816 0%, #070b1a 55%, #0b1024 100%);
+}
+
+.bo-content {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 24px 24px 32px 0;
+}
+
+@media (max-width: 960px) {
+  .bo-content {
+    padding: 20px 20px 28px 0;
+  }
+}
+
+@media (max-width: 600px) {
+  .bo-content {
+    padding: 16px 14px 24px 0;
+  }
+}
