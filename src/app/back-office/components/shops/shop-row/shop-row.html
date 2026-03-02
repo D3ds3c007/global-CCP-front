@@ -1,5 +1,5 @@
 <a class="row" [attr.href]="isActive ? '/shop/' + shop._id + '/dashboard' : null" (click)="onRowClick($event)">
-  <div class="left">
+  <div class="media">
     <ng-container *ngIf="logoSrc as src; else avatarFallback">
       <picture>
         <img [src]="src" alt="Shop avatar" class="avatar avatar-img" (error)="onLogoError()">
@@ -9,21 +9,63 @@
       <div class="avatar" aria-hidden="true">{{ initials }}</div>
     </ng-template>
 
-    <div class="info">
-      <div class="name">{{ shopName }}</div>
-      <div class="meta">
-        <span class="dot">.</span>
-        <span>Category : {{ categoryName }}</span>
+  </div>
+
+  <div class="content">
+    <div class="content-main">
+      <div class="topline">
+        <div class="title-wrap">
+          <div class="name">{{ shopName }}</div>
+          <div class="category-pill">{{ categoryName }}</div>
+        </div>
+
+        <span
+          class="badge"
+          [class.active]="shop.status==='ACTIVE'"
+          [class.pending]="shop.status==='PENDING'"
+          [class.suspended]="shop.status==='SUSPENDED'"
+        >
+          {{ shop.status | uppercase }}
+        </span>
+      </div>
+
+      <p class="description">
+        {{ shop.description || 'No description provided yet. Open this shop to continue its setup and storefront identity.' }}
+      </p>
+    </div>
+
+    <div class="details">
+      <div class="detail-card">
+        <span class="detail-label">Contact</span>
+        <strong>{{ shop.contact?.phone || shop.contact?.email || 'Not provided' }}</strong>
+      </div>
+
+      <div class="detail-card">
+        <span class="detail-label">Hours</span>
+        <strong>{{ shop.openingHours || 'Schedule not set' }}</strong>
+      </div>
+
+      <div class="detail-card">
+        <span class="detail-label">Address</span>
+        <strong>{{ shop.contact?.address || 'Address not added' }}</strong>
+      </div>
+
+      <div class="detail-card">
+        <span class="detail-label">Online</span>
+        <strong>{{ shop.socials?.website || shop.socials?.instagram || shop.socials?.facebook || 'No link yet' }}</strong>
       </div>
     </div>
   </div>
 
-  <span
-    class="badge"
-    [class.active]="shop.status==='ACTIVE'"
-    [class.pending]="shop.status==='PENDING'"
-    [class.suspended]="shop.status==='SUSPENDED'"
-  >
-    {{ shop.status | uppercase }}
-  </span>
+  <div class="aside">
+    <div class="aside-copy">
+      <span class="aside-label">Shop ID</span>
+      <strong>{{ shop._id }}</strong>
+    </div>
+
+    <div class="aside-action" aria-hidden="true">
+      <span class="aside-action__hint">{{ isActive ? 'Open dashboard' : 'Pending activation' }}</span>
+      <span class="aside-action__arrow">&rarr;</span>
+    </div>
+  </div>
 </a>

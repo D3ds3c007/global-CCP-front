@@ -1,27 +1,36 @@
-<div class="list" *ngIf="customers.length; else empty">
-  <div
-    class="row"
-    *ngFor="let c of customers; trackBy: trackById"
-    [class.ACTIVE]="c.id === selectedId"
-    (click)="select.emit(c.id)"
-  >
-    <div class="content">
-      <div class="meta">
-        <div class="name">{{ c.fullName }}</div>
-        <div class="contact">{{ c.email || 'No email provided' }}</div>
-        <div class="contact" *ngIf="c.phone">{{ c.phone }}</div>
-        <div class="contact" *ngIf="c.address">{{ c.address }}</div>
+<div class="table-wrap">
+  <div class="table-head" *ngIf="customers.length">
+    <span>Customer</span>
+    <span>Contact</span>
+    <span class="right">Orders</span>
+    <span>Last order</span>
+  </div>
+
+  <div class="list" *ngIf="customers.length; else empty">
+    <div
+      class="row"
+      *ngFor="let c of customers; trackBy: trackById"
+      [class.ACTIVE]="c.id === selectedId"
+      (click)="select.emit(c.id)"
+    >
+      <div class="cell cell--customer">
+        <div class="meta">
+          <div class="name">{{ c.fullName }}</div>
+          <div class="subline">{{ c.address || 'No address provided' }}</div>
+        </div>
       </div>
 
-      <div class="stats">
-        <div class="stat">
-          <span class="label">Orders</span>
-          <span class="value">{{ c.totalOrders }}</span>
-        </div>
-        <div class="stat" *ngIf="c.lastOrderDate">
-          <span class="label">Last order</span>
-          <span class="value">{{ c.lastOrderDate | date: 'mediumDate' }}</span>
-        </div>
+      <div class="cell cell--contact">
+        <div class="contact">{{ c.email || 'No email provided' }}</div>
+        <div class="contact" *ngIf="c.phone">{{ c.phone }}</div>
+      </div>
+
+      <div class="cell cell--orders right">
+        <span class="pill">{{ c.totalOrders }}</span>
+      </div>
+
+      <div class="cell cell--date">
+        <span class="date-value">{{ c.lastOrderDate ? (c.lastOrderDate | date: 'mediumDate') : 'No orders yet' }}</span>
       </div>
     </div>
   </div>

@@ -1,8 +1,8 @@
 <div class="overlay" (click)="onBackdropClick()">
   <div class="modal" (click)="$event.stopPropagation()">
     <div class="head">
-      <h3>{{ title }}</h3>
-      <button class="x" type="button" (click)="cancel.emit()" [disabled]="submitting">&times;</button>
+      <h3 class="title">{{ title }}</h3>
+      <button class="x" type="button" (click)="cancel.emit()" [disabled]="submitting" aria-label="Close dialog">&times;</button>
     </div>
 
     <div class="alert" *ngIf="errorMessage">{{ errorMessage }}</div>
@@ -12,7 +12,7 @@
       <div class="details" *ngIf="product as p">
         <div class="details-gallery">
           <div class="details-main">
-            <img [src]="pictureUrl + (detailsActiveImage || p.imageUrl)" [alt]="p.name" />
+            <img [src]="pictureUrl + primaryPreviewImage" [alt]="p.name" />
           </div>
           <div class="thumbs" *ngIf="(p.images.length || 0) > 1">
             <button
@@ -50,36 +50,52 @@
     </ng-container>
 
     <ng-template #editForm>
-      <form [formGroup]="form" (ngSubmit)="onSubmit()">
-        <div class="img-section">
-          <div class="img-toolbar">
-            <label class="file-btn" [class.disabled]="submitting">
-              Add images
-              <input
-                type="file"
-                accept="image/*"
-                multiple
-                [disabled]="submitting"
-                (change)="onPickFiles($event)"
-                hidden
-              />
-            </label>
+      <form class="dialog-form" [formGroup]="form" (ngSubmit)="onSubmit()">
+        <div class="img-block">
+          <div class="preview preview--product" [class.preview--empty]="!primaryPreviewImage">
+            <img *ngIf="primaryPreviewImage; else emptyPreview" [src]="primaryPreviewSrc" alt="Product image preview" />
           </div>
 
-          <div class="thumbs-edit" *ngIf="retainedImages.length || newImages.length; else noImages">
-            <div class="thumb-card" *ngFor="let img of retainedImages; index as i">
-              <img [src]="pictureUrl + img" alt="existing image" />
-              <button type="button" class="remove-thumb" (click)="removeExistingImage(i)" [disabled]="submitting">&times;</button>
-            </div>
-            <div class="thumb-card" *ngFor="let item of newImages; index as i">
-              <img [src]=" item.previewUrl" [alt]="item.name" />
-              <button type="button" class="remove-thumb" (click)="removeNewImage(i)" [disabled]="submitting">&times;</button>
+          <div class="img-actions">
+            <div class="dropzone">
+              <p class="dropzone-title">Add product images</p>
+              <p class="dropzone-hint">PNG, JPG, WEBP | Multiple files supported</p>
+
+              <div class="dropzone-actions">
+                <label class="file-btn" [class.is-disabled]="submitting">
+                  {{ combinedImages.length ? 'Replace or add images' : 'Upload images' }}
+                  <input
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    [disabled]="submitting"
+                    (change)="onPickFiles($event)"
+                    hidden
+                  />
+                </label>
+              </div>
+
+              <p class="file-meta" *ngIf="selectedImagesLabel">{{ selectedImagesLabel }}</p>
+
+              <div class="thumbs-edit" *ngIf="retainedImages.length || newImages.length; else noImages">
+                <div class="thumb-card" *ngFor="let img of retainedImages; index as i">
+                  <img [src]="pictureUrl + img" alt="existing image" />
+                  <button type="button" class="remove-thumb" (click)="removeExistingImage(i)" [disabled]="submitting" aria-label="Remove image">&times;</button>
+                </div>
+                <div class="thumb-card" *ngFor="let item of newImages; index as i">
+                  <img [src]="item.previewUrl" [alt]="item.name" />
+                  <button type="button" class="remove-thumb" (click)="removeNewImage(i)" [disabled]="submitting" aria-label="Remove image">&times;</button>
+                </div>
+              </div>
             </div>
           </div>
-          <ng-template #noImages>
-            <div class="empty-thumb">No image selected</div>
-          </ng-template>
         </div>
+        <ng-template #emptyPreview>
+          <div class="preview-placeholder">No image selected</div>
+        </ng-template>
+        <ng-template #noImages>
+          <div class="empty-thumb">No image selected</div>
+        </ng-template>
 
         <div class="grid">
           <label class="field">
