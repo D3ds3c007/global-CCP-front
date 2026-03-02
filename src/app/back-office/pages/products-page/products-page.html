@@ -4,6 +4,14 @@
       <h1>Products</h1>
       <p>Create, review and manage your catalog with the same Back Office dashboard look.</p>
     </div>
+
+    <button class="create-product-panel" type="button" (click)="openCreate()" title="Add">
+      <span class="create-product-panel__spark">+</span>
+      <span class="create-product-panel__body">
+        <span class="create-product-panel__title">Add product</span>
+        <span class="create-product-panel__text">Open the creation dialog.</span>
+      </span>
+    </button>
   </div>
 
   <div class="empty" *ngIf="noShopMessage">{{ noShopMessage }}</div>
@@ -30,7 +38,7 @@
     </div> -->
   </div>
 
-  <h3 class="section-title">List (table)</h3>
+  <h3 class="section-title"></h3>
   <div class="surface surface--table">
     <app-products-table
       [products]="vm.products"
@@ -41,10 +49,6 @@
       (toggle)="onToggle($event)"
     ></app-products-table>
   </div>
-
-  <button class="fab" type="button" (click)="openCreate()" title="Add">
-    +
-  </button>
 
   <app-product-dialog
     *ngIf="dialogOpen"

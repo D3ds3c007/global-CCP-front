@@ -7,10 +7,16 @@
 
 .page-head {
   display: flex;
-  align-items: flex-start;
+  align-items: flex-end;
   justify-content: space-between;
-  gap: 16px;
+  gap: 20px;
   margin-bottom: 22px;
+}
+
+.page-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .title {
@@ -20,6 +26,13 @@
   line-height: 0.96;
   letter-spacing: -0.03em;
   font-weight: 700;
+}
+
+.subtitle {
+  margin: 0;
+  color: #9fb0da;
+  font-size: 14px;
+  line-height: 1.45;
 }
 
 .list {
@@ -40,26 +53,25 @@
   color: #b8c6ea;
 }
 
-.fab {
-  position: fixed;
-  right: 30px;
-  bottom: 30px;
-  width: 64px;
-  height: 64px;
-  border-radius: 999px;
-  border: 1px solid #43d95f;
+.create-shop-cta {
+  min-width: 220px;
+  padding: 14px 16px;
+  border-radius: 18px;
+  border: 1px solid rgba(67, 217, 95, 0.44);
   background: linear-gradient(135deg, #8ffb3c 0%, #22e6bf 55%, #00cfdb 100%);
   color: #05221a;
-  font-size: 34px;
-  line-height: 0;
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  text-align: left;
   box-shadow:
     0 18px 28px rgba(0, 0, 0, 0.35),
     0 10px 22px rgba(20, 219, 150, 0.32);
   transition: transform 0.24s ease, box-shadow 0.24s ease, border-color 0.24s ease, background 0.24s ease;
 }
 
-.fab:hover {
+.create-shop-cta:hover {
   transform: translateY(-2px);
   border-color: #74f583;
   background: linear-gradient(135deg, #a2ff56 0%, #35edc7 55%, #16d8e5 100%);
@@ -68,14 +80,52 @@
     0 14px 28px rgba(20, 219, 150, 0.28);
 }
 
-.fab:focus-visible {
+.create-shop-cta:focus-visible {
   outline: 2px solid rgba(255, 255, 255, 0.9);
   outline-offset: 4px;
+}
+
+.create-shop-cta__icon {
+  width: 46px;
+  height: 46px;
+  flex: 0 0 auto;
+  display: inline-grid;
+  place-items: center;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.28);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.42);
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.create-shop-cta__copy {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.create-shop-cta__label {
+  font-size: 15px;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.create-shop-cta__meta {
+  margin-top: 4px;
+  font-size: 12px;
+  line-height: 1.35;
+  color: rgba(5, 34, 26, 0.78);
 }
 
 @media (max-width: 960px) {
   .page {
     padding-top: 8px;
+  }
+
+  .page-head {
+    align-items: stretch;
+    flex-direction: column;
   }
 
   .list {
@@ -97,17 +147,18 @@
     font-size: clamp(24px, 8vw, 32px);
   }
 
+  .subtitle {
+    font-size: 13px;
+  }
+
   .list {
     padding: 14px;
     gap: 12px;
     border-radius: 16px;
   }
 
-  .fab {
-    right: 16px;
-    bottom: 16px;
-    width: 58px;
-    height: 58px;
-    font-size: 30px;
+  .create-shop-cta {
+    width: 100%;
+    min-width: 0;
   }
 }

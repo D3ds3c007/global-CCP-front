@@ -1,13 +1,22 @@
 <section class="page" *ngIf="vm$ | async as vm">
   <div class="page-head">
-    <h1 class="title">My Shops</h1>
+    <div class="page-copy">
+      <h1 class="title">My Shops</h1>
+      <p class="subtitle">Open an existing shop or create a new workspace for your team.</p>
+    </div>
+
+    <button class="create-shop-cta" type="button" (click)="openCreate()">
+      <span class="create-shop-cta__icon">+</span>
+      <span class="create-shop-cta__copy">
+        <span class="create-shop-cta__label">Create shop</span>
+        <span class="create-shop-cta__meta">Launch setup dialog</span>
+      </span>
+    </button>
   </div>
 
   <div class="list">
     <app-shop-row *ngFor="let s of vm.shops" [shop]="$any(s)"></app-shop-row>
   </div>
-
-  <button class="fab" type="button" (click)="openCreate()">+</button>
 
   <app-shop-dialog
     *ngIf="dialogOpen"
