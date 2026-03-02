@@ -1,71 +1,104 @@
 <section class="orders">
   <h2 class="title">My Orders</h2>
 
-  <article class="order-card" *ngFor="let o of (orders$ | async) ?? []; trackBy: trackById">
-    <div class="order-head">
-      <div class="left">
-        <div class="order-number">{{ o.orderId }}</div>
-        <div class="order-meta">
-          <span>{{ o.createdAt | date:'medium' }}</span>
-          <span class="dot">&bull;</span>
-          <span>{{ o.items.length }} item(s)</span>
-        </div>
-      </div>
-
-      <div class="right">
-        <span [class]="badgeClass(o.status)">{{ o.status }}</span>
-        <div class="order-total">{{ o.total | currency:currencyCode }}</div>
-
-        <button class="details-btn" type="button" (click)="toggleDetails(o._id)">
-          {{ expandedId === o._id ? 'Hide details' : 'View details' }}
-        </button>
-      </div>
-    </div>
-
-    <div class="details" *ngIf="expandedId === o._id">
-      <div class="grid">
-        <div class="block">
-          <div class="block-title">Customer</div>
-          <div class="kv"><span class="k">Phone</span><span class="v">{{ o.phone }}</span></div>
-          <div class="kv"><span class="k">Address</span><span class="v">{{ o.address }}</span></div>
+  <div class="orders-list">
+    <article class="order-card" *ngFor="let o of (orders$ | async) ?? []; trackBy: trackById">
+      <div class="order-head">
+        <div class="left">
+          <div class="order-number">{{ o.orderId }}</div>
+          <div class="order-meta">
+            <span>{{ o.createdAt | date:'medium' }}</span>
+            <span class="dot">&bull;</span>
+            <span>{{ o.items.length }} item(s)</span>
+          </div>
         </div>
 
-        <div class="block">
-          <div class="block-title">Payment</div>
-          <div class="kv"><span class="k">Method</span><span class="v">{{ o.paymentMethod }}</span></div>
-          <div class="kv"><span class="k">Status</span><span class="v">{{ o.status }}</span></div>
+        <div class="right">
+          <span [class]="badgeClass(o.status)">{{ o.status }}</span>
+          <div class="order-total">{{ o.total | currency:currencyCode }}</div>
+
+          <button class="details-btn" type="button" (click)="toggleDetails(o._id)">
+            {{ expandedId === o._id ? 'Hide details' : 'View details' }}
+          </button>
         </div>
       </div>
+    </article>
+  </div>
 
-      <div class="block-title items-title">Items</div>
+  <ng-container *ngFor="let o of (orders$ | async) ?? []; trackBy: trackById">
+    <div class="dialog-overlay" *ngIf="expandedId === o._id" (click)="toggleDetails(o._id)">
+      <div class="dialog-shell" (click)="$event.stopPropagation()">
+        <div class="dialog-card">
+          <div class="dialog-hero">
+            <div class="hero-main">
+              <div class="hero-top">
+                <div class="hero-meta">
+                  <div class="order-number">{{ o.orderId }}</div>
+                  <div class="order-meta">
+                    <span>{{ o.createdAt | date:'medium' }}</span>
+                    <span class="dot">&bull;</span>
+                    <span>{{ o.items.length }} item(s)</span>
+                  </div>
+                </div>
 
-      <div class="items">
-        <div class="item" *ngFor="let it of o.items; trackBy: trackByItemId">
-          <img *ngIf="it.path" class="thumb" [src]="pictureUrl + it.path" [alt]="it.name" />
+                <div class="hero-actions">
+                  <span [class]="badgeClass(o.status)">{{ o.status }}</span>
+                  <div class="order-total">{{ o.total | currency:currencyCode }}</div>
+                  <button class="details-btn close-btn" type="button" (click)="toggleDetails(o._id)">
+                    Hide details
+                  </button>
+                </div>
+              </div>
 
-          <div class="item-info">
-            <div class="item-name">{{ it.name }}</div>
-            <div class="item-meta">
-              Qty {{ it.qty }} x {{ it.priceSnapshot | currency:currencyCode }}
+              <div class="surface customer-card">
+                <div class="block-title">Customer</div>
+                <div class="kv"><span class="k">Phone</span><span class="v">{{ o.phone }}</span></div>
+                <div class="kv"><span class="k">Address</span><span class="v">{{ o.address }}</span></div>
+              </div>
+            </div>
+
+            <div class="surface payment-card">
+              <div class="block-title">Payment</div>
+              <div class="kv"><span class="k">Method</span><span class="v">{{ o.paymentMethod }}</span></div>
+              <div class="kv"><span class="k">Status</span><span class="v">{{ o.status }}</span></div>
             </div>
           </div>
 
-          <div class="item-total">
-            {{ itemLineTotal(it) | currency:currencyCode }}
+          <div class="dialog-body">
+            <div class="summary surface">
+              <div class="sum-row">
+                <span>Subtotal</span>
+                <span>{{ orderSubtotal(o) | currency:currencyCode }}</span>
+              </div>
+              <div class="sum-row strong">
+                <span>Total</span>
+                <span>{{ o.total | currency:currencyCode }}</span>
+              </div>
+            </div>
+
+            <div class="surface items-panel">
+              <div class="block-title items-title">Items</div>
+
+              <div class="items">
+                <div class="item" *ngFor="let it of o.items; trackBy: trackByItemId">
+                  <img *ngIf="it.path" class="thumb" [src]="pictureUrl + it.path" [alt]="it.name" />
+
+                  <div class="item-info">
+                    <div class="item-name">{{ it.name }}</div>
+                    <div class="item-meta">
+                      Qty {{ it.qty }} x {{ it.priceSnapshot | currency:currencyCode }}
+                    </div>
+                  </div>
+
+                  <div class="item-total">
+                    {{ itemLineTotal(it) | currency:currencyCode }}
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-
-      <div class="summary">
-        <div class="sum-row">
-          <span>Subtotal</span>
-          <span>{{ orderSubtotal(o) | currency:currencyCode }}</span>
-        </div>
-        <div class="sum-row strong">
-          <span>Total</span>
-          <span>{{ o.total | currency:currencyCode }}</span>
-        </div>
-      </div>
     </div>
-  </article>
+  </ng-container>
 </section>

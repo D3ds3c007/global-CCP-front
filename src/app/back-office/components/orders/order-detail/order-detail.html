@@ -1,47 +1,63 @@
 <div *ngIf="order; else empty" class="detail">
-  <div class="top">
-    <div>
-      <div class="id">{{ order.id }}</div>
-      <div class="meta">{{ order.createdAt }}</div>
+  <div class="dialog-hero">
+    <div class="hero-main">
+      <div class="topline">
+        <div class="meta">{{ order.createdAt }}</div>
+        <div class="actions">
+          <button class="btn" type="button" [disabled]="!nextStatus" (click)="advance.emit(order.id)">
+            Next status
+          </button>
+          <button class="btn danger" type="button" [disabled]="!canCancel" (click)="cancel.emit(order.id)">
+            Cancel
+          </button>
+        </div>
+      </div>
+
+      <div class="headline">
+        <div class="id">{{ order.id }}</div>
+      </div>
+
+      <div class="surface info-card buyer-card">
+        <h4>Buyer contact</h4>
+        <div>{{ order.buyer.fullName }}</div>
+        <div class="muted">{{ order.buyer.email }} &bull; {{ order.buyer.phone }}</div>
+      </div>
     </div>
 
-    <div class="actions">
-      <button class="btn" type="button" [disabled]="!nextStatus" (click)="advance.emit(order.id)">
-        Next status
-      </button>
-      <button class="btn danger" type="button" [disabled]="!canCancel" (click)="cancel.emit(order.id)">
-        Cancel
-      </button>
-    </div>
-  </div>
-
-  <app-order-timeline [status]="order.status" [history]="order.history"></app-order-timeline>
-
-  <div class="block">
-    <h4>Buyer contact</h4>
-    <div>{{ order.buyer.fullName }}</div>
-    <div class="muted">{{ order.buyer.email }} &bull; {{ order.buyer.phone }}</div>
-  </div>
-
-  <div class="block">
-    <h4>Address</h4>
-    <div>{{ order.address.line1 }}</div>
-    <div class="muted">{{ order.address.city }} {{ order.address.zip }} &bull; {{ order.address.country }}</div>
-  </div>
-
-  <div class="block">
-    <h4>Items</h4>
-    <div class="item" *ngFor="let it of order.items">
-      <img *ngIf="it.imageUrl" class="thumb" [src]="pictureBaseUrl + it.imageUrl" />
-      <div class="iname">{{ it.name }} <span class="muted">x{{ it.qty }}</span></div>
-      <div class="iprice">{{ (it.unitPrice * it.qty) | currency:'USD' }}</div>
+    <div class="hero-side">
+      <div class="surface info-card address-card">
+        <h4>Address</h4>
+        <div>{{ order.address.line1 }}</div>
+        <div class="muted">{{ order.address.city }} {{ order.address.zip }} &bull; {{ order.address.country }}</div>
+      </div>
     </div>
   </div>
 
-  <div class="total">
-    <div><span>Subtotal</span><span>{{ order.subtotal | currency:'USD' }}</span></div>
-    <div><span>Shipping</span><span>{{ order.shipping | currency:'USD' }}</span></div>
-    <div class="grand"><span>Total</span><span>{{ order.total | currency:'USD' }}</span></div>
+  <div class="surface timeline-card">
+    <app-order-timeline [status]="order.status" [history]="order.history"></app-order-timeline>
+  </div>
+
+  <div class="body-grid">
+    <div class="surface summary-card">
+      <div class="total">
+        <div><span>Subtotal</span><span>{{ order.subtotal | currency:'USD' }}</span></div>
+        <div><span>Shipping</span><span>{{ order.shipping | currency:'USD' }}</span></div>
+        <div class="grand"><span>Total</span><span>{{ order.total | currency:'USD' }}</span></div>
+      </div>
+    </div>
+
+    <div class="surface items-card">
+      <h4>Items</h4>
+      <div class="items-list">
+        <div class="item" *ngFor="let it of order.items">
+          <img *ngIf="it.imageUrl" class="thumb" [src]="pictureBaseUrl + it.imageUrl" />
+          <div class="iname">
+            {{ it.name }} <span class="muted">x{{ it.qty }}</span>
+          </div>
+          <div class="iprice">{{ (it.unitPrice * it.qty) | currency:'USD' }}</div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
