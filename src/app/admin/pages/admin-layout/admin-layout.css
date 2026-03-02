@@ -15,6 +15,12 @@
     linear-gradient(180deg, #050816 0%, #070b1a 55%, #0b1024 100%);
 }
 
+.bo-sidebar {
+  flex: 0 0 auto;
+  position: relative;
+  z-index: 2;
+}
+
 .bo-content {
   flex: 1 1 auto;
   min-width: 0;

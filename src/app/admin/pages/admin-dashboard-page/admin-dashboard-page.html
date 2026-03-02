@@ -1,4 +1,11 @@
 <section class="page" *ngIf="pageVm$ | async as vm">
+  <div class="page-head">
+    <div>
+      <h1 class="page-title">Dashboard</h1>
+      <p class="page-subtitle">Admin overview</p>
+    </div>
+  </div>
+
   <div class="grid" *ngIf="vm.dashboardState.data as dashboard; else dashboardStateBlock">
       <app-dashboard-card class="c1 metric-card" [title]="dashboard.kpiTotalShops.title">
         <app-kpi-card [data]="dashboard.kpiTotalShops"></app-kpi-card>
