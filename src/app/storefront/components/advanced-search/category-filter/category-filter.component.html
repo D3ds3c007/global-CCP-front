@@ -5,8 +5,11 @@
     class="field__select"
     nzMode="multiple"
     nzPlaceHolder="Select categories"
-    [nzOptions]="options()"
     [ngModel]="selectedIds()"
     (ngModelChange)="onSelectionChange($event)"
-  ></nz-select>
+  >
+    @for (category of categories(); track category.id) {
+      <nz-option [nzLabel]="category.name" [nzValue]="category.id"></nz-option>
+    }
+  </nz-select>
 </div>
