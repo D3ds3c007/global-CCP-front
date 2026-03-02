@@ -25,6 +25,12 @@
   flex: 1 1 auto;
   min-width: 0;
   padding: 24px 24px 32px 0;
+  display: flex;
+  justify-content: center;
+}
+
+.bo-content__frame {
+  width: min(100%, 1240px);
 }
 
 @media (max-width: 960px) {
@@ -36,5 +42,9 @@
 @media (max-width: 600px) {
   .bo-content {
     padding: 16px 14px 24px 0;
+  }
+
+  .bo-content__frame {
+    width: 100%;
   }
 }
