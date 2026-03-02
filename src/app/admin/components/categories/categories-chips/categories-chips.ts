@@ -13,7 +13,19 @@ export class CategoriesChipsComponent {
   @Input() categories: Category[] = [];
 
   @Output() edit = new EventEmitter<Category>();
-  @Output() toggle = new EventEmitter<string>(); // id
+  @Output() toggle = new EventEmitter<string>();
 
   trackByCategory = (_index: number, category: Category) => category._id ?? category.id;
+
+  statusLabel(category: Category): string {
+    return category.status === 'active' ? 'Live' : 'Paused';
+  }
+
+  toggleLabel(category: Category): string {
+    return category.status === 'active' ? 'Disable' : 'Enable';
+  }
+
+  typeLabel(category: Category): string {
+    return String(category.type ?? 'General');
+  }
 }

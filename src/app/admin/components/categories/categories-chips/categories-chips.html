@@ -1,16 +1,41 @@
-<div class="chips">
-  <div
-    class="chip"
-    *ngFor="let c of categories; trackBy: trackByCategory"
-    [class.active]="c.status==='active'"
-    [class.inactive]="c.status==='inactive'"
+<div *ngIf="categories.length; else empty" class="categories-board">
+  <article
+    class="category-card"
+    *ngFor="let category of categories; trackBy: trackByCategory"
+    [class.is-active]="category.status === 'active'"
+    [class.is-inactive]="category.status === 'inactive'"
   >
-    <button class="chip-main" type="button" (click)="edit.emit(c)">
-      {{ c.name }} <span class="type">{{ c.type }}</span>
-    </button>
+    <div class="category-card__accent"></div>
 
-    <button class="chip-toggle" type="button" (click)="toggle.emit(c.id)">
-      {{ c.status === 'active' ? 'ON' : 'OFF' }}
-    </button>
-  </div>
+    <div class="category-card__body">
+      <div class="category-card__meta">
+        <span class="category-type">{{ typeLabel(category) }}</span>
+        <span class="category-status" [class.is-active]="category.status === 'active'">
+          {{ statusLabel(category) }}
+        </span>
+      </div>
+
+      <button class="category-name" type="button" (click)="edit.emit(category)">
+        {{ category.name }}
+      </button>
+
+      <p class="category-hint">
+        {{ category.status === 'active' ? 'Available in the catalog and visible to shops.' : 'Hidden from active use until re-enabled.' }}
+      </p>
+    </div>
+
+    <div class="category-card__actions">
+      <button class="action action-edit" type="button" (click)="edit.emit(category)">
+        Edit
+      </button>
+
+      <button class="action action-toggle" type="button" (click)="toggle.emit(category.id)">
+        {{ toggleLabel(category) }}
+      </button>
+    </div>
+  </article>
 </div>
+
+<ng-template #empty>
+  <div class="empty">No categories found.</div>
+</ng-template>
