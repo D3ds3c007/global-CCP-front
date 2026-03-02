@@ -2,8 +2,8 @@
   <div class="card">
     <div class="top">
       <div class="brand">
-        <div class="logo"></div>
-        <div class="title" *ngIf="!collapsed">{{ brand }}</div>
+        <!-- <div class="logo"></div> -->
+        <div *ngIf="!collapsed"><h1 class="title">{{ brand }}</h1></div>
       </div>
 
       <!-- <div class="search" *ngIf="!collapsed && (hasCustomNav || (selectedShop$ | async))">
