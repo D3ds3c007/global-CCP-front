@@ -27,6 +27,7 @@ export class OrdersPage implements OnInit {
   loading = false;
   errorMessage: string | null = null;
   noShopMessage: string | null = null;
+  isDetailDialogOpen = false;
 
   vm$ = this.service.vm$.pipe(
     tap(vm => this.service.ensureSelectedFirst(vm.orders))
@@ -63,7 +64,14 @@ export class OrdersPage implements OnInit {
   }
 
   setQuery(p: any) { this.service.setQuery(p); }
-  select(id: string) { this.service.select(id); }
+  select(id: string) {
+    this.service.select(id);
+    this.isDetailDialogOpen = !!id;
+  }
+
+  closeDetail() {
+    this.isDetailDialogOpen = false;
+  }
 
   advance(id: string) {
     this.errorMessage = null;

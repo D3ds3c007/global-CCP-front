@@ -20,7 +20,7 @@
     </div>
   </div>
 
-  <div class="dialog-overlay" *ngIf="vm.selectedOrder" (click)="select('')">
+  <div class="dialog-overlay" *ngIf="isDetailDialogOpen && vm.selectedOrder" (click)="closeDetail()">
     <div class="dialog-shell" (click)="$event.stopPropagation()">
       <div class="card dialog-card">
         <app-order-detail
