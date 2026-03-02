@@ -61,18 +61,18 @@ export class AdminDashboardPage {
   });
 
   readonly months: SelectOption[] = [
-    { value: 1, label: 'Janvier' },
-    { value: 2, label: 'Fevrier' },
-    { value: 3, label: 'Mars' },
-    { value: 4, label: 'Avril' },
-    { value: 5, label: 'Mai' },
-    { value: 6, label: 'Juin' },
-    { value: 7, label: 'Juillet' },
-    { value: 8, label: 'Aout' },
-    { value: 9, label: 'Septembre' },
-    { value: 10, label: 'Octobre' },
-    { value: 11, label: 'Novembre' },
-    { value: 12, label: 'Decembre' },
+    { value: 1, label: 'January' },
+    { value: 2, label: 'February' },
+    { value: 3, label: 'March' },
+    { value: 4, label: 'April' },
+    { value: 5, label: 'May' },
+    { value: 6, label: 'June' },
+    { value: 7, label: 'July' },
+    { value: 8, label: 'August' },
+    { value: 9, label: 'September' },
+    { value: 10, label: 'October' },
+    { value: 11, label: 'November' },
+    { value: 12, label: 'December' },
   ];
 
   readonly dashboardState$ = this.ds.loadDashboard(3).pipe(
@@ -170,9 +170,9 @@ export class AdminDashboardPage {
   private readErrorMessage(error: unknown): string {
     if (typeof error === 'object' && error !== null) {
       const maybeError = error as { error?: { message?: string }; message?: string };
-      return maybeError.error?.message || maybeError.message || 'Chargement du dashboard impossible.';
+      return maybeError.error?.message || maybeError.message || 'Unable to load dashboard.';
     }
 
-    return 'Chargement du dashboard impossible.';
+    return 'Unable to load dashboard.';
   }
 }

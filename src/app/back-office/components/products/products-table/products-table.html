@@ -3,10 +3,10 @@
     <thead>
       <tr>
         <th>Image</th>
-        <th>Nom</th>
-        <th class="right">Prix</th>
+        <th>Name</th>
+        <th class="right">Price</th>
         <th class="right">Stock</th>
-        <th>Statut</th>
+        <th>Status</th>
         <th class="right">Actions</th>
       </tr>
     </thead>
@@ -15,7 +15,7 @@
       <tr *ngFor="let p of products; trackBy: trackByProductId" (click)="view.emit(p)">
         <td><img class="thumb" [src]="pictureUrl + p.imageUrl" [alt]="p.name" /></td>
         <td class="name">{{ p.name }}</td>
-        <td class="right">{{ p.price === 0 ? 'FREE' : (p.price | currency:'EUR') }}</td>
+        <td class="right">{{ p.price === 0 ? 'FREE' : (p.price | currency:'USD') }}</td>
         <td class="right">{{ p.stock }}</td>
         <td>
           <span class="pill" [class.on]="p.status==='ACTIVE'">{{ p.status }}</span>
@@ -26,12 +26,12 @@
           </button>
           <button type="button" [disabled]="isDisabled(p)" (click)="$event.stopPropagation(); edit.emit(p)">edit</button>
           <button type="button" class="danger" [disabled]="isDisabled(p)" (click)="$event.stopPropagation(); remove.emit(p)">delete</button>
-        </td> 
+        </td>
       </tr>
     </tbody>
   </table>
 
   <ng-template #empty>
-    <div class="empty">Aucun produit.</div>
+    <div class="empty">No products.</div>
   </ng-template>
 </div>

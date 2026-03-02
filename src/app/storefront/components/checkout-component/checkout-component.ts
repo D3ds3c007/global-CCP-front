@@ -8,6 +8,7 @@ import { catchError, map, shareReplay, switchMap, take } from 'rxjs/operators';
 import { CartItemsState, CartService } from '../../services/cart.service';
 import { ProductService } from '../../services/product.service';
 import { OrderService } from '../../services/order.service';
+import { APP_CURRENCY } from '../../../core/constants/app-locale';
 
 type PaymentMethod = 'COD' | 'MOBILE_MONEY';
 
@@ -57,13 +58,13 @@ export class CheckoutComponent {
 
   @Output() confirmed = new EventEmitter<CheckoutPayload>();
 
-  currencyCode = 'EUR';
+  currencyCode = APP_CURRENCY;
   submitting = false;
 
   deliveryOptions: DeliveryOption[] = [
-    { id: 'standard', label: 'Livraison standard (2–4 jours)', fee: 4.99 },
-    { id: 'express', label: 'Livraison express (24–48h)', fee: 9.99 },
-    { id: 'pickup', label: 'Retrait en magasin', fee: 0 },
+    { id: 'standard', label: 'Standard delivery (2-4 days)', fee: 4.99 },
+    { id: 'express', label: 'Express delivery (24-48h)', fee: 9.99 },
+    { id: 'pickup', label: 'Store pickup', fee: 0 },
   ];
 
   form = this.fb.group({
@@ -92,7 +93,7 @@ export class CheckoutComponent {
               return of({
                 productId,
                 quantity,
-                product: { id: productId, name: 'Produit indisponible', price: 0, imageUrl: '', shopId: '' },
+                product: { id: productId, name: 'Unavailable product', price: 0, imageUrl: '', shopId: '' },
                 shopId: ''
               } as CheckoutLine);
             })
@@ -105,7 +106,6 @@ export class CheckoutComponent {
 
   trackByProductId = (_: number, line: CheckoutLine) => line.productId;
 
-  // ----- Totaux -----
   subtotal(lines: CheckoutLine[]): number {
     return lines.reduce((sum, l) => sum + l.product.price * l.quantity, 0);
   }
@@ -123,7 +123,6 @@ export class CheckoutComponent {
     return this.subtotal(lines);
   }
 
-  // ----- Confirm -----
   confirm(lines: CheckoutLine[]) {
     console.log('Confirming order with lines:', lines);
     if (lines.length === 0) return;
@@ -133,7 +132,6 @@ export class CheckoutComponent {
       return;
     }
 
-    // Ensure every line has a shopId (required by backend/payload)
     const missing = lines.filter(l => !l.shopId);
     if (missing.length) {
       console.error('Cannot create order: missing shopId for some items', missing);
@@ -162,25 +160,17 @@ export class CheckoutComponent {
         console.log('Order submitted successfully', res);
         this.submitting = false;
         this.confirmed.emit(payload);
-        // Optionnel: vider le panier si tu as clear()
-        // (this.cartService as any).clear?.().subscribe?.();
       },
       error: (err) => {
         console.error('Error submitting order', err);
         this.submitting = false;
-        // Optionnel: afficher une notification d'erreur à l'utilisateur
       }
     });
 
     this.submitting = true;
-    //redirect to orders page
     window.location.href = '/orders';
-
-    // Mock submit (tu peux remplacer par un OrderService + HTTP)
-    
   }
 
-  // ----- Produit (adapter si ton ProductService a un autre nom) -----
   private loadProduct$(id: string): Observable<Product> {
     const ps: any = this.productService;
     const obs: Observable<any> =
@@ -188,13 +178,13 @@ export class CheckoutComponent {
       ps.getProduct?.(id);
 
     if (!obs) {
-      throw new Error(`ProductService doit exposer getProductById(id) ou getProduct(id).`);
+      throw new Error('ProductService must expose getProductById(id) or getProduct(id).');
     }
 
     return obs.pipe(
       map((p: any) => ({
         id: p.id ?? id,
-        name: p.name ?? p.title ?? 'Produit',
+        name: p.name ?? p.title ?? 'Product',
         price: Number(p.price ?? 0),
         imageUrl: p.imageUrl ?? p.image ?? p.thumbnailUrl ?? '',
         info: p.info ?? p.shortDescription ?? p.brand ?? '',

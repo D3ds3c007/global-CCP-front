@@ -1,4 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 
 import { AdminCustomersPage } from './admin-customers-page';
 
@@ -8,7 +10,8 @@ describe('AdminCustomersPage', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AdminCustomersPage]
+      imports: [AdminCustomersPage],
+      providers: [provideHttpClient(), provideHttpClientTesting()],
     })
     .compileComponents();
 

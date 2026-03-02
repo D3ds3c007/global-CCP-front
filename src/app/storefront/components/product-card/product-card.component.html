@@ -16,42 +16,44 @@
       </a>
     </ng-template>
 
-    <nz-card-meta [nzTitle]="item.name" [nzDescription]="storeNameTpl"></nz-card-meta>
+    <div class="product-card__content">
+      <nz-card-meta [nzTitle]="item.name" [nzDescription]="storeNameTpl"></nz-card-meta>
 
-    <ng-template #storeNameTpl>
-      @if (item.shopId) {
-        <a [routerLink]="['/manufacturers', item.shopId]">{{ item.storeName }}</a>
-      } @else {
-        <span>{{ item.storeName }}</span>
-      }
-    </ng-template>
-
-    <div class="product-card__meta">
-      <span class="product-card__price">{{ item.price | currency }}</span>
-      <nz-tag [nzColor]="item.stock > 0 ? 'blue' : 'red'">
-        @if (item.stock > 0) {
-          In stock: {{ item.stock }}
+      <ng-template #storeNameTpl>
+        @if (item.shopId) {
+          <a [routerLink]="['/manufacturers', item.shopId]">{{ item.storeName }}</a>
         } @else {
-          Out of stock
+          <span>{{ item.storeName }}</span>
         }
-      </nz-tag>
+      </ng-template>
+
+      <div class="product-card__meta">
+        <span class="product-card__price">{{ item.price | currency }}</span>
+        <nz-tag [nzColor]="item.stock > 0 ? 'blue' : 'red'">
+          @if (item.stock > 0) {
+            In stock: {{ item.stock }}
+          } @else {
+            Out of stock
+          }
+        </nz-tag>
+      </div>
+
+      <button
+        nz-button
+        nzType="primary"
+        type="button"
+        [nzLoading]="isAdding()"
+        [disabled]="item.stock <= 0"
+        (click)="onAddToCart()"
+      >
+        <span>
+          @if (justAdded()) {
+            Added
+          } @else {
+            Add to cart
+          }
+        </span>
+      </button>
     </div>
-
-    <button
-      nz-button
-      nzType="primary"
-      type="button"
-      [nzLoading]="isAdding()"
-      [disabled]="item.stock <= 0"
-      (click)="onAddToCart()"
-    >
-      <span>
-        @if (justAdded()) {
-          Added
-        } @else {
-          Add to cart
-        }
-      </span>
-    </button>
   </nz-card>
 }

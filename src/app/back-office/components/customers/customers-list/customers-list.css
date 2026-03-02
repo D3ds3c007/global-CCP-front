@@ -1,8 +1,22 @@
 .list { display: flex; flex-direction: column; gap: 10px; }
 
 .row {
+  padding: 12px;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.row:hover {
+  background: #f8fafc;
+}
+
+.row.ACTIVE {
+  background: #fff7ed;
+}
+
+.content {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 12px;
   padding: 14px 16px;
@@ -42,9 +56,7 @@
 .icon-btn:hover { background: rgba(28, 42, 79, 0.72); }
 .icon-btn.danger { border-color: rgba(248, 113, 113, 0.22); color: #fecaca; }
 
-.all {
-  margin-top: 10px;
-  font-size: 12px;
+.name {
   font-weight: 800;
   color: #8fdcff;
   text-decoration: none;

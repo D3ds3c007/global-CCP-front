@@ -4,13 +4,12 @@
       [tabs]="[
         { label: 'Payment', link: ['/cart'] },
         { label: 'Order', link: ['/orders'] },
-        { label: 'Historique', link: ['/history'] }
       ]"
     ></app-checkout-header>
     <app-cart></app-cart>
   </ng-container>
 
   <ng-template #notFound>
-    <p>Produit introuvable.</p>
+    <p>Product not found.</p>
   </ng-template>
 </app-details-layout>

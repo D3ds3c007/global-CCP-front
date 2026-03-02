@@ -7,7 +7,7 @@
         <div class="order-number">{{ o.orderId }}</div>
         <div class="order-meta">
           <span>{{ o.createdAt | date:'medium' }}</span>
-          <span class="dot">•</span>
+          <span class="dot">&bull;</span>
           <span>{{ o.items.length }} item(s)</span>
         </div>
       </div>
@@ -26,7 +26,6 @@
       <div class="grid">
         <div class="block">
           <div class="block-title">Customer</div>
-          <!-- <div class="kv"><span class="k">Name</span><span class="v">{{ o.buyerId.fullName }}</span></div> -->
           <div class="kv"><span class="k">Phone</span><span class="v">{{ o.phone }}</span></div>
           <div class="kv"><span class="k">Address</span><span class="v">{{ o.address }}</span></div>
         </div>
@@ -42,12 +41,12 @@
 
       <div class="items">
         <div class="item" *ngFor="let it of o.items; trackBy: trackByItemId">
-          <img *ngIf="it.path" class="thumb" [src]="it.path" [alt]="it.name" />
+          <img *ngIf="it.path" class="thumb" [src]="pictureUrl + it.path" [alt]="it.name" />
 
           <div class="item-info">
             <div class="item-name">{{ it.name }}</div>
             <div class="item-meta">
-              Qty {{ it.qty }} × {{ it.priceSnapshot | currency:currencyCode }}
+              Qty {{ it.qty }} x {{ it.priceSnapshot | currency:currencyCode }}
             </div>
           </div>
 
@@ -69,5 +68,4 @@
       </div>
     </div>
   </article>
-  <!-- <p>Coucou Hello World {{ (orders$ | async)?.length ?? 0 }}</p> -->
 </section>

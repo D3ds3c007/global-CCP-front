@@ -1,3 +1,12 @@
+:host {
+  display: block;
+  width: min(100%, 280px);
+  min-width: min(100%, 280px);
+  max-width: 280px;
+  justify-self: start;
+  align-self: stretch;
+}
+
 .product-card__coverLink {
   display: block;
   position: relative;
@@ -30,6 +39,7 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  height: 100%;
   min-height: 100%;
   background: linear-gradient(165deg, rgba(16, 22, 46, 0.95), rgba(10, 14, 33, 0.96));
   border: 1px solid rgba(95, 120, 190, 0.28);
@@ -75,7 +85,7 @@
 
 .product-card__meta {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 8px;
   margin: 12px 0 14px;
@@ -113,4 +123,8 @@
   background: rgba(69, 83, 123, 0.7);
   border-color: rgba(109, 126, 175, 0.52);
   color: #b5c3e8;
+}
+
+.product-card button[nz-button] {
+  width: 100%;
 }

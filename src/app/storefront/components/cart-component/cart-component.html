@@ -1,11 +1,10 @@
 <section class="cart">
-  <h2 class="title">Votre panier</h2>
+  <h2 class="title">Your cart</h2>
 
   <ng-container *ngIf="lines$ | async as lines">
-    <p *ngIf="lines.length === 0" class="empty">Votre panier est vide.</p>
+    <p *ngIf="lines.length === 0" class="empty">Your cart is empty.</p>
 
     <div class="grid" *ngIf="lines.length > 0">
-      <!-- Liste items -->
       <ul class="list">
         <li class="item" *ngFor="let line of lines; trackBy: trackByProductId">
           <img
@@ -25,8 +24,8 @@
             <div class="info" *ngIf="line.product.info">{{ line.product.info }}</div>
 
             <div class="row bottom">
-              <div class="qty" role="group" [attr.aria-label]="'Quantité pour ' + line.product.name">
-                <button type="button" (click)="decrement(line.productId)" aria-label="Diminuer">−</button>
+              <div class="qty" role="group" [attr.aria-label]="'Quantity for ' + line.product.name">
+                <button type="button" (click)="decrement(line.productId)" aria-label="Decrease">-</button>
 
                 <input
                   type="number"
@@ -34,14 +33,14 @@
                   [ngModel]="line.quantity"
                   (ngModelChange)="updateQty(line.productId, $event)"
                   [ngModelOptions]="{ standalone: true }"
-                  aria-label="Quantité"
+                  aria-label="Quantity"
                 />
 
-                <button type="button" (click)="increment(line.productId)" aria-label="Augmenter">+</button>
+                <button type="button" (click)="increment(line.productId)" aria-label="Increase">+</button>
               </div>
 
               <div class="lineTotal">
-                Total ligne :
+                Line total:
                 <strong>
                   {{ (line.product.price * line.quantity) | currency: currencyCode:'symbol':'1.2-2' }}
                 </strong>
@@ -50,31 +49,30 @@
           </div>
 
           <button class="remove" type="button" (click)="remove(line.productId)">
-            Supprimer
+            Remove
           </button>
         </li>
       </ul>
 
-      <!-- Résumé -->
       <aside class="summary">
-        <h3 class="summaryTitle">Résumé</h3>
+        <h3 class="summaryTitle">Summary</h3>
 
         <div class="sumRow">
-          <span>Sous-total</span>
+          <span>Subtotal</span>
           <strong>{{ subtotal(lines) | currency: currencyCode:'symbol':'1.2-2' }}</strong>
         </div>
 
         <!-- <label class="delivery">
-          <span>Livraison</span>
+          <span>Delivery</span>
           <select [(ngModel)]="deliveryId" [ngModelOptions]="{ standalone: true }">
             <option *ngFor="let o of deliveryOptions" [value]="o.id">
-              {{ o.label }} — {{ o.fee | currency: currencyCode:'symbol':'1.2-2' }}
+              {{ o.label }} - {{ o.fee | currency: currencyCode:'symbol':'1.2-2' }}
             </option>
           </select>
         </label>
 
         <div class="sumRow">
-          <span>Frais de livraison</span>
+          <span>Delivery fee</span>
           <strong>{{ deliveryFee() | currency: currencyCode:'symbol':'1.2-2' }}</strong>
         </div> -->
 
@@ -86,7 +84,7 @@
         </div>
 
         <button class="cta" type="button" (click)="goToCheckout()">
-          Passer au paiement
+          Proceed to checkout
         </button>
       </aside>
     </div>

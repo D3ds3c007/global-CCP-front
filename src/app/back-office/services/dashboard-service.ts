@@ -16,6 +16,7 @@ export interface KpiCard {
 }
 
 export interface TopProduct {
+  productId?: string;
   name: string;
   valueK: number;
 }
@@ -263,7 +264,8 @@ export class DashboardService {
       .get<TopProductsResponse>(`${this.apiUrl}shops/${shopId}/top-products-by-revenue`, { withCredentials: true })
       .pipe(
         map((res) =>
-          (res.topProducts ?? []).slice(0, 1).map((p) => ({
+          (res.topProducts ?? []).map((p) => ({
+            productId: p.productId ? String(p.productId) : undefined,
             name: String(p.name ?? 'N/A').toUpperCase(),
             valueK: this.toK(p.totalRevenue ?? 0),
           }))
@@ -322,22 +324,22 @@ export class DashboardService {
 
     return {
       kpiProcessed: {
-        title: 'Commandes traitees',
+        title: 'Processed orders',
         percent: input.processedCount,
         trend: input.processedCount > 0 ? 'up' : undefined,
-        subtitle: 'Statut CONFIRMED',
+        subtitle: 'Status CONFIRMED',
         linkText: '',
       },
       kpiPENDING: {
-        title: 'Commandes en attente',
+        title: 'Pending orders',
         percent: input.pendingCount,
-        subtitle: 'Statut PENDING',
+        subtitle: 'Status PENDING',
         linkText: '',
       },
       kpiDELIVERED: {
-        title: 'Commandes livrees',
+        title: 'Delivered orders',
         percent: input.deliveredCount,
-        subtitle: 'Statut DELIVERED',
+        subtitle: 'Status DELIVERED',
         linkText: '',
       },
       topProducts: input.topProducts,
@@ -349,8 +351,8 @@ export class DashboardService {
       ],
       topBuyer:
         input.topCustomers[0] ?? {
-          name: 'Aucun client',
-          company: 'Aucune commande',
+          name: 'No customer',
+          company: 'No orders',
           avatarUrl: 'https://i.pravatar.cc/80?u=empty-buyer',
         },
       shopStatus,

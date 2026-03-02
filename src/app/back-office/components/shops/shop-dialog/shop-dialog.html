@@ -1,7 +1,7 @@
 <div class="overlay" (click)="onBackdropClick()">
   <div class="modal" (click)="$event.stopPropagation()">
     <div class="head">
-      <h3>Creer une boutique</h3>
+      <h3>Create shop</h3>
       <button class="x" type="button" (click)="cancel.emit()">x</button>
     </div>
 
@@ -19,7 +19,7 @@
             (dragleave)="onDragLeave($event)"
             (drop)="onDrop($event)"
           >
-            <p class="dropzone-title">Glissez-deposez un logo ici</p>
+            <p class="dropzone-title">Drag and drop a logo here</p>
             <p class="dropzone-hint">PNG, JPG, WEBP | Max 2MB</p>
 
             <div class="dropzone-actions">
@@ -42,12 +42,12 @@
 
       <div class="grid">
         <label class="field">
-          <span>Nom</span>
+          <span>Name</span>
           <input formControlName="name" />
         </label>
 
         <label class="field">
-          <span>Categorie</span>
+          <span>Category</span>
           <select formControlName="categoryId">
             <option *ngFor="let c of categories" [value]="c._id">{{ c.name }}</option>
           </select>
@@ -101,9 +101,9 @@
       <p class="error" *ngIf="submitError">{{ submitError }}</p>
 
       <div class="actions">
-        <button type="button" class="btn ghost" (click)="cancel.emit()" [disabled]="submitting">Annuler</button>
+        <button type="button" class="btn ghost" (click)="cancel.emit()" [disabled]="submitting">Cancel</button>
         <button type="submit" class="btn primary" [disabled]="submitting">
-          {{ submitting ? 'Creation...' : 'Creer' }}
+          {{ submitting ? 'Creating...' : 'Create' }}
         </button>
       </div>
     </form>
