@@ -109,7 +109,7 @@ export class CartComponent {
   }
 
   total(lines: CartLine[]): number {
-    return this.subtotal(lines) + this.deliveryFee();
+    return this.subtotal(lines);
   }
 
   checkout(lines: CartLine[]) {
