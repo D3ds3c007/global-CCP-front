@@ -5,7 +5,7 @@
 </ng-container>
 
 <ng-template #dashboardContent>
-  <section *ngIf="vm$ | async as vm; else loading">
+  <section class="page" *ngIf="vm$ | async as vm; else loading">
     <div class="header">
       <div>
         <h1>Dashboard</h1>

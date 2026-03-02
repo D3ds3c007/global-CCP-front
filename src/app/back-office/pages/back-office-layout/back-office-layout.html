@@ -2,6 +2,8 @@
     <app-sidebar class="bo-sidebar" (logout)="onLogout()"></app-sidebar>
 
     <main class="bo-content">
-        <router-outlet></router-outlet>
+        <div class="bo-content__frame">
+            <router-outlet></router-outlet>
+        </div>
     </main>
 </div>

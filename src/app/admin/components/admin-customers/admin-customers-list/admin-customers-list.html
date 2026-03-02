@@ -1,32 +1,64 @@
-<div class="list">
-  <!-- header row like screenshot -->
-  <div class="list-head">
-    <div></div>
-    <div class="col">ROLE</div>
-    <div class="col right">CONTACT</div>
-  </div>
-
-  <div
-    class="row"
-    *ngFor="let c of customers; trackBy: trackById"
-    [class.active]="isActiveRow(c.id)"
-    (click)="select.emit(c.id)"
-  >
-    <div class="left">
-      <div class="meta">
-        <div class="name">{{ c.fullName }}</div>
-        <div class="company">{{ c.email || 'No email provided' }}</div>
+<div class="directory" *ngIf="customers.length; else empty">
+  <section class="featured-panel" *ngIf="selectedCustomer as selected">
+    <div class="featured-head">
+      <div class="featured-avatar">{{ initials(selected) }}</div>
+      <div class="featured-copy">
+        <p class="eyebrow">Selected profile</p>
+        <h3>{{ selected.fullName }}</h3>
+        <p class="featured-role">{{ roleLabel(selected) }}</p>
       </div>
     </div>
 
-    <div class="type">{{ c.role }}</div>
-
-    <div class="right-side">
-      <span class="status" [class.active]="c.status==='active'" [class.banned]="c.status==='banned'">
-        {{ (c.phone || 'No phone') }}
-      </span>
+    <div class="featured-metrics">
+      <div class="metric">
+        <span class="metric-label">Email</span>
+        <strong>{{ selected.email || 'No email provided' }}</strong>
+      </div>
+      <div class="metric">
+        <span class="metric-label">Phone</span>
+        <strong>{{ selected.phone || 'No phone provided' }}</strong>
+      </div>
+      <div class="metric">
+        <span class="metric-label">Joined</span>
+        <strong>{{ formatDate(selected.createdAt) }}</strong>
+      </div>
     </div>
+  </section>
+
+  <div class="cards-head">
+    <div>
+      <p class="eyebrow">Directory</p>
+      <h4>Browse all customers</h4>
+    </div>
+    <span class="cards-count">{{ customers.length }} profiles</span>
   </div>
 
-  <div class="empty" *ngIf="!customers.length">No users found.</div>
+  <div class="cards-grid">
+    <button
+      class="customer-card"
+      type="button"
+      *ngFor="let customer of customers; trackBy: trackById"
+      [class.is-active]="isActiveRow(customer.id)"
+      (click)="select.emit(customer.id)"
+    >
+      <div class="customer-card__top">
+        <span class="customer-avatar">{{ initials(customer) }}</span>
+      </div>
+
+      <div class="customer-card__body">
+        <strong class="customer-name">{{ customer.fullName }}</strong>
+        <span class="customer-role">{{ roleLabel(customer) }}</span>
+        <span class="customer-email">{{ customer.email || 'No email provided' }}</span>
+      </div>
+
+      <div class="customer-card__foot">
+        <span class="customer-phone">{{ customer.phone || 'No phone' }}</span>
+        <span class="customer-date">{{ formatDate(customer.createdAt) }}</span>
+      </div>
+    </button>
+  </div>
 </div>
+
+<ng-template #empty>
+  <div class="empty">No users found.</div>
+</ng-template>

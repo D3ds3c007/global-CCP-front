@@ -1,42 +1,47 @@
-<div class="wrap">
-  <table *ngIf="commissions.length; else empty">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Rule</th>
-        <th>Status</th>
-        <th class="right">Action</th>
-      </tr>
-    </thead>
+<div class="commissions-board" *ngIf="commissions.length; else empty">
+  <div class="commission-card" *ngFor="let commission of commissions; trackBy: trackByCommissionId" [class.is-active]="commission.active">
+    <div class="commission-card__head">
+      <div>
+        <span class="state-pill" [class.is-active]="commission.active">
+          {{ statusLabel(commission) }}
+        </span>
+        <h3 class="commission-name">{{ commission.name }}</h3>
+      </div>
 
-    <tbody>
-      <tr *ngFor="let c of commissions; trackBy: trackByCommissionId">
-        <td class="name">{{ c.name }}</td>
+      <button
+        class="btn"
+        type="button"
+        [disabled]="commission.active"
+        (click)="activate.emit(commission.id)"
+      >
+        {{ commission.active ? 'In use' : 'Activate' }}
+      </button>
+    </div>
 
-        <td class="mono">
-          &lt; {{ c.rule.thresholdEur }} USD -> ${{ c.rule.fixedUnderUsd }}
-          | &gt;= {{ c.rule.thresholdEur }} USD -> {{ c.rule.percentAbove }}%
-        </td>
+    <div class="rule-grid">
+      <div class="rule-block">
+        <span>Threshold</span>
+        <strong>{{ commission.rule.thresholdEur }} USD</strong>
+      </div>
+      <div class="rule-block">
+        <span>Under threshold</span>
+        <strong>${{ commission.rule.fixedUnderUsd }}</strong>
+      </div>
+      <div class="rule-block">
+        <span>Above threshold</span>
+        <strong>{{ commission.rule.percentAbove }}%</strong>
+      </div>
+    </div>
 
-        <td>
-          <span class="badge" [class.active]="c.active" [class.inactive]="!c.active">
-            {{ c.active ? 'ACTIVE' : 'INACTIVE' }}
-          </span>
-        </td>
-
-        <td class="right">
-          <button
-            class="btn"
-            type="button"
-            [disabled]="c.active"
-            (click)="activate.emit(c.id)"
-          >
-            Activate
-          </button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+    <div class="commission-story">
+      <span class="story-line">
+        Orders below {{ commission.rule.thresholdEur }} USD pay a fixed ${{ commission.rule.fixedUnderUsd }} fee.
+      </span>
+      <span class="story-line">
+        Orders at or above the threshold pay {{ commission.rule.percentAbove }}% of order value.
+      </span>
+    </div>
+  </div>
 
   <div class="toolbar">
     <button class="btn ghost" type="button" (click)="deactivateAll.emit()">
@@ -44,8 +49,8 @@
     </button>
     <div class="note">Delete is not allowed.</div>
   </div>
-
-  <ng-template #empty>
-    <div class="empty">No commissions.</div>
-  </ng-template>
 </div>
+
+<ng-template #empty>
+  <div class="empty">No commissions.</div>
+</ng-template>

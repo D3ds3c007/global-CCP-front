@@ -1,41 +1,72 @@
-<section class="page" *ngIf="vm$ | async as vm; else loading">
-  <div class="kpis">
-    <app-dashboard-card [title]="vm.kpi1.title">
-      <app-kpi-card [data]="vm.kpi1"></app-kpi-card>
-    </app-dashboard-card>
+<section class="page" *ngIf="vm$ | async as vm; else loadingState">
+  <div class="hero">
+    <div class="hero-copy">
+      <p class="eyebrow">Admin CRM</p>
+      <h1 class="page-title">Customer Atlas</h1>
+      <p class="page-subtitle">
+        Monitor all registered users, highlight shop owners, and move through the directory from one focused workspace.
+      </p>
 
-    <app-dashboard-card [title]="vm.kpi2.title">
-      <app-kpi-card [data]="vm.kpi2"></app-kpi-card>
-    </app-dashboard-card>
-  </div>
-
-  <app-dashboard-card title="Users">
-    <div class="controls">
-      <input
-        class="search"
-        [ngModel]="vm.query.search"
-        (ngModelChange)="setSearch($event)"
-        [ngModelOptions]="{ standalone: true }"
-        placeholder="Search user..."
-      />
-
-      <div class="sort">
-        <span>Sort by</span>
-        <select [ngModel]="vm.query.sort" (ngModelChange)="setSort($event)">
-          <option value="newest">Newest</option>
-          <option value="oldest">Oldest</option>
-        </select>
+      <div class="hero-badges">
+        <span class="hero-badge">{{ vm.customers.length }} visible profiles</span>
+        <span class="hero-badge">Sorted: {{ vm.query.sort }}</span>
       </div>
     </div>
 
-    <app-admin-customers-list
-      [customers]="vm.customers"
-      [selectedId]="vm.selectedId"
-      (select)="select($event)"
-    ></app-admin-customers-list>
-  </app-dashboard-card>
+    <div class="hero-kpis">
+      <app-dashboard-card class="hero-kpi" [title]="vm.kpi1.title">
+        <app-kpi-card [data]="vm.kpi1"></app-kpi-card>
+      </app-dashboard-card>
+
+      <app-dashboard-card class="hero-kpi" [title]="vm.kpi2.title">
+        <app-kpi-card [data]="vm.kpi2"></app-kpi-card>
+      </app-dashboard-card>
+    </div>
+  </div>
+
+  <div class="workspace">
+    <app-dashboard-card class="control-card" title="Directory controls">
+      <div class="control-stack">
+        <label class="control-block">
+          <span class="control-label">Search people</span>
+          <input
+            class="search"
+            [ngModel]="vm.query.search"
+            (ngModelChange)="setSearch($event)"
+            [ngModelOptions]="{ standalone: true }"
+            placeholder="Search by name, email, phone, or role"
+          />
+        </label>
+
+        <label class="control-block">
+          <span class="control-label">Timeline order</span>
+          <select class="sort-select" [ngModel]="vm.query.sort" (ngModelChange)="setSort($event)">
+            <option value="newest">Newest</option>
+            <option value="oldest">Oldest</option>
+          </select>
+        </label>
+
+        <div class="control-note">
+          <span class="control-note__value">{{ vm.selectedId ? '1 selected' : 'Auto-selecting first profile' }}</span>
+          <span class="control-note__text">Selection updates the featured profile panel below.</span>
+        </div>
+      </div>
+    </app-dashboard-card>
+
+    <app-dashboard-card class="directory-card" title="Customer directory">
+      <app-admin-customers-list
+        [customers]="vm.customers"
+        [selectedId]="vm.selectedId"
+        (select)="select($event)"
+      ></app-admin-customers-list>
+    </app-dashboard-card>
+  </div>
 </section>
 
-<ng-template #loading>
-  <div style="padding: 18px;">{{ errorMessage || (loading ? 'Loading...' : 'Loading...') }}</div>
+<ng-template #loadingState>
+  <section class="page">
+    <div class="loading-card">
+      {{ errorMessage || (loading ? 'Loading customers...' : 'Preparing customer workspace...') }}
+    </div>
+  </section>
 </ng-template>
