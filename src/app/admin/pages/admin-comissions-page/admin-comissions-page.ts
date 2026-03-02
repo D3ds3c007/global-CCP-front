@@ -19,7 +19,7 @@ import { DashboardCardComponent } from '../../../back-office/components/dashboar
   ],
   templateUrl: './admin-comissions-page.html',
   styles: [`
-    .page{padding:18px;background:#f5f6fa;min-height:100vh}
+    .page{padding:18px;min-height:100vh}
     .title{margin:0 0 14px;font-size:22px;font-weight:900;color:#0f172a}
 
     .fab{
