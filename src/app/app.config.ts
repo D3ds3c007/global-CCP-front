@@ -2,7 +2,7 @@ import { registerLocaleData } from '@angular/common';
 import localeEn from '@angular/common/locales/en';
 import { DEFAULT_CURRENCY_CODE, LOCALE_ID, ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { provideRouter } from '@angular/router';
-import { ShoppingCartOutline, UserOutline } from '@ant-design/icons-angular/icons';
+import { LoginOutline, LogoutOutline, ShoppingCartOutline, UserOutline } from '@ant-design/icons-angular/icons';
 
 import { routes } from './app.routes';
 import { provideClientHydration, withEventReplay, withNoHttpTransferCache } from '@angular/platform-browser';
@@ -23,7 +23,9 @@ export const appConfig: ApplicationConfig = {
     { provide: DEFAULT_CURRENCY_CODE, useValue: APP_CURRENCY },
     provideNzIcons([
       ShoppingCartOutline,
-      UserOutline
+      UserOutline,
+      LoginOutline,
+      LogoutOutline
     ])
   ]
 };

@@ -10,7 +10,6 @@ import {
   ProductsQuery,
 } from '../../services/product-back';
 import { ProductsFiltersComponent } from '../../components/products/products-filters/products-filters';
-import { ProductCardComponent } from '../../components/products/product-card/product-card';
 import { ProductsTableComponent } from '../../components/products/products-table/products-table';
 import {
   ProductDialogComponent,
@@ -25,7 +24,6 @@ import { SelectedShopStateService } from '../../services/selected-shop-state.ser
   imports: [
     CommonModule,
     ProductsFiltersComponent,
-    ProductCardComponent,
     ProductsTableComponent,
     ProductDialogComponent,
   ],
