@@ -38,6 +38,10 @@
         </app-dashboard-card>
       </ng-container>
 
+      <app-mini-tile class="top-buyer-panel" title="Top buyer" *ngIf="vm.topBuyer as tb">
+        <app-top-buyer-tile [buyer]="tb"></app-top-buyer-tile>
+      </app-mini-tile>
+
       <app-dashboard-card class="c4 revenue-panel" title="Revenue">
         <div card-right class="select">
           <select #yearSelect [value]="revenueYear" (change)="setRevenueYear(yearSelect.value)" style="border: 0; background: transparent; color: inherit; font: inherit; cursor: pointer;">
@@ -67,10 +71,6 @@
       <app-dashboard-card class="low-stock-panel" title="Low-stock products">
         <app-low-stock [products]="vm.lowStock"></app-low-stock>
       </app-dashboard-card>
-
-      <app-mini-tile class="top-buyer-panel" title="Top buyer" *ngIf="vm.topBuyer as tb">
-        <app-top-buyer-tile [buyer]="tb"></app-top-buyer-tile>
-      </app-mini-tile>
 
       <app-dashboard-card title="Latest Orders" style="grid-column: span 12;">
         <ng-container *ngIf="latestOrdersState$ | async as latestOrdersState">
