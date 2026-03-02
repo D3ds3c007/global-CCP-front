@@ -1,15 +1,43 @@
-<div class="head">
-  <h3>Low-stock products</h3>
-  <span class="muted">{{ products.length }} article(s)</span>
+<div class="stock-overview">
+  <div>
+    <p class="eyebrow">Inventory watch</p>
+  </div>
+
+  <div class="overview-badges" *ngIf="products.length">
+    <span class="badge">{{ products.length }} monitored</span>
+    <span class="badge badge-alert" *ngIf="urgentCount">{{ urgentCount }} critical</span>
+  </div>
 </div>
 
-<div *ngIf="products.length; else empty">
-  <div class="row" *ngFor="let p of products">
-    <div class="name">{{ p.name }}</div>
-    <div class="stock" [class.danger]="p.stock <= p.minStock">
-      {{ p.stock }} / min {{ p.minStock }}
+<div *ngIf="products.length; else empty" class="stock-grid">
+  <article class="stock-card" *ngFor="let product of products; trackBy: trackByProduct">
+    <div class="card-top">
+      <div class="product-meta">
+        <strong class="product-name">{{ product.name }}</strong>
+        <span class="product-status" [class.is-critical]="severityLabel(product) === 'Critical'">
+          {{ severityLabel(product) }}
+        </span>
+      </div>
+
+      <div class="stock-value">
+        <span class="current">{{ product.stock }}</span>
+        <span class="separator">/</span>
+        <span class="minimum">min {{ product.minStock }}</span>
+      </div>
     </div>
-  </div>
+
+    <div class="meter" aria-hidden="true">
+      <div class="meter-track"></div>
+      <div class="meter-fill" [style.width.%]="stockRatio(product) * 100"></div>
+    </div>
+
+    <div class="card-bottom">
+      <span class="hint">Restock gap</span>
+      <span class="gap" [class.is-zero]="shortage(product) === 0">
+        {{ shortage(product) }} item(s)
+      </span>
+    </div>
+  </article>
 </div>
 
 <ng-template #empty>
