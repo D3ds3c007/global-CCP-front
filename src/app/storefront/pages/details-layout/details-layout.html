@@ -1,9 +1,9 @@
-<app-navbar
-    class="app__nav"
-    [user]="currentUser$ | async"
-    (logout)="onLogout()"
-></app-navbar>
+<main class="details-layout">
+  <div class="details-layout__shell">
+    <section class="details-layout__content details-layout__content--storefront">
+      <ng-content></ng-content>
+    </section>
+  </div>
 
-<main class="app__content app__content--storefront-details">
-    <ng-content></ng-content>
+  <app-floating-actions></app-floating-actions>
 </main>

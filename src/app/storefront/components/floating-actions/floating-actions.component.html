@@ -1,0 +1,41 @@
+<div class="floating-actions" aria-label="Storefront quick actions">
+  <a class="floating-actions__button floating-actions__button--cart" routerLink="/cart" aria-label="Open cart">
+    <span nz-icon nzType="shopping-cart" nzTheme="outline"></span>
+    <span class="floating-actions__label">Cart</span>
+
+    @if (cartCount$ | async; as cartCount) {
+      @if (cartCount > 0) {
+        <span class="floating-actions__badge">{{ cartCount }}</span>
+      }
+    }
+  </a>
+
+  @if (currentUser$ | async; as user) {
+    <div
+      class="floating-actions__user"
+      (mouseenter)="openUserMenu()"
+      (mouseleave)="closeUserMenu()"
+      (focusin)="openUserMenu()"
+      (focusout)="onUserMenuFocusOut($event)"
+    >
+      <button class="floating-actions__button" nz-button nzType="default" type="button">
+        <span nz-icon nzType="user" nzTheme="outline"></span>
+        <span class="floating-actions__label">{{ user.fullName }}</span>
+      </button>
+
+      <div class="floating-actions__menu" [class.floating-actions__menu--open]="isUserMenuOpen()">
+        <a class="floating-actions__menu-link" routerLink="/orders">My Orders</a>
+      </div>
+    </div>
+
+    <button class="floating-actions__button floating-actions__button--primary" nz-button nzType="default" type="button" (click)="onLogout()">
+      <span nz-icon nzType="logout" nzTheme="outline"></span>
+      <span class="floating-actions__label">Logout</span>
+    </button>
+  } @else {
+    <a class="floating-actions__button floating-actions__button--primary" nz-button nzType="primary" routerLink="/auth/login">
+      <span nz-icon nzType="login" nzTheme="outline"></span>
+      <span class="floating-actions__label">Sign In</span>
+    </a>
+  }
+</div>
