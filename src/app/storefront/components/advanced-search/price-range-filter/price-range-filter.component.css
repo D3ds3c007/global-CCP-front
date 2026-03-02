@@ -9,7 +9,7 @@
   letter-spacing: 0.05em;
   text-transform: uppercase;
   font-weight: 600;
-  color: #97a9d2;
+  color: #475569;
 }
 
 .field__row {
@@ -19,26 +19,26 @@
 }
 
 .field__input {
-  border: 1px solid rgba(95, 120, 190, 0.3);
-  border-radius: 12px;
+  border: 1px solid rgba(148, 163, 184, 0.28);
+  border-radius: 14px;
   padding: 11px 12px;
   font-size: 14px;
   width: 100%;
   box-sizing: border-box;
-  color: #eaf0ff;
-  background: rgba(13, 20, 43, 0.72);
+  color: #0f172a;
+  background: #ffffff;
   transition: border-color 0.22s ease, box-shadow 0.22s ease, background 0.22s ease;
 }
 
 .field__input::placeholder {
-  color: #7082ad;
+  color: #94a3b8;
 }
 
 .field__input:focus-visible {
   outline: none;
-  border-color: rgba(123, 188, 255, 0.92);
-  box-shadow: 0 0 0 3px rgba(79, 154, 255, 0.26);
-  background: rgba(16, 24, 52, 0.92);
+  border-color: rgba(14, 165, 233, 0.72);
+  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.16);
+  background: #ffffff;
 }
 
 .field__sr {

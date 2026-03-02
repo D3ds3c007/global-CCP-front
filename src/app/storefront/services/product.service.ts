@@ -82,7 +82,7 @@ interface BackendCategory {
   _id: string;
   name: string;
   type?: string;
-  isACTIVE?: boolean;
+  isActive?: boolean;
 }
 
 interface BackendCategoryListResponse {
@@ -117,19 +117,21 @@ export class ProductService {
     const params = new HttpParams().set('type', 'PRODUCT');
 
     return this.http
-      .get<BackendCategoryListResponse>(this.categoriesUrl, {
+      .get<BackendCategory[] | BackendCategoryListResponse>(this.categoriesUrl, {
         params,
         withCredentials: true
       })
       .pipe(
-        map(response =>
-          (response.categories ?? [])
-            .filter(category => category.isACTIVE !== false)
+        map(response => {
+          const categories = Array.isArray(response) ? response : (response.categories ?? []);
+
+          return categories
+            .filter(category => category.isActive !== false)
             .map(category => ({
               id: category._id,
               name: category.name
-            }))
-        ),
+            }));
+        }),
         catchError(error => {
           console.error('getCategories failed', error);
           return of([]);

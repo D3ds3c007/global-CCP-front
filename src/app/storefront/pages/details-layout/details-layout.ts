@@ -1,25 +1,12 @@
-import { Component, inject, input } from '@angular/core';
-import { NavbarComponent } from '../../components/navbar/navbar.component';
-import { AuthStateService } from '../../../core/services/auth-state.service';
-import { AsyncPipe } from '@angular/common';
-
-
+import { Component } from '@angular/core';
+import { FloatingActionsComponent } from '../../components/floating-actions/floating-actions.component';
 
 @Component({
   selector: 'app-details-layout',
   imports: [
-    AsyncPipe,
-    NavbarComponent,
+    FloatingActionsComponent,
   ],
   templateUrl: './details-layout.html',
   styleUrl: './details-layout.css',
 })
-export class DetailsLayout {
-  private readonly authState = inject(AuthStateService);
-  readonly currentUser$ = this.authState.currentUser$;
-
-    onLogout(): void {
-    this.authState.logout();
-  }
-
-}
+export class DetailsLayout {}

@@ -1,11 +1,14 @@
 <section class="cart">
-  <h2 class="title">Your cart</h2>
+  <header class="cart__header">
+    <h2 class="title">Your cart</h2>
+  </header>
 
   <ng-container *ngIf="lines$ | async as lines">
     <p *ngIf="lines.length === 0" class="empty">Your cart is empty.</p>
 
-    <div class="grid" *ngIf="lines.length > 0">
-      <ul class="list">
+    <div class="cart__grid" *ngIf="lines.length > 0">
+      <section class="cart__listShell">
+        <ul class="list">
         <li class="item" *ngFor="let line of lines; trackBy: trackByProductId">
           <img
             class="thumb"
@@ -14,7 +17,7 @@
           />
 
           <div class="content">
-            <div class="row">
+            <div class="row row--top">
               <div class="name">{{ line.product.name }}</div>
               <div class="price">
                 {{ line.product.price | currency: currencyCode:'symbol':'1.2-2' }}
@@ -45,48 +48,49 @@
                   {{ (line.product.price * line.quantity) | currency: currencyCode:'symbol':'1.2-2' }}
                 </strong>
               </div>
+
+              <button class="remove" type="button" (click)="remove(line.productId)">
+                Remove
+              </button>
             </div>
           </div>
-
-          <button class="remove" type="button" (click)="remove(line.productId)">
-            Remove
-          </button>
         </li>
-      </ul>
+        </ul>
 
-      <aside class="summary">
-        <h3 class="summaryTitle">Summary</h3>
+        <aside class="summary">
+          <h3 class="summaryTitle">Summary</h3>
 
-        <div class="sumRow">
-          <span>Subtotal</span>
-          <strong>{{ subtotal(lines) | currency: currencyCode:'symbol':'1.2-2' }}</strong>
-        </div>
+          <div class="sumRow">
+            <span>Subtotal</span>
+            <strong>{{ subtotal(lines) | currency: currencyCode:'symbol':'1.2-2' }}</strong>
+          </div>
 
-        <!-- <label class="delivery">
-          <span>Delivery</span>
-          <select [(ngModel)]="deliveryId" [ngModelOptions]="{ standalone: true }">
-            <option *ngFor="let o of deliveryOptions" [value]="o.id">
-              {{ o.label }} - {{ o.fee | currency: currencyCode:'symbol':'1.2-2' }}
-            </option>
-          </select>
-        </label>
+          <!-- <label class="delivery">
+            <span>Delivery</span>
+            <select [(ngModel)]="deliveryId" [ngModelOptions]="{ standalone: true }">
+              <option *ngFor="let o of deliveryOptions" [value]="o.id">
+                {{ o.label }} - {{ o.fee | currency: currencyCode:'symbol':'1.2-2' }}
+              </option>
+            </select>
+          </label>
 
-        <div class="sumRow">
-          <span>Delivery fee</span>
-          <strong>{{ deliveryFee() | currency: currencyCode:'symbol':'1.2-2' }}</strong>
-        </div> -->
+          <div class="sumRow">
+            <span>Delivery fee</span>
+            <strong>{{ deliveryFee() | currency: currencyCode:'symbol':'1.2-2' }}</strong>
+          </div> -->
 
-        <hr class="divider" />
+          <hr class="divider" />
 
-        <div class="sumRow total">
-          <span>Total</span>
-          <strong>{{ total(lines) | currency: currencyCode:'symbol':'1.2-2' }}</strong>
-        </div>
+          <div class="sumRow total">
+            <span>Total</span>
+            <strong>{{ total(lines) | currency: currencyCode:'symbol':'1.2-2' }}</strong>
+          </div>
 
-        <button class="cta" type="button" (click)="goToCheckout()">
-          Proceed to checkout
-        </button>
-      </aside>
+          <button class="cta" type="button" (click)="goToCheckout()">
+            Proceed to checkout
+          </button>
+        </aside>
+      </section>
     </div>
   </ng-container>
 </section>

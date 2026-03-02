@@ -231,7 +231,11 @@ export class OrdersBackService {
   }
 
   private patchOrderFromServer(serverOrder: OrderFromServer): Order {
-    const mapped = this.mapOrderFromServer(serverOrder);
+    const existingOrder =
+      this.ordersSubject.value.find((order) => order.rawId === String(serverOrder._id)) ??
+      this.ordersSubject.value.find((order) => order.id === String(serverOrder.orderId ?? serverOrder._id)) ??
+      null;
+    const mapped = this.mapOrderFromServer(serverOrder, existingOrder);
     const nextOrders = this.ordersSubject.value.map((order) => {
       if (order.rawId !== mapped.rawId && order.id !== mapped.id) {
         return order;
@@ -266,39 +270,42 @@ export class OrdersBackService {
     throw new Error('Invalid order update response');
   }
 
-  private mapOrderFromServer(order: OrderFromServer): Order {
+  private mapOrderFromServer(order: OrderFromServer, previous?: Order | null): Order {
     const buyer = typeof order.buyerId === 'string' ? null : order.buyerId;
     const status = this.mapStatus(order.status);
-    const total = Number(order.total ?? 0);
+    const total = Number(order.total ?? previous?.total ?? 0);
+    const items = order.items?.length
+      ? order.items.map((item) => ({
+          productId: String(item.productId ?? ''),
+          name: String(item.name ?? 'Item'),
+          unitPrice: Number(item.priceSnapshot ?? 0),
+          qty: Number(item.qty ?? 0),
+          imageUrl: item.path ?? undefined,
+        }))
+      : (previous?.items ?? []);
 
     return {
       id: String(order.orderId ?? order._id),
       rawId: String(order._id),
-      shopId: String(order.shopId ?? ''),
-      createdAt: String(order.createdAt ?? nowIso()),
+      shopId: String(order.shopId ?? previous?.shopId ?? ''),
+      createdAt: String(order.createdAt ?? previous?.createdAt ?? nowIso()),
       status,
       buyer: {
-        fullName: String(buyer?.fullName ?? 'Unknown buyer'),
-        email: String(buyer?.email ?? ''),
-        phone: String(order.phone ?? ''),
+        fullName: String(buyer?.fullName ?? previous?.buyer.fullName ?? 'Unknown buyer'),
+        email: String(buyer?.email ?? previous?.buyer.email ?? ''),
+        phone: String(order.phone ?? previous?.buyer.phone ?? ''),
       },
       address: {
-        line1: String(order.address ?? ''),
-        city: '',
-        zip: '',
-        country: '',
+        line1: String(order.address ?? previous?.address.line1 ?? ''),
+        city: String(previous?.address.city ?? ''),
+        zip: String(previous?.address.zip ?? ''),
+        country: String(previous?.address.country ?? ''),
       },
-      items: (order.items ?? []).map((item) => ({
-        productId: String(item.productId ?? ''),
-        name: String(item.name ?? 'Item'),
-        unitPrice: Number(item.priceSnapshot ?? 0),
-        qty: Number(item.qty ?? 0),
-        imageUrl: item.path ?? undefined,
-      })),
-      subtotal: total,
-      shipping: 0,
+      items,
+      subtotal: Number(order.total ?? previous?.subtotal ?? total),
+      shipping: previous?.shipping ?? 0,
       total,
-      history: [{ status, at: String(order.createdAt ?? nowIso()) }],
+      history: previous?.history ?? [{ status, at: String(order.createdAt ?? nowIso()) }],
     };
   }
 

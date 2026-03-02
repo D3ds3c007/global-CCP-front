@@ -9,22 +9,46 @@
   letter-spacing: 0.05em;
   text-transform: uppercase;
   font-weight: 600;
-  color: #97a9d2;
+  color: #475569;
 }
 
 .field__input {
-  border: 1px solid rgba(95, 120, 190, 0.3);
-  border-radius: 12px;
-  padding: 11px 12px;
-  font-size: 14px;
-  background: rgba(13, 20, 43, 0.72);
-  color: #eaf0ff;
+  display: block;
   transition: border-color 0.22s ease, box-shadow 0.22s ease, background 0.22s ease;
 }
 
-.field__input:focus-visible {
-  outline: none;
-  border-color: rgba(123, 188, 255, 0.92);
-  box-shadow: 0 0 0 3px rgba(79, 154, 255, 0.26);
-  background: rgba(16, 24, 52, 0.92);
+:host ::ng-deep .field__input .ant-select-selector {
+  border: 1px solid rgba(148, 163, 184, 0.28) !important;
+  border-radius: 14px !important;
+  min-height: 46px !important;
+  padding: 7px 12px !important;
+  background: #ffffff !important;
+  box-shadow: none !important;
+}
+
+:host ::ng-deep .field__input.ant-select-single .ant-select-selector .ant-select-selection-item,
+:host ::ng-deep .field__input.ant-select-single .ant-select-selector .ant-select-selection-placeholder {
+  line-height: 30px !important;
+}
+
+:host ::ng-deep .field__input .ant-select-selection-item {
+  color: #0f172a !important;
+}
+
+:host ::ng-deep .field__input .ant-select-selection-placeholder {
+  color: #94a3b8 !important;
+}
+
+:host ::ng-deep .field__input.ant-select-focused .ant-select-selector,
+:host ::ng-deep .field__input:hover .ant-select-selector {
+  border-color: rgba(14, 165, 233, 0.72) !important;
+}
+
+:host ::ng-deep .field__input.ant-select-focused {
+  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.16);
+  border-radius: 14px;
+}
+
+:host ::ng-deep .field__input .ant-select-arrow {
+  color: #64748b;
 }
