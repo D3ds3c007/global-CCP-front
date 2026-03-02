@@ -1,35 +1,46 @@
 <section class="page" *ngIf="vm$ | async as vm">
+  <div class="header">
+    <div>
+      <h1>Products</h1>
+      <p>Create, review and manage your catalog with the same Back Office dashboard look.</p>
+    </div>
+  </div>
+
   <div class="empty" *ngIf="noShopMessage">{{ noShopMessage }}</div>
   <div class="empty" *ngIf="loading">Loading products...</div>
   <div class="empty" *ngIf="errorMessage">{{ errorMessage }}</div>
 
-  <app-products-filters
-    [categories]="vm.categories"
-    [query]="vm.query"
-    (queryChange)="setQuery($event)"
-  ></app-products-filters>
+  <div class="surface">
+    <app-products-filters
+      [categories]="vm.categories"
+      [query]="vm.query"
+      (queryChange)="setQuery($event)"
+    ></app-products-filters>
 
-  <div class="cards">
-    <app-product-card
-      *ngFor="let p of vm.products; trackBy: trackByProductId"
-      [product]="p"
-      [actionsDisabled]="isProductBusy(p)"
+    <!-- <div class="cards">
+      <app-product-card
+        *ngFor="let p of vm.products; trackBy: trackByProductId"
+        [product]="p"
+        [actionsDisabled]="isProductBusy(p)"
+        (view)="openDetails($event)"
+        (edit)="openEdit($event)"
+        (remove)="onDelete($event)"
+        (toggle)="onToggle($event)"
+      ></app-product-card>
+    </div> -->
+  </div>
+
+  <h3 class="section-title">List (table)</h3>
+  <div class="surface surface--table">
+    <app-products-table
+      [products]="vm.products"
+      [disabledIds]="busyProductIds"
       (view)="openDetails($event)"
       (edit)="openEdit($event)"
       (remove)="onDelete($event)"
       (toggle)="onToggle($event)"
-    ></app-product-card>
+    ></app-products-table>
   </div>
-
-  <h3 class="section-title">List (table)</h3>
-  <app-products-table
-    [products]="vm.products"
-    [disabledIds]="busyProductIds"
-    (view)="openDetails($event)"
-    (edit)="openEdit($event)"
-    (remove)="onDelete($event)"
-    (toggle)="onToggle($event)"
-  ></app-products-table>
 
   <button class="fab" type="button" (click)="openCreate()" title="Add">
     +

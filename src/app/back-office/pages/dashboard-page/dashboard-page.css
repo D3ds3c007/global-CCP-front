@@ -31,6 +31,22 @@
 .c4 { grid-column: span 5; }
 .c5 { grid-column: span 7; }
 
+.revenue-panel {
+  grid-column: span 8;
+}
+
+.top-product-panel {
+  grid-column: span 4;
+}
+
+.low-stock-panel {
+  grid-column: span 9;
+}
+
+.top-buyer-panel {
+  grid-column: span 3;
+}
+
 /* Bottom tiles alignées sous le bloc revenu (7 colonnes) */
 .t1 { grid-column: 6 / span 2; }
 .t2 { grid-column: 8 / span 2; }
@@ -56,6 +72,10 @@
 @media (max-width: 1100px) {
   .c1,.c2,.c3 { grid-column: span 12; }
   .c4,.c5 { grid-column: span 12; }
+  .revenue-panel,
+  .top-product-panel,
+  .low-stock-panel,
+  .top-buyer-panel { grid-column: span 12; }
   .t1,.t2,.t3 { grid-column: span 12; }
   .extras { grid-template-columns: 1fr; }
   .span-2 { grid-column: span 1; }

@@ -4,6 +4,43 @@
   min-height: 100vh;
 }
 
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 22px;
+  color: #edf3ff;
+}
+
+.header p {
+  margin: 6px 0 0;
+  font-size: 13px;
+  color: #9fb0da;
+}
+
+.surface {
+  padding: 16px;
+  border-radius: 18px;
+  border: 1px solid rgba(95, 120, 190, 0.22);
+  background:
+    radial-gradient(120% 140% at 0% 0%, rgba(56, 189, 248, 0.12), transparent 40%),
+    linear-gradient(160deg, rgba(16, 22, 46, 0.96), rgba(10, 15, 34, 0.94));
+  box-shadow:
+    0 20px 32px rgba(0, 0, 0, 0.24),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.surface--table {
+  padding: 0;
+  overflow: hidden;
+}
+
 .kpis {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -43,11 +80,118 @@
     0 10px 22px rgba(20, 219, 150, 0.32);
 }
 
+:host ::ng-deep app-products-filters .filters {
+  margin: 0 0 14px;
+}
+
+:host ::ng-deep app-products-filters .search input,
+:host ::ng-deep app-products-filters select {
+  border: 1px solid rgba(95, 120, 190, 0.22);
+  background: rgba(11, 17, 37, 0.82);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+:host ::ng-deep app-products-filters .search input::placeholder {
+  color: #9fb0da;
+}
+
+:host ::ng-deep app-products-table .table-wrap {
+  border: 0;
+  border-radius: 18px;
+  box-shadow: none;
+}
+
+:host ::ng-deep app-product-dialog .overlay {
+  background: rgba(2, 6, 23, 0.72);
+  backdrop-filter: blur(8px);
+}
+
+:host ::ng-deep app-product-dialog .modal {
+  border: 1px solid rgba(95, 120, 190, 0.24);
+  border-radius: 20px;
+  background:
+    radial-gradient(120% 140% at 0% 0%, rgba(56, 189, 248, 0.12), transparent 38%),
+    linear-gradient(165deg, rgba(24, 31, 62, 0.96), rgba(11, 16, 36, 0.98));
+  box-shadow:
+    0 28px 56px rgba(0, 0, 0, 0.48),
+    0 16px 30px rgba(8, 145, 178, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  color: #edf3ff;
+}
+
+:host ::ng-deep app-product-dialog .head h3,
+:host ::ng-deep app-product-dialog .details-grid strong,
+:host ::ng-deep app-product-dialog .details-desc {
+  color: #edf3ff;
+}
+
+:host ::ng-deep app-product-dialog .x,
+:host ::ng-deep app-product-dialog .file-btn,
+:host ::ng-deep app-product-dialog .btn.ghost,
+:host ::ng-deep app-product-dialog .thumb-btn,
+:host ::ng-deep app-product-dialog .details-grid div,
+:host ::ng-deep app-product-dialog .details-desc,
+:host ::ng-deep app-product-dialog .details-main,
+:host ::ng-deep app-product-dialog .thumb-card {
+  border-color: rgba(95, 120, 190, 0.22);
+  background: rgba(11, 17, 37, 0.72);
+  color: #d9e4ff;
+}
+
+:host ::ng-deep app-product-dialog .empty-thumb {
+  border-color: rgba(128, 156, 229, 0.34);
+  color: #9fb0da;
+}
+
+:host ::ng-deep app-product-dialog .field span,
+:host ::ng-deep app-product-dialog .details-grid span {
+  color: #9fb0da;
+}
+
+:host ::ng-deep app-product-dialog .field input,
+:host ::ng-deep app-product-dialog .field select,
+:host ::ng-deep app-product-dialog .field textarea {
+  border-color: rgba(95, 120, 190, 0.22);
+  background: rgba(6, 11, 27, 0.72);
+  color: #edf3ff;
+}
+
+:host ::ng-deep app-product-dialog .field input::placeholder,
+:host ::ng-deep app-product-dialog .field textarea::placeholder {
+  color: #8da1d1;
+}
+
+:host ::ng-deep app-product-dialog .btn.primary {
+  border-color: #43d95f;
+  background: linear-gradient(135deg, #8ffb3c 0%, #22e6bf 55%, #00cfdb 100%);
+  color: #05221a;
+}
+
+:host ::ng-deep app-product-dialog .alert {
+  border-color: rgba(248, 113, 113, 0.28);
+  background: rgba(127, 29, 29, 0.2);
+  color: #fecaca;
+}
+
+:host ::ng-deep app-product-dialog .alert.info {
+  border-color: rgba(56, 189, 248, 0.28);
+  background: rgba(14, 116, 144, 0.18);
+  color: #bae6fd;
+}
+
 @media (max-width: 1100px) {
   .cards { grid-template-columns: repeat(2, 1fr); }
 }
 
 @media (max-width: 720px) {
+  .header {
+    margin-bottom: 12px;
+  }
+
+  .surface {
+    padding: 14px;
+  }
+
   .kpis { grid-template-columns: 1fr; }
   .cards { grid-template-columns: 1fr; }
 }

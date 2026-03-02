@@ -1,9 +1,49 @@
-<div *ngIf="products.length; else empty" class="list">
-  <div class="row" *ngFor="let p of products; trackBy: trackByProduct">
-    <div class="bar">
-      <div class="fill" [style.width]="width(p)"></div>
-      <div class="label">{{ p.name }}</div>
-      <div class="val">{{ p.valueK }}K</div>
+<div *ngIf="products.length && totalValue > 0; else empty" class="top-products">
+  <div class="donut-panel">
+    <div class="donut-wrap">
+      <svg class="donut" [attr.viewBox]="'0 0 ' + size + ' ' + size" aria-hidden="true">
+        <circle
+          class="donut-track"
+          [attr.cx]="size / 2"
+          [attr.cy]="size / 2"
+          [attr.r]="radius"
+          [attr.stroke-width]="strokeWidth"
+          [attr.stroke]="trackColor"
+          fill="none"
+        ></circle>
+
+        <circle
+          *ngFor="let segment of segments"
+          class="donut-segment"
+          [attr.cx]="size / 2"
+          [attr.cy]="size / 2"
+          [attr.r]="radius"
+          [attr.stroke-width]="strokeWidth"
+          [attr.stroke]="segment.color"
+          [attr.stroke-dasharray]="segment.dasharray"
+          [attr.stroke-dashoffset]="segment.dashoffset"
+          stroke-linecap="butt"
+          fill="none"
+        >
+          <title>{{ segment.name }}: {{ formatValueK(segment.valueK) }} ({{ formatPercent(segment.share) }})</title>
+        </circle>
+      </svg>
+
+      <div class="donut-center" *ngIf="topProduct as top">
+        <strong class="center-name">{{ top.name }}</strong>
+        <span class="center-value">{{ formatValueK(top.valueK) }} / {{ formatPercent(topProductShare) }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="legend" role="list" aria-label="Top products">
+    <div class="legend-row" role="listitem" *ngFor="let product of products; let i = index; trackBy: trackByProduct">
+      <span class="legend-swatch" [style.background]="legendColor(i)"></span>
+      <div class="legend-copy">
+        <span class="legend-name">{{ product.name }}</span>
+        <span class="legend-share" *ngIf="totalValue > 0">{{ formatPercent(product.valueK / totalValue) }}</span>
+      </div>
+      <span class="legend-value">{{ formatValueK(product.valueK) }}</span>
     </div>
   </div>
 </div>
