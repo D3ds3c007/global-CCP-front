@@ -7,42 +7,6 @@
     <p *ngIf="lines.length === 0" class="empty">Your cart is empty.</p>
 
     <div class="cart__grid" *ngIf="lines.length > 0">
-      <section class="cart__summaryShell">
-        <aside class="summary">
-          <h3 class="summaryTitle">Summary</h3>
-
-          <div class="sumRow">
-            <span>Subtotal</span>
-            <strong>{{ subtotal(lines) | currency: currencyCode:'symbol':'1.2-2' }}</strong>
-          </div>
-
-          <!-- <label class="delivery">
-            <span>Delivery</span>
-            <select [(ngModel)]="deliveryId" [ngModelOptions]="{ standalone: true }">
-              <option *ngFor="let o of deliveryOptions" [value]="o.id">
-                {{ o.label }} - {{ o.fee | currency: currencyCode:'symbol':'1.2-2' }}
-              </option>
-            </select>
-          </label>
-
-          <div class="sumRow">
-            <span>Delivery fee</span>
-            <strong>{{ deliveryFee() | currency: currencyCode:'symbol':'1.2-2' }}</strong>
-          </div> -->
-
-          <hr class="divider" />
-
-          <div class="sumRow total">
-            <span>Total</span>
-            <strong>{{ total(lines) | currency: currencyCode:'symbol':'1.2-2' }}</strong>
-          </div>
-
-          <button class="cta" type="button" (click)="goToCheckout()">
-            Proceed to checkout
-          </button>
-        </aside>
-      </section>
-
       <section class="cart__listShell">
         <ul class="list">
         <li class="item" *ngFor="let line of lines; trackBy: trackByProductId">
@@ -92,6 +56,40 @@
           </div>
         </li>
         </ul>
+
+        <aside class="summary">
+          <h3 class="summaryTitle">Summary</h3>
+
+          <div class="sumRow">
+            <span>Subtotal</span>
+            <strong>{{ subtotal(lines) | currency: currencyCode:'symbol':'1.2-2' }}</strong>
+          </div>
+
+          <!-- <label class="delivery">
+            <span>Delivery</span>
+            <select [(ngModel)]="deliveryId" [ngModelOptions]="{ standalone: true }">
+              <option *ngFor="let o of deliveryOptions" [value]="o.id">
+                {{ o.label }} - {{ o.fee | currency: currencyCode:'symbol':'1.2-2' }}
+              </option>
+            </select>
+          </label>
+
+          <div class="sumRow">
+            <span>Delivery fee</span>
+            <strong>{{ deliveryFee() | currency: currencyCode:'symbol':'1.2-2' }}</strong>
+          </div> -->
+
+          <hr class="divider" />
+
+          <div class="sumRow total">
+            <span>Total</span>
+            <strong>{{ total(lines) | currency: currencyCode:'symbol':'1.2-2' }}</strong>
+          </div>
+
+          <button class="cta" type="button" (click)="goToCheckout()">
+            Proceed to checkout
+          </button>
+        </aside>
       </section>
     </div>
   </ng-container>
