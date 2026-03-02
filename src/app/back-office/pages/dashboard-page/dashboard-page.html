@@ -38,7 +38,7 @@
         </app-dashboard-card>
       </ng-container>
 
-      <app-dashboard-card class="c4" title="Revenue" style="grid-column: span 12;">
+      <app-dashboard-card class="c4 revenue-panel" title="Revenue">
         <div card-right class="select">
           <select #yearSelect [value]="revenueYear" (change)="setRevenueYear(yearSelect.value)" style="border: 0; background: transparent; color: inherit; font: inherit; cursor: pointer;">
             <option [value]="2024">2024</option>
@@ -60,15 +60,15 @@
         </ng-container>
       </app-dashboard-card>
 
-      <app-dashboard-card title="Low-stock products" style="grid-column: span 5;">
-        <app-low-stock [products]="vm.lowStock"></app-low-stock>
-      </app-dashboard-card>
-
-      <app-dashboard-card title="Top Product" style="grid-column: span 4;">
+      <app-dashboard-card class="top-product-panel" title="Top Product">
         <app-top-products [products]="vm.topProducts"></app-top-products>
       </app-dashboard-card>
 
-      <app-mini-tile title="Top buyer" *ngIf="vm.topBuyer as tb" style="grid-column: span 3;">
+      <app-dashboard-card class="low-stock-panel" title="Low-stock products">
+        <app-low-stock [products]="vm.lowStock"></app-low-stock>
+      </app-dashboard-card>
+
+      <app-mini-tile class="top-buyer-panel" title="Top buyer" *ngIf="vm.topBuyer as tb">
         <app-top-buyer-tile [buyer]="tb"></app-top-buyer-tile>
       </app-mini-tile>
 
