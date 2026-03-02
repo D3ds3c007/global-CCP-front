@@ -1,11 +1,11 @@
 <div class="overlay" (click)="onBackdropClick()">
   <div class="modal" (click)="$event.stopPropagation()">
     <div class="head">
-      <h3>Create shop</h3>
-      <button class="x" type="button" (click)="cancel.emit()">x</button>
+      <h3 class="title">Create shop</h3>
+      <button class="x" type="button" (click)="cancel.emit()" aria-label="Close dialog">x</button>
     </div>
 
-    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <form class="dialog-form" [formGroup]="form" (ngSubmit)="onSubmit()">
       <div class="img-block">
         <div class="preview">
           <img [src]="previewUrl || defaultLogoUrl" alt="Shop logo preview" />
@@ -23,7 +23,7 @@
             <p class="dropzone-hint">PNG, JPG, WEBP | Max 2MB</p>
 
             <div class="dropzone-actions">
-              <label class="file-btn">
+              <label class="file-btn" [class.is-disabled]="submitting">
                 {{ hasCustomLogo ? 'Replace logo' : 'Upload logo' }}
                 <input type="file" accept="image/*" (change)="onPickFile($event)" [disabled]="submitting" hidden />
               </label>
@@ -98,7 +98,7 @@
         </label>
       </div>
 
-      <p class="error" *ngIf="submitError">{{ submitError }}</p>
+      <p class="error submit-error" *ngIf="submitError">{{ submitError }}</p>
 
       <div class="actions">
         <button type="button" class="btn ghost" (click)="cancel.emit()" [disabled]="submitting">Cancel</button>
