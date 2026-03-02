@@ -5,7 +5,7 @@ import { Observable, Subject, takeUntil } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { APP_CURRENCY } from '../../../core/constants/app-locale';
 
-type OrderStatus = 'PAID' | 'PENDING' | 'CANCELLED';
+type OrderStatus = 'PAID' | 'PENDING' | 'CANCELLED' | 'DELIVERED';
 
 export type OrderItem = {
   id: string;
@@ -138,6 +138,7 @@ export class OrderComponent implements OnInit, OnDestroy {
       PAID: 'badge paid',
       PENDING: 'badge PENDING',
       CANCELLED: 'badge cancelled',
+      DELIVERED: 'badge DELIVERED',
     }[status];
   }
 

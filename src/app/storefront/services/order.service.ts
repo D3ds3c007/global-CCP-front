@@ -5,7 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { Product } from './product.service';
 import { submit } from '@angular/forms/signals';
 import { CheckoutPayload } from '../components/checkout-component/checkout-component';
-export type OrderStatus = 'PAID' | 'PENDING' | 'CANCELLED';
+export type OrderStatus = 'PAID' | 'PENDING' | 'CANCELLED' | 'DELIVERED';
 
 export interface OrderFromServer{
 fullName: any;
