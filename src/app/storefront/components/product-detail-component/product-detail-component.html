@@ -1,13 +1,16 @@
 <section class="page">
-  <header class="top">
-    <h1 class="product-name">{{ product.name }}</h1>
-    <a class="store-link" [routerLink]="['/manufacturers', product.shopId]">
-        <div class="store-name">{{ product.storeName }}</div>
-    </a>
+  <header class="detail-header">
+    <div class="detail-header__copy">
+      <h1 class="product-name">{{ product.name }}</h1>
+      <a class="store-link" [routerLink]="['/manufacturers', product.shopId]">
+        <span class="store-link__label">Store</span>
+        <span class="store-name">{{ product.storeName }}</span>
+      </a>
+    </div>
   </header>
 
-  <div class="layout">
-    <div class="gallery">
+  <div class="detail-shell">
+    <section class="detail-gallery-card" aria-label="Product gallery">
       <div class="carousel">
         <div class="scroller" #scroller (scroll)="onScrollerScroll()">
           <figure class="slide" *ngFor="let img of images; index as i; trackBy: trackByIndex">
@@ -15,22 +18,25 @@
           </figure>
         </div>
 
-        <button class="nav prev" type="button" (click)="prev()" [disabled]="images.length <= 1">&lsaquo;</button>
-        <button class="nav next" type="button" (click)="next()" [disabled]="images.length <= 1">&rsaquo;</button>
-
-        <div class="dots" *ngIf="images.length > 1">
-          <button
-            class="dot"
-            *ngFor="let _ of images; index as i; trackBy: trackByIndex"
-            type="button"
-            (click)="scrollTo(i)"
-            [class.ACTIVE]="i === ACTIVEIndex"
-          ></button>
-        </div>
+        <button class="nav prev" type="button" (click)="prev()" [disabled]="images.length <= 1" aria-label="Previous image">&lsaquo;</button>
+        <button class="nav next" type="button" (click)="next()" [disabled]="images.length <= 1" aria-label="Next image">&rsaquo;</button>
       </div>
-    </div>
 
-    <aside class="panel">
+      <div class="thumbs" *ngIf="images.length > 1">
+        <button
+          class="thumb"
+          *ngFor="let img of images; index as i; trackBy: trackByIndex"
+          type="button"
+          (click)="scrollTo(i)"
+          [class.ACTIVE]="i === ACTIVEIndex"
+          [attr.aria-label]="'Show image ' + (i + 1)"
+        >
+          <img [src]="pictureUrl + img" [alt]="product.name + ' thumbnail ' + (i + 1)" />
+        </button>
+      </div>
+    </section>
+
+    <aside class="detail-info-card">
       <div class="price">
         <div class="price-label">Price</div>
         <div class="price-value">{{ product.price | currency:'USD' }}</div>
@@ -50,27 +56,29 @@
         </div>
       </div>
 
-      <div class="qty">
-        <div class="qty-label">Quantity</div>
+      <section class="qty-panel" aria-label="Quantity selection">
+        <div class="qty">
+          <div class="qty-label">Quantity</div>
 
-        <div class="qty-control">
-          <button type="button" class="qty-btn" (click)="decQty()" [disabled]="isOutOfStock || qty <= 1">-</button>
+          <div class="qty-control">
+            <button type="button" class="qty-btn" (click)="decQty()" [disabled]="isOutOfStock || qty <= 1">-</button>
 
-          <input
-            class="qty-input"
-            type="number"
-            [(ngModel)]="qty"
-            (blur)="clampQty()"
-            [min]="isOutOfStock ? 0 : 1"
-            [max]="maxQty"
-            [disabled]="isOutOfStock"
-          />
+            <input
+              class="qty-input"
+              type="number"
+              [(ngModel)]="qty"
+              (blur)="clampQty()"
+              [min]="isOutOfStock ? 0 : 1"
+              [max]="maxQty"
+              [disabled]="isOutOfStock"
+            />
 
-          <button type="button" class="qty-btn" (click)="incQty()" [disabled]="isOutOfStock || qty >= maxQty">+</button>
+            <button type="button" class="qty-btn" (click)="incQty()" [disabled]="isOutOfStock || qty >= maxQty">+</button>
+          </div>
+
+          <div class="qty-hint" *ngIf="!isOutOfStock">Max: {{ maxQty }}</div>
         </div>
-
-        <div class="qty-hint" *ngIf="!isOutOfStock">Max: {{ maxQty }}</div>
-      </div>
+      </section>
 
       <div class="total">
         <span>Total</span>
@@ -91,12 +99,12 @@
     </aside>
   </div>
 
-  <section class="product-description" *ngIf="product.description as description">
+  <section class="detail-description-card product-description" *ngIf="product.description as description">
     <h2>Description</h2>
     <p>{{ description }}</p>
   </section>
 
-  <section class="product-description" *ngIf="!product.description">
+  <section class="detail-description-card product-description" *ngIf="!product.description">
     <h2>Description</h2>
     <p>No description available for this product.</p>
   </section>
