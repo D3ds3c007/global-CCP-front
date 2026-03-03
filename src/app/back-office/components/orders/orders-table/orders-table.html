@@ -11,9 +11,8 @@
       <span class="pill" [class]="o.status">{{ o.status }}</span>
     </div>
 
-    <div class="order-card__buyer">{{ o.buyer.fullName }}</div>
-
-    <div class="order-card__bottom">
+    <div class="order-card__summary">
+      <div class="order-card__buyer">{{ o.buyer.fullName }}</div>
       <div class="order-card__date">{{ o.createdAt | date:'short' }}</div>
       <div class="order-card__total">{{ o.total | currency:'USD' }}</div>
     </div>

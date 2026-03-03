@@ -14,7 +14,7 @@
   padding: 16px;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 10px;
   text-align: left;
   cursor: pointer;
   transition:
@@ -41,7 +41,7 @@
 }
 
 .order-card__top,
-.order-card__bottom {
+.order-card__summary {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -54,16 +54,22 @@
 }
 
 .order-card__buyer {
+  min-width: 0;
+  flex: 1 1 auto;
   font-size: 16px;
-  line-height: 1.35;
+  line-height: 1.2;
   font-weight: 800;
   color: #edf3ff;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .order-card__date {
   min-width: 0;
   font-size: 12px;
   color: #9fb0da;
+  white-space: nowrap;
 }
 
 .order-card__total {
@@ -101,13 +107,17 @@
   .order-card {
     padding: 14px;
     border-radius: 16px;
-    gap: 12px;
+    gap: 10px;
   }
 
   .order-card__top,
-  .order-card__bottom {
+  .order-card__summary {
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  .order-card__buyer {
+    white-space: normal;
   }
 
   .order-card__total {
