@@ -33,7 +33,7 @@ export class ShopDialogComponent implements OnInit, OnChanges, OnDestroy {
 
   private fb = inject(FormBuilder);
   
-  readonly defaultLogoUrl = 'https://picsum.photos/seed/newshop/120/120';
+  readonly defaultLogoUrl = '';
   previewUrl = '';
   isDragOver = false;
   selectedLogoFileName = '';
@@ -163,7 +163,7 @@ export class ShopDialogComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   get hasCustomLogo(): boolean {
-    return this.form.controls.logoUrl.value !== this.defaultLogoUrl;
+    return !!this.form.controls.logoUrl.value;
   }
 
   onSubmit() {

@@ -128,15 +128,20 @@
 }
 
 .shop-context {
-  border: 1px solid rgba(95, 120, 190, 0.18);
+  border: 1px solid rgba(67, 217, 95, 0.34);
   border-radius: 16px;
   padding: 12px 14px;
-  background: rgba(16, 25, 52, 0.56);
+  background:
+    radial-gradient(circle at top left, rgba(255, 255, 255, 0.18), transparent 34%),
+    linear-gradient(135deg, #8ffb3c 0%, #22e6bf 55%, #00cfdb 100%);
+  box-shadow:
+    0 12px 24px rgba(20, 219, 150, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18);
 }
 
 .shop-context__label {
   font-size: 11px;
-  color: #8da1d1;
+  color: rgba(5, 34, 26, 0.72);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -146,7 +151,14 @@
   margin-top: 6px;
   font-size: 13px;
   font-weight: 700;
-  color: #edf3ff;
+  color: #05221a;
+}
+
+.shop-context hr {
+  border: 0;
+  height: 1px;
+  margin: 12px 0;
+  background: rgba(5, 34, 26, 0.14);
 }
 
 .item {
@@ -193,7 +205,12 @@
 }
 
 .back-action {
-  color: #c1d0f2;
+  color: #05221a;
+}
+
+.shop-context .back-action .mi,
+.shop-context .back-action .label {
+  color: #05221a;
 }
 
 .bottom {

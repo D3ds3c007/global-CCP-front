@@ -189,7 +189,7 @@ export class ShopsBackService {
         name: fallbackCategoryName,
       },
       status: String(apiShop?.status ?? 'PENDING'),
-      logoUrl: String(apiShop?.logoUrl ?? 'default.png'),
+      logoUrl: String(apiShop?.logoUrl ?? 'default.jpg'),
       coverUrl: apiShop?.coverUrl ?? undefined,
       ownerId: String(apiShop?.ownerUserId ?? this.authState.snapshot?.id ?? ''),
       description: apiShop?.description ?? payload?.description ?? '',
