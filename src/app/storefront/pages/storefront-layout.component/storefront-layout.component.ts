@@ -5,13 +5,15 @@ import { SearchQuery } from '../../services/product.service';
 import { AdvancedSearchPanelComponent } from '../../components/advanced-search/advanced-search-panel.component';
 import { StorefrontStateService  } from '../../services/store-front-state';
 import { FloatingActionsComponent } from '../../components/floating-actions/floating-actions.component';
+import { StorefrontFooterComponent } from '../../components/storefront-footer/storefront-footer.component';
 
 @Component({
   selector: 'app-storefront-layout',
   imports: [
     AsyncPipe,
     AdvancedSearchPanelComponent,
-    FloatingActionsComponent
+    FloatingActionsComponent,
+    StorefrontFooterComponent
   ],
   templateUrl: './storefront-layout.component.html',
   styleUrl: './storefront-layout.component.css',

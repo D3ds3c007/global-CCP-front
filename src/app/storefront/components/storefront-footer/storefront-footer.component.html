@@ -1,0 +1,28 @@
+<footer class="storefront-footer">
+  <div class="storefront-footer__panel">
+    <div class="storefront-footer__intro">
+      <p class="storefront-footer__eyebrow">Hello Mercado</p>
+      <h2 class="storefront-footer__title">Built as a modern storefront experience.</h2>
+      <p class="storefront-footer__text">
+        A marketplace interface shaped around product discovery, smooth browsing, and a cleaner shopping flow.
+      </p>
+    </div>
+
+    <div class="storefront-footer__credits">
+      <p class="storefront-footer__label">Developers</p>
+      <div class="storefront-footer__developers">
+        @for (developer of developers; track developer) {
+          <div class="storefront-footer__developer-card">
+            <span class="storefront-footer__developer-mark">DEV</span>
+            <span class="storefront-footer__developer-name">{{ developer }}</span>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+
+  <div class="storefront-footer__bottom">
+    <span class="storefront-footer__bottom-line"></span>
+    <p class="storefront-footer__signature">Crafted by the website development team.</p>
+  </div>
+</footer>

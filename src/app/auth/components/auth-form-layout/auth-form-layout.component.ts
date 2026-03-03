@@ -9,7 +9,7 @@ import { NzCardModule } from 'ng-zorro-antd/card';
   imports: [NzCardModule]
 })
 export class AuthFormLayoutComponent {
-  readonly title = input<string>('Welcome back');
+  readonly title = input<string>('Hello Mercado');
   readonly subtitle = input<string>('Sign in to continue.');
   readonly titleId = input<string>('auth-title');
 }
