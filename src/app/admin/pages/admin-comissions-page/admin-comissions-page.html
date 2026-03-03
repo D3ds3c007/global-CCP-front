@@ -11,6 +11,14 @@
         <span class="hero-badge">{{ vm.commissions.length }} total plans</span>
         <span class="hero-badge">{{ inactiveCount(vm.commissions) }} inactive</span>
       </div>
+
+      <button class="create-commission-cta" type="button" (click)="openCreate()">
+        <span class="create-commission-cta__icon">+</span>
+        <span class="create-commission-cta__copy">
+          <span class="create-commission-cta__label">Create commission</span>
+          <span class="create-commission-cta__meta">Launch a new pricing rule setup</span>
+        </span>
+      </button>
     </div>
 
     <app-dashboard-card class="hero-panel" title="Active strategy">
@@ -51,10 +59,6 @@
           Explore all commission plans as cards instead of a plain table. Activate one plan at a time or clear the active state.
         </p>
       </div>
-
-      <button class="create-btn" type="button" (click)="openCreate()">
-        Create commission
-      </button>
     </div>
 
     <app-commissions-table
@@ -63,8 +67,6 @@
       (deactivateAll)="deactivateAll()"
     ></app-commissions-table>
   </app-dashboard-card>
-
-  <button class="fab" type="button" (click)="openCreate()" title="Create commission">+</button>
 
   <app-commission-dialog
     *ngIf="dialogOpen"

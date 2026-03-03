@@ -1,6 +1,18 @@
 <section class="page" *ngIf="vm$ | async as vm">
   <div class="page-head">
-    <h1 class="title">Categories</h1>
+    <div class="page-copy">
+      <h1 class="title">Categories</h1>
+      <p class="subtitle">Organize the catalog structure and keep every product grouped under the right section.</p>
+    </div>
+
+    <button class="create-category-cta" type="button" (click)="openCreate()">
+      <span class="create-category-cta__icon" aria-hidden="true">+</span>
+
+      <span class="create-category-cta__copy">
+        <span class="create-category-cta__label">Create category</span>
+        <span class="create-category-cta__meta">Open the category setup dialog</span>
+      </span>
+    </button>
   </div>
 
   <app-dashboard-card title="">
@@ -18,10 +30,6 @@
     ></app-categories-chips>
   </app-dashboard-card>
 
-  <!-- Bouton + -->
-  <button class="fab" type="button" (click)="openCreate()" title="Create category">+</button>
-
-  <!-- Popup -->
   <app-category-dialog
     *ngIf="dialogOpen"
     [mode]="dialogMode"
